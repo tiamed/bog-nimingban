@@ -37,8 +37,10 @@ export default function ProfileScreen({
 
   const getCanSign = (utcTimeString: string) => {
     const signTime = parseISO(utcTimeString);
-    // const signTimeLocal = addMinutes(signTime, signTime.getTimezoneOffset());
     const timestamp = signTime.getTime();
+    if (Number.isNaN(timestamp) || timestamp < 0) {
+      return true;
+    }
     return Date.now() > timestamp;
   };
 
@@ -189,7 +191,7 @@ function AddModal(props: { cookie?: Cookie }) {
   }, [props.cookie]);
 
   return (
-    <Modal isVisible={visible}>
+    <Modal isVisible={visible} onBackdropPress={close}>
       <View style={styles.modal}>
         <Text style={styles.title}>
           {props.cookie ? "修改饼干" : "添加饼干"}

@@ -4,7 +4,7 @@ import { atom } from "jotai";
 
 import { IImageInfo } from "react-native-image-zoom-viewer/built/image-viewer.type";
 
-import { Forum } from "../api";
+import { Forum, Post } from "../api";
 
 export const previewsAtom = atom<IImageInfo[]>([]);
 
@@ -61,6 +61,8 @@ export const emoticonsAtom = atomWithAsyncStorage(
   1000 * 60 * 60 * 6
 );
 
+export const currentPostAtom = atom({} as Post);
+
 export const threadAtom = atomWithAsyncStorage("thread", 0, true);
 
 export const favoriteAtom = atomWithAsyncStorage("favorite", []);
@@ -74,3 +76,7 @@ export const tabRefreshingAtom = atom(false);
 export const draftAtom = atom("");
 
 export const signDictAtom = atomWithAsyncStorage("signDict", {}, true);
+
+export const showPageModalAtom = atom(false);
+
+export const showActionModalAtom = atom(false);

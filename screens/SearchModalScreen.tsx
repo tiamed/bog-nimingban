@@ -4,12 +4,14 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
 
 import { Button, Text, View } from "../components/Themed";
-import ThreadPost from "../components/ThreadPost";
+import ThreadPost from "../components/Post/ThreadPost";
 import { RootStackScreenProps } from "../types";
 import { getReply } from "../api";
+import Overlay from "../components/Overlay";
 
 export default function QuoteModalScreen({
   route,
@@ -26,6 +28,7 @@ export default function QuoteModalScreen({
 
   return (
     <View style={styles.container}>
+      <Overlay></Overlay>
       <View style={styles.modal}>
         <TextInput
           value={query}
@@ -49,7 +52,6 @@ export default function QuoteModalScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: "center",
     justifyContent: "center",
     padding: "10%",
     backgroundColor: "#40404040",
@@ -57,7 +59,6 @@ const styles = StyleSheet.create({
   modal: {
     flexDirection: "column",
     justifyContent: "center",
-    // alignItems: "center",
     borderRadius: 10,
     overflow: "hidden",
     padding: 8,
