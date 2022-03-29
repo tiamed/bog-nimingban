@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import { useKeyboard } from "@react-native-community/hooks";
 
 import { Button, Text, useThemeColor, View } from "../components/Themed";
 import { RootStackScreenProps } from "../types";
@@ -24,6 +25,7 @@ import * as ImagePicker from "expo-image-picker";
 import { TextInput } from "react-native";
 
 import useEmoticons from "../hooks/useEmoticons";
+import Overlay from "../components/Overlay";
 
 export default function ReplyModalScreen({
   route,
@@ -34,7 +36,7 @@ export default function ReplyModalScreen({
   const [forumId, setForumId] = useState<number | null | undefined>(null);
   const [replyId, setReplyId] = useState<number | null | undefined>(null);
   const [cookieCode, setCookieCode] = useState("");
-  const [images, setImages] = useState<Image[]>([]);
+  const [images] = useState<Image[]>([]);
   const [emoticonPickerVisible, setEmoticonPickerVisible] = useState(false);
   const [cookies] = useAtom(cookiesAtom);
   const [draft, setDraft] = useAtom(draftAtom);
@@ -89,10 +91,12 @@ export default function ReplyModalScreen({
   };
 
   useEffect(() => {
-    setForumId(route.params.forumId);
-    setReplyId(route.params.postId);
-    setDraft(draft + (route.params.content || ""));
-  }, [route]);
+    setTimeout(() => {
+      setForumId(route.params.forumId);
+      setReplyId(route.params.postId);
+      setDraft(draft + (route.params.content || ""));
+    }, 100);
+  }, [route.params]);
 
   useEffect(() => {
     if (cookies?.length) setCookieCode(cookies[0].code);
@@ -105,7 +109,15 @@ export default function ReplyModalScreen({
   }, []);
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#40404040",
+      }}
+    >
+      <Overlay></Overlay>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{
@@ -135,7 +147,11 @@ export default function ReplyModalScreen({
                 backgroundColor: backgroundColor,
               }}
               selectedValue={forumId as number}
-              onValueChange={(val: number) => setForumId(val)}
+              onValueChange={(val: number) => {
+                if (val !== forumId) {
+                  setForumId(val);
+                }
+              }}
             >
               {forums
                 ?.filter((x) => x.id)
@@ -195,7 +211,7 @@ export default function ReplyModalScreen({
           }}
         ></EmoticonPicker>
       </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+    </View>
   );
 }
 
@@ -205,6 +221,7 @@ function EmoticonPicker(props: {
 }) {
   const emoticons = useEmoticons();
   const [data, setData] = useState<string[]>([]);
+  const keyboard = useKeyboard();
 
   useEffect(() => {
     if (emoticons?.length) {
@@ -214,7 +231,7 @@ function EmoticonPicker(props: {
   return (
     <FlatList
       style={{
-        height: 200,
+        height: keyboard.keyboardHeight,
         overflow: "scroll",
         display: props.visible ? "flex" : "none",
         flex: 1,
@@ -251,6 +268,10 @@ function EmoticonPicker(props: {
 }
 
 const styles = StyleSheet.create({
+  overlay: {
+    backgroundColor: "rgba(0,0,0,0.3)",
+    flex: 1,
+  },
   container: {
     justifyContent: "center",
     position: "absolute",

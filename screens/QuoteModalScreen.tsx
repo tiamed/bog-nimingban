@@ -1,21 +1,21 @@
-import { StatusBar } from "expo-status-bar";
-import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
-import ImageViewer from "react-native-image-zoom-viewer";
-import { IImageInfo } from "react-native-image-zoom-viewer/built/image-viewer.type";
-import { previewsAtom } from "../atoms";
+import { useAtom } from "jotai";
 
-import { Text, View } from "../components/Themed";
-import ThreadPost from "../components/ThreadPost";
+import { Text, useThemeColor, View } from "../components/Themed";
+import ThreadPost from "../components/Post/ThreadPost";
 import { RootStackScreenProps } from "../types";
-import { getReply } from "../api";
+import { getReply, Post, Reply } from "../api";
+import { currentPostAtom } from "../atoms";
+import Overlay from "../components/Overlay";
 
 export default function QuoteModalScreen({
   route,
   navigation,
 }: RootStackScreenProps<"QuoteModal">) {
-  const [data, setData] = useState({ content: "加载中..." });
+  const [data, setData] = useState<Reply>({ content: "加载中..." } as Reply);
+  const [currentPost] = useAtom<Post>(currentPostAtom);
+  const tintColor = useThemeColor({}, "tint");
   const loadData = async () => {
     try {
       const {
@@ -42,30 +42,39 @@ export default function QuoteModalScreen({
         backgroundColor: "#40404040",
       }}
     >
-      <TouchableOpacity
-        style={{
-          flex: 1,
-          width: "80%",
-          justifyContent: "center",
-        }}
-        onPressOut={() => {
-          navigation.goBack();
-        }}
-      >
-        <ThreadPost data={data}></ThreadPost>
-      </TouchableOpacity>
+      <Overlay></Overlay>
+      <View style={styles.actionWrapper}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Post", {
+              id: data.res,
+              title: "",
+            });
+          }}
+          disabled={currentPost.id === data.res}
+        >
+          <Text
+            style={styles.action}
+            lightColor={tintColor}
+            darkColor={tintColor}
+          >
+            {currentPost.id === data.res ? "当前串" : "查看原串"}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <ThreadPost data={data}></ThreadPost>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+  actionWrapper: {
+    padding: 10,
+    paddingBottom: 0,
+    alignItems: "flex-end",
+    width: "100%",
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
+  action: {
+    fontSize: 14,
   },
 });

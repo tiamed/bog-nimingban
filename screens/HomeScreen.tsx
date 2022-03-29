@@ -12,7 +12,7 @@ import { Text, View, useThemeColor } from "../components/Themed";
 import { threadAtom, tabRefreshingAtom } from "../atoms";
 import { RootTabScreenProps } from "../types";
 import { Post, getPostsByForum } from "../api";
-import ThreadPost from "../components/ThreadPost";
+import ThreadPost from "../components/Post/ThreadPost";
 import Loadings from "../constants/Loadings";
 import { useForumsIdMap } from "../hooks/useForums";
 import TabBarIcon from "../components/TabBarIcon";
