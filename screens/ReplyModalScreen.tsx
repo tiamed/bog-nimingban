@@ -10,19 +10,21 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useKeyboard } from "@react-native-community/hooks";
+import Toast from "react-native-root-toast";
+import { TextInput } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Button, Text, useThemeColor, View } from "../components/Themed";
 import { RootStackScreenProps } from "../types";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { cookiesAtom, draftAtom } from "../atoms";
 import TabBarIcon from "../components/TabBarIcon";
 import useForums, { useForumsIdMap } from "../hooks/useForums";
-import { addReply, Image } from "../api";
-import Toast from "react-native-root-toast";
-import { TextInput } from "react-native";
+import { addReply, uploadImage, Image } from "../api";
 
 import useEmoticons from "../hooks/useEmoticons";
 import Overlay from "../components/Overlay";
+import ImageView from "../components/Post/ImageView";
 
 export default function ReplyModalScreen({
   route,
@@ -33,7 +35,7 @@ export default function ReplyModalScreen({
   const [forumId, setForumId] = useState<number | null | undefined>(null);
   const [replyId, setReplyId] = useState<number | null | undefined>(null);
   const [cookieCode, setCookieCode] = useState("");
-  const [images] = useState<Image[]>([]);
+  const [images, setImages] = useState<Image[]>([]);
   const [emoticonPickerVisible, setEmoticonPickerVisible] = useState(false);
   const [cookies] = useAtom(cookiesAtom);
   const [draft, setDraft] = useAtom(draftAtom);
@@ -54,8 +56,37 @@ export default function ReplyModalScreen({
     setEmoticonPickerVisible(!emoticonPickerVisible);
   };
 
-  const addImage = () => {
-    Toast.show("开发中");
+  const addImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      try {
+        const { uri } = result;
+        const formData = new FormData();
+        const fileName = uri.split("/")[uri.split("/").length - 1];
+        const ext = uri.split(".")[uri.split(".").length - 1];
+        formData.append("image", {
+          uri,
+          name: fileName,
+          type: `image/${ext}`,
+        } as any);
+        const { code, pic, msg } = await uploadImage(formData);
+        if (code === 200) {
+          if (images.find((image) => image.url === pic)) {
+            Toast.show("请勿上传重复图片");
+          } else {
+            setImages([...images, { url: pic, ext: `.${ext}` }]);
+          }
+        } else {
+          Toast.show(msg);
+        }
+      } catch (error) {
+        Toast.show("出错了");
+      }
+    }
   };
 
   const submit = async () => {
@@ -68,21 +99,26 @@ export default function ReplyModalScreen({
         name: "",
         cookie: cookieCode,
         webapp: 1,
-        img: images,
+        img: images.map((image) => image.url),
       };
       const {
-        data: { info: newPostId },
+        data: { info: newPostId, type },
       } = await addReply(params);
-      if (!replyId) {
-        navigation.navigate("Post", {
-          id: newPostId,
-          title: `${forumsIdMap.get(params.forum)} Po.${newPostId}`,
-        });
+      if (type === "OK") {
+        if (!replyId) {
+          navigation.navigate("Post", {
+            id: newPostId,
+            title: `${forumsIdMap.get(params.forum)} Po.${newPostId}`,
+          });
+        }
+        if (typeof newPostId === "number") {
+          Toast.show("发送成功，请刷新页面");
+        }
+        setDraft("");
+        close();
+      } else {
+        Toast.show(newPostId?.toString() || "出错了");
       }
-      if (typeof newPostId === "number") {
-        Toast.show("发送成功");
-      }
-      close();
       return;
     }
   };
@@ -160,6 +196,46 @@ export default function ReplyModalScreen({
               没有可用的饼干
             </Text>
           )}
+        </View>
+        <View
+          style={{ flexDirection: "row", marginBottom: 10, flexWrap: "wrap" }}
+        >
+          {images.map((image) => (
+            <View
+              key={image.url}
+              style={{
+                width: "25%",
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 10,
+              }}
+            >
+              <ImageView
+                data={image}
+                onPress={() => {}}
+                style={{
+                  aspectRatio: 1,
+                  borderColor: tintColor,
+                  borderWidth: 1,
+                  marginRight: 5,
+                  width: "60%",
+                  height: "60%",
+                }}
+                imageStyle={{
+                  width: "100%",
+                  height: "100%",
+                }}
+                path="image_pre"
+              ></ImageView>
+              <TouchableOpacity
+                onPress={() => {
+                  setImages(images.filter((item) => item !== image));
+                }}
+              >
+                <TabBarIcon name="times-circle" color={tintColor}></TabBarIcon>
+              </TouchableOpacity>
+            </View>
+          ))}
         </View>
         <Footer></Footer>
         <EmoticonPicker
