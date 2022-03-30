@@ -85,4 +85,4 @@ export const sizeAtom = atomWithAsyncStorage("fontSize", "normal");
 
 export const postIdRefreshingAtom = atom(-1);
 
-export const colorSchemeAtom = atom(null);
+export const colorSchemeAtom = atomWithAsyncStorage("colorScheme", null);

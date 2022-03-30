@@ -175,9 +175,38 @@ export default function ReplyModalScreen({
           onChangeText={(val) => setDraft(val)}
         ></TextInput>
         <View
-          style={{ flexDirection: "row", minHeight: 60, alignItems: "center" }}
+          style={{
+            flexDirection: "row",
+            minHeight: 60,
+            alignItems: "center",
+            flex: 1,
+          }}
         >
-          {!replyId && <ForumPicker />}
+          {!replyId && (
+            <Picker
+              style={{
+                ...styles.picker,
+                color: tintColor,
+                backgroundColor: backgroundColor,
+              }}
+              selectedValue={forumId as number}
+              onValueChange={(val: number) => {
+                if (val !== forumId) {
+                  setForumId(val);
+                }
+              }}
+            >
+              {forums
+                ?.filter((x) => x.id)
+                ?.map((forum: any) => (
+                  <Picker.Item
+                    key={forum.id}
+                    label={forum.name}
+                    value={forum.id}
+                  ></Picker.Item>
+                ))}
+            </Picker>
+          )}
           {cookies?.length ? (
             <Picker
               style={{
@@ -242,7 +271,9 @@ export default function ReplyModalScreen({
             </View>
           ))}
         </View>
-        <Footer></Footer>
+        <View style={{ ...styles.footer, paddingBottom: insets.bottom }}>
+          <Footer></Footer>
+        </View>
         <EmoticonPicker
           visible={emoticonPickerVisible}
           onInsert={(emoji) => {
@@ -253,42 +284,13 @@ export default function ReplyModalScreen({
     </View>
   );
 
-  function ForumPicker() {
-    return (
-      <Picker
-        style={{
-          ...styles.picker,
-          color: tintColor,
-          backgroundColor: backgroundColor,
-        }}
-        selectedValue={forumId as number}
-        onValueChange={(val: number) => {
-          if (val !== forumId) {
-            setForumId(val);
-          }
-        }}
-      >
-        {forums
-          ?.filter((x) => x.id)
-          ?.map((forum: any) => (
-            <Picker.Item
-              key={forum.id}
-              label={forum.name}
-              value={forum.id}
-            ></Picker.Item>
-          ))}
-      </Picker>
-    );
-  }
-
   function Footer() {
     return (
-      <View style={{ ...styles.footer, paddingBottom: insets.bottom }}>
+      <>
         <View style={styles.footerLeft}></View>
         <TouchableOpacity onPress={addEmoji} style={styles.icon}>
           <TabBarIcon color={tintColor} name="smile-o"></TabBarIcon>
         </TouchableOpacity>
-
         <TouchableOpacity onPress={addImage} style={styles.icon}>
           <TabBarIcon color={tintColor} name="image"></TabBarIcon>
         </TouchableOpacity>
@@ -298,7 +300,7 @@ export default function ReplyModalScreen({
         <TouchableOpacity onPress={submit} style={styles.icon}>
           <TabBarIcon color={tintColor} name="send"></TabBarIcon>
         </TouchableOpacity>
-      </View>
+      </>
     );
   }
 }
