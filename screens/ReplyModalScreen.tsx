@@ -139,71 +139,10 @@ export default function ReplyModalScreen({
           onChangeText={(val) => setDraft(val)}
         ></TextInput>
         <View style={{ flexDirection: "row" }}>
-          {!replyId && (
-            <Picker
-              style={{
-                ...styles.picker,
-                color: tintColor,
-                backgroundColor: backgroundColor,
-              }}
-              selectedValue={forumId as number}
-              onValueChange={(val: number) => {
-                if (val !== forumId) {
-                  setForumId(val);
-                }
-              }}
-            >
-              {forums
-                ?.filter((x) => x.id)
-                ?.map((forum: any) => (
-                  <Picker.Item
-                    key={forum.id}
-                    label={forum.name}
-                    value={forum.id}
-                  ></Picker.Item>
-                ))}
-            </Picker>
-          )}
-          {cookies?.length ? (
-            <Picker
-              style={{
-                ...styles.picker,
-                color: tintColor,
-                backgroundColor: backgroundColor,
-              }}
-              selectedValue={cookieCode}
-              onValueChange={(val: string) => setCookieCode(val)}
-            >
-              {cookies?.map((cookie: any) => (
-                <Picker.Item
-                  key={cookie.hash}
-                  label={cookie.name}
-                  value={cookie.code}
-                ></Picker.Item>
-              ))}
-            </Picker>
-          ) : (
-            <Text style={{ ...styles.picker, padding: 10 }}>
-              没有可用的饼干
-            </Text>
-          )}
+          {!replyId && <ForumPicker />}
+          <CookiePicker></CookiePicker>
         </View>
-        <View style={{ ...styles.footer, paddingBottom: insets.bottom }}>
-          <View style={styles.footerLeft}></View>
-          <TouchableOpacity onPress={addEmoji} style={styles.icon}>
-            <TabBarIcon color={tintColor} name="smile-o"></TabBarIcon>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={addImage} style={styles.icon}>
-            <TabBarIcon color={tintColor} name="image"></TabBarIcon>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={addDice} style={styles.icon}>
-            <TabBarIcon color={tintColor} name="dot-circle-o"></TabBarIcon>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={submit} style={styles.icon}>
-            <TabBarIcon color={tintColor} name="send"></TabBarIcon>
-          </TouchableOpacity>
-        </View>
+        <Footer></Footer>
         <EmoticonPicker
           visible={emoticonPickerVisible}
           onInsert={(emoji) => {
@@ -213,6 +152,79 @@ export default function ReplyModalScreen({
       </KeyboardAvoidingView>
     </View>
   );
+
+  function ForumPicker() {
+    return (
+      <Picker
+        style={{
+          ...styles.picker,
+          color: tintColor,
+          backgroundColor: backgroundColor,
+        }}
+        selectedValue={forumId as number}
+        onValueChange={(val: number) => {
+          if (val !== forumId) {
+            setForumId(val);
+          }
+        }}
+      >
+        {forums
+          ?.filter((x) => x.id)
+          ?.map((forum: any) => (
+            <Picker.Item
+              key={forum.id}
+              label={forum.name}
+              value={forum.id}
+            ></Picker.Item>
+          ))}
+      </Picker>
+    );
+  }
+
+  function CookiePicker() {
+    return cookies?.length ? (
+      <Picker
+        style={{
+          ...styles.picker,
+          color: tintColor,
+          backgroundColor: backgroundColor,
+        }}
+        selectedValue={cookieCode}
+        onValueChange={(val: string) => setCookieCode(val)}
+      >
+        {cookies?.map((cookie: any) => (
+          <Picker.Item
+            key={cookie.hash}
+            label={cookie.name}
+            value={cookie.code}
+          ></Picker.Item>
+        ))}
+      </Picker>
+    ) : (
+      <Text style={{ ...styles.picker, padding: 10 }}>没有可用的饼干</Text>
+    );
+  }
+
+  function Footer() {
+    return (
+      <View style={{ ...styles.footer, paddingBottom: insets.bottom }}>
+        <View style={styles.footerLeft}></View>
+        <TouchableOpacity onPress={addEmoji} style={styles.icon}>
+          <TabBarIcon color={tintColor} name="smile-o"></TabBarIcon>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={addImage} style={styles.icon}>
+          <TabBarIcon color={tintColor} name="image"></TabBarIcon>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={addDice} style={styles.icon}>
+          <TabBarIcon color={tintColor} name="dot-circle-o"></TabBarIcon>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={submit} style={styles.icon}>
+          <TabBarIcon color={tintColor} name="send"></TabBarIcon>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 
 function EmoticonPicker(props: {
@@ -231,7 +243,7 @@ function EmoticonPicker(props: {
   return (
     <FlatList
       style={{
-        height: keyboard.keyboardHeight,
+        height: keyboard.keyboardHeight || 200,
         overflow: "scroll",
         display: props.visible ? "flex" : "none",
         flex: 1,

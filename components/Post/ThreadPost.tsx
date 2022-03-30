@@ -2,8 +2,8 @@ import { TouchableOpacity, Dimensions } from "react-native";
 import { useSetAtom } from "jotai";
 
 import { Post, Image } from "../../api";
-import { View, Text, useThemeColor } from "../Themed";
-import useForums, { useForumsIdMap } from "../../hooks/useForums";
+import { View } from "../Themed";
+import { useForumsIdMap } from "../../hooks/useForums";
 import { previewIndexAtom, previewsAtom } from "../../atoms";
 import { useNavigation } from "@react-navigation/native";
 import { useMemo } from "react";
@@ -17,7 +17,6 @@ export default function ThreadPost(props: { data: Partial<Post> }) {
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const navigation = useNavigation();
-  const borderColor = useThemeColor({}, "border");
   const images = useMemo(() => {
     const { data } = props;
     const result: Image[] = data.images || [];
