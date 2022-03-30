@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import {
   Platform,
@@ -17,7 +17,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Button, Text, useThemeColor, View } from "../components/Themed";
 import { RootStackScreenProps } from "../types";
-import { cookiesAtom, draftAtom } from "../atoms";
+import { cookiesAtom, draftAtom, postIdRefreshingAtom } from "../atoms";
 import TabBarIcon from "../components/TabBarIcon";
 import useForums, { useForumsIdMap } from "../hooks/useForums";
 import { addReply, uploadImage, Image } from "../api";
@@ -39,6 +39,7 @@ export default function ReplyModalScreen({
   const [emoticonPickerVisible, setEmoticonPickerVisible] = useState(false);
   const [cookies] = useAtom(cookiesAtom);
   const [draft, setDraft] = useAtom(draftAtom);
+  const setPostIdRefreshing = useSetAtom(postIdRefreshingAtom);
   const tintColor = useThemeColor({}, "tint");
   const backgroundColor = useThemeColor({}, "background");
   const forums = useForums();
@@ -104,15 +105,17 @@ export default function ReplyModalScreen({
       const {
         data: { info: newPostId, type },
       } = await addReply(params);
-      if (type === "OK") {
+      if (/ok/i.test(type)) {
+        if (typeof newPostId === "number") {
+          Toast.show("发送成功");
+        }
         if (!replyId) {
           navigation.navigate("Post", {
             id: newPostId,
             title: `${forumsIdMap.get(params.forum)} Po.${newPostId}`,
           });
-        }
-        if (typeof newPostId === "number") {
-          Toast.show("发送成功，请刷新页面");
+        } else {
+          setPostIdRefreshing(replyId);
         }
         setDraft("");
         close();
@@ -171,7 +174,9 @@ export default function ReplyModalScreen({
           value={draft}
           onChangeText={(val) => setDraft(val)}
         ></TextInput>
-        <View style={{ flexDirection: "row" }}>
+        <View
+          style={{ flexDirection: "row", minHeight: 60, alignItems: "center" }}
+        >
           {!replyId && <ForumPicker />}
           {cookies?.length ? (
             <Picker

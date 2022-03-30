@@ -80,3 +80,9 @@ export const signDictAtom = atomWithAsyncStorage("signDict", {}, true);
 export const showPageModalAtom = atom(false);
 
 export const showActionModalAtom = atom(false);
+
+export const sizeAtom = atomWithAsyncStorage("fontSize", "normal");
+
+export const postIdRefreshingAtom = atom(-1);
+
+export const colorSchemeAtom = atom(null);

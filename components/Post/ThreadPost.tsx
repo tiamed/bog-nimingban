@@ -1,4 +1,4 @@
-import { TouchableOpacity, Dimensions } from "react-native";
+import { Pressable } from "react-native";
 import { useSetAtom } from "jotai";
 
 import { Post, Image } from "../../api";
@@ -11,12 +11,14 @@ import HtmlView from "./HtmlView";
 import Header from "./Header";
 import ImageView, { getImageUrl, getThumbnailUrl } from "./ImageView";
 import Wrapper from "./Wrapper";
+import useSize from "../../hooks/useSize";
 
 export default function ThreadPost(props: { data: Partial<Post> }) {
   const forumsIdMap = useForumsIdMap();
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const navigation = useNavigation();
+  const BASE_SIZE = useSize();
   const images = useMemo(() => {
     const { data } = props;
     const result: Image[] = data.images || [];
@@ -29,7 +31,7 @@ export default function ThreadPost(props: { data: Partial<Post> }) {
   }, [props.data]);
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={() => {
         navigation.navigate("Post", {
           id: props.data.id as number,
@@ -52,6 +54,7 @@ export default function ThreadPost(props: { data: Partial<Post> }) {
           <View
             style={{
               flex: 2,
+              maxHeight: BASE_SIZE * 1.3 * 10,
             }}
           >
             <HtmlView content={props.data.content as string}></HtmlView>
@@ -81,6 +84,6 @@ export default function ThreadPost(props: { data: Partial<Post> }) {
           )}
         </View>
       </Wrapper>
-    </TouchableOpacity>
+    </Pressable>
   );
 }

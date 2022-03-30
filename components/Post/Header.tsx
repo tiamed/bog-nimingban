@@ -3,6 +3,7 @@ import { zhCN } from "date-fns/locale";
 
 import { Post } from "../../api";
 import useForums, { useForumsIdMap } from "../../hooks/useForums";
+import useSize from "../../hooks/useSize";
 import { View, Text } from "../Themed";
 
 export default function Header(props: {
@@ -12,6 +13,7 @@ export default function Header(props: {
 }) {
   const forums = useForums();
   const forumsIdMap = useForumsIdMap();
+  const BASE_SIZE = useSize();
 
   return (
     <View
@@ -25,7 +27,7 @@ export default function Header(props: {
             lightColor="white"
             darkColor="white"
             style={{
-              fontSize: 11,
+              fontSize: BASE_SIZE * 0.8,
               backgroundColor: "#FC88B3",
               marginRight: 2,
               borderRadius: 2,
@@ -35,16 +37,22 @@ export default function Header(props: {
             Po
           </Text>
         )}
-        <Text lightColor="#FC88B3" darkColor="#FC88B3" style={{ fontSize: 11 }}>
+        <Text
+          lightColor="#FC88B3"
+          darkColor="#FC88B3"
+          style={{ fontSize: BASE_SIZE * 0.8 }}
+        >
           {props.data.cookie}
         </Text>
       </View>
-      <Text style={{ fontSize: 11, flex: 1 }}>Po.{props.data.id}</Text>
+      <Text style={{ fontSize: BASE_SIZE * 0.8, flex: 1 }}>
+        Po.{props.data.id}
+      </Text>
       <View style={{ flex: 2, flexDirection: "column" }}>
         <Text
           lightColor="#666666"
           darkColor="#999999"
-          style={{ fontSize: 11, flex: 2, textAlign: "right" }}
+          style={{ fontSize: BASE_SIZE * 0.8, flex: 2, textAlign: "right" }}
         >
           {renderTime(props.data.root, props.data.time)}
         </Text>
@@ -54,7 +62,7 @@ export default function Header(props: {
               lightColor="white"
               darkColor="white"
               style={{
-                fontSize: 11,
+                fontSize: BASE_SIZE * 0.8,
                 backgroundColor: "#FD4C5D",
                 padding: 2,
                 paddingLeft: 6,

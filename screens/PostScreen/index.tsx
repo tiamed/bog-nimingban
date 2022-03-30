@@ -13,6 +13,7 @@ import {
   draftAtom,
   showActionModalAtom,
   currentPostAtom,
+  postIdRefreshingAtom,
 } from "../../atoms/index";
 import { getImageUrl, getThumbnailUrl } from "../../components/Post/ImageView";
 import ReplyPost from "../../components/Post/ReplyPost";
@@ -38,6 +39,7 @@ export default function PostScreen({
   const [lastPageFinished, setLastPageFinished] = useState(false);
 
   const [focusItem, setFocusItem] = useState({} as Reply);
+  const [postIdRefreshing, setPostIdRefreshing] = useAtom(postIdRefreshingAtom);
   const setPreviews = useSetAtom(previewsAtom);
   const [history, setHistory] = useAtom<UserHistory[], UserHistory[], void>(
     historyAtom
@@ -186,6 +188,14 @@ export default function PostScreen({
       setMainPost({} as Post);
     };
   }, [route.params.id]);
+
+  useEffect(() => {
+    if (postIdRefreshing === route.params.id) {
+      loadMoreData(true).then(() => {
+        setPostIdRefreshing(-1);
+      });
+    }
+  }, [postIdRefreshing]);
 
   return (
     <View style={{ ...styles.container, paddingBottom: insets.bottom }}>

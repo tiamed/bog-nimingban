@@ -1,13 +1,12 @@
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
 
-import { Button, Text, useThemeColor, View } from "../components/Themed";
-import { RootTabScreenProps } from "../types";
-import { cookiesAtom, signDictAtom } from "../atoms/index";
+import { Button, Text, useThemeColor, View } from "../../components/Themed";
+import { cookiesAtom, signDictAtom } from "../../atoms/index";
 import { atom, useAtom, useSetAtom } from "jotai";
-import TabBarIcon from "../components/TabBarIcon";
+import TabBarIcon from "../../components/TabBarIcon";
 import Modal from "react-native-modal";
 import { useEffect, useState } from "react";
-import { SignInfo, signIn, getCookie } from "../api";
+import { SignInfo, signIn, getCookie } from "../../api";
 import Toast from "react-native-root-toast";
 import { parseISO, addSeconds, format, formatRelative } from "date-fns";
 import { zhCN } from "date-fns/locale";
@@ -25,9 +24,7 @@ interface SignDict {
 
 const showAddModalAtom = atom(false);
 
-export default function ProfileScreen({
-  navigation,
-}: RootTabScreenProps<"Profile">) {
+export default function Cookie() {
   const [current, setCurrent] = useState<Cookie | undefined>(undefined);
   const [cookies, setCookies] = useAtom<Cookie[], Cookie[], void>(cookiesAtom);
   const [signDict, setSignDict] = useAtom<SignDict, SignDict, void>(
@@ -226,7 +223,6 @@ function AddModal(props: { cookie?: Cookie }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "flex-start",
     justifyContent: "flex-start",
     paddingLeft: 15,
