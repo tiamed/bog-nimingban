@@ -1,5 +1,4 @@
-import { StatusBar } from "expo-status-bar";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import {
   Platform,
@@ -8,7 +7,6 @@ import {
   KeyboardAvoidingView,
   FlatList,
   Keyboard,
-  TouchableWithoutFeedback,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useKeyboard } from "@react-native-community/hooks";
@@ -21,7 +19,6 @@ import TabBarIcon from "../components/TabBarIcon";
 import useForums, { useForumsIdMap } from "../hooks/useForums";
 import { addReply, Image } from "../api";
 import Toast from "react-native-root-toast";
-import * as ImagePicker from "expo-image-picker";
 import { TextInput } from "react-native";
 
 import useEmoticons from "../hooks/useEmoticons";

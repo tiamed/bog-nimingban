@@ -46,8 +46,8 @@ export default function QuoteModalScreen({
       <View style={styles.actionWrapper}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Post", {
-              id: data.res,
+            navigation.push("Post", {
+              id: data.res || data.id,
               title: "",
             });
           }}
