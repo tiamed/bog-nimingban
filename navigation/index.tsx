@@ -15,7 +15,14 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import * as Clipboard from "expo-clipboard";
 
 import * as React from "react";
-import { AppState, ColorSchemeName, Platform, Pressable } from "react-native";
+import {
+  Alert,
+  AppState,
+  ColorSchemeName,
+  Platform,
+  Pressable,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
@@ -25,10 +32,10 @@ import NotFoundScreen from "../screens/NotFoundScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import HomeScreen from "../screens/HomeScreen";
 import FavoriteScreen from "../screens/FavoriteScreen";
-import HistoryScreen from "../screens/HistoryScreen";
+import HistoryScreen, { UserHistory } from "../screens/HistoryScreen";
 import PostScreen from "../screens/PostScreen";
 import DrawerContent from "../components/DrawerContent";
-import { tabRefreshingAtom } from "../atoms";
+import { tabRefreshingAtom, historyAtom } from "../atoms";
 import {
   RootStackParamList,
   RootTabParamList,
@@ -39,7 +46,9 @@ import { useAtom, useSetAtom } from "jotai";
 import TabBarIcon from "../components/TabBarIcon";
 import ReplyModalScreen from "../screens/ReplyModalScreen";
 import SearchModalScreen from "../screens/SearchModalScreen";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { addClipboardListener } from "expo-clipboard";
+import { Post } from "../api";
 
 export default function Navigation({
   colorScheme,
@@ -64,26 +73,51 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const appState = useRef(AppState.currentState);
-  const [lastCopy, setLastCopy] = useState("");
   const navigation = useNavigation();
+
+  const onClipboardChange = (
+    threadId: string | undefined,
+    history: UserHistory[]
+  ): void => {
+    const shouldShowConfirm =
+      threadId &&
+      !history
+        .slice(0, 5)
+        .some((item) => (item as unknown as Post)?.id === Number(threadId));
+    if (shouldShowConfirm) {
+      showNavigateConfirm(threadId);
+    }
+  };
+
+  const showNavigateConfirm = (threadId: string) => {
+    Alert.alert("检测到串号，是否跳转Po." + threadId, "", [
+      { text: "取消" },
+      {
+        text: "确认",
+        onPress: () => {
+          navigation.navigate("Post", {
+            id: Number(threadId),
+            title: `Po.${threadId}`,
+          });
+        },
+      },
+    ]);
+  };
+
   useEffect(() => {
     AppState.addEventListener("change", (nextAppState) => {
       if (nextAppState === "active") {
-        Clipboard.getStringAsync().then((text) => {
-          if (text !== lastCopy) {
-            const thread = text.match(/http:\/\/bog\.ac\/t\/([0-9]{0,})/);
-            if (thread?.[1]) {
-              navigation.navigate("Post", {
-                id: Number(thread?.[1]),
-                title: `Po.${thread?.[1]}`,
-              });
-              setLastCopy(text);
-            }
-          }
+        Clipboard.getStringAsync().then(async (text) => {
+          const thread = text.match(/http:\/\/bog\.ac\/t\/([0-9]{0,})/);
+          const threadId = thread?.[1];
+          const history = await AsyncStorage.getItem("history");
+          const historyList = JSON.parse(history || "[]");
+          onClipboardChange(threadId, historyList);
         });
       }
     });
   }, [appState.current]);
+
   return (
     <Stack.Navigator>
       <Stack.Screen
