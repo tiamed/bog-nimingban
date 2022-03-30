@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import Modal from "react-native-modal";
 import { decode } from "html-entities";
@@ -7,8 +7,9 @@ import Toast from "react-native-root-toast";
 import { useNavigation } from "@react-navigation/native";
 
 import { Text, View } from "../../components/Themed";
-import { Reply } from "../../api";
-import { showActionModalAtom } from "../../atoms/index";
+import { Reply, deleteReply } from "../../api";
+import { cookiesAtom, showActionModalAtom } from "../../atoms/index";
+import { Cookie } from "../ProfileScreen";
 
 export default function ActionModal(props: {
   item: Reply;
@@ -16,6 +17,7 @@ export default function ActionModal(props: {
   forumId: number;
 }) {
   const [visible, setVisible] = useAtom(showActionModalAtom);
+  const [cookies] = useAtom<Cookie[]>(cookiesAtom);
   const navigation = useNavigation();
   const close = () => {
     setVisible(false);
@@ -32,6 +34,35 @@ export default function ActionModal(props: {
     Clipboard.setString(decode(props.item.content)?.replace(/<[^>]*>/g, ""));
     close();
     Toast.show("已复制到剪贴板");
+  };
+
+  const onDelete = () => {
+    Alert.alert("确认删除吗？", "", [
+      { text: "取消" },
+      {
+        text: "确认",
+        onPress: async () => {
+          const replyCookie = cookies.find(
+            (cookie) => cookie.code.indexOf(props.item.cookie) !== -1
+          );
+          try {
+            const {
+              data: { type, info },
+            } = await deleteReply(
+              props.item.id,
+              `${props.item.cookie}#${replyCookie?.hash}`
+            );
+            if (type === "OK") {
+              Toast.show("删除成功，请刷新页面");
+            } else {
+              Toast.show(info.toString() || "出错了");
+            }
+          } finally {
+            close();
+          }
+        },
+      },
+    ]);
   };
 
   return (
@@ -53,6 +84,15 @@ export default function ActionModal(props: {
             <Text>复制</Text>
           </View>
         </TouchableOpacity>
+        {cookies.find(
+          (cookie) => cookie.code.indexOf(props.item.cookie) !== -1
+        ) && (
+          <TouchableOpacity onPress={onDelete}>
+            <View style={styles.actionModalItem}>
+              <Text>删除</Text>
+            </View>
+          </TouchableOpacity>
+        )}
       </View>
     </Modal>
   );

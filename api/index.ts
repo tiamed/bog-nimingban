@@ -60,7 +60,7 @@ export interface ReplyRequest {
   comment: string; // 内容
   cookie: string; // 饼干
   webapp: number; // 使用post提交必须包含这个参数，发送1
-  img: Image[];
+  img: string[];
 }
 
 export interface UploadResponse {
@@ -105,10 +105,18 @@ export const signIn = (cookie: string, hash: string) =>
 export const addReply = (data: ReplyRequest) =>
   axios.post<CommonResponse<number>>("/post/post", data);
 
-export const uploadImage = (images: FormData) =>
-  axios.post("/post/upload", images, {
-    disableQs: true,
-  } as AxiosRequestConfig);
+export const deleteReply = (id: number, cookie: string) =>
+  axios.post(`/post/del/${id}`, { cookie });
+
+export const uploadImage = (image: FormData) =>
+  fetch("http://bog.ac/post/upload", {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "multipart/form-data",
+    },
+    method: "POST",
+    body: image,
+  }).then((res) => res.json());
 
 export const getCookie = () =>
   axios.post<CommonResponse<string>>("/post/cookieGet");

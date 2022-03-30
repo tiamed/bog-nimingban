@@ -25,26 +25,30 @@ export default function PreviewModalScreen() {
     if (!status?.granted) {
       requestPermission();
     } else {
-      const { uri } = await FileSystem.downloadAsync(
-        previews[previewIndex].url,
-        FileSystem.documentDirectory +
-          previews[previewIndex].url.replace("http://bog.ac/image/large/", "")
-      );
+      try {
+        const { uri } = await FileSystem.downloadAsync(
+          previews[previewIndex].url,
+          FileSystem.documentDirectory +
+            previews[previewIndex].url.replace("http://bog.ac/image/large/", "")
+        );
 
-      const asset = await MediaLibrary.createAssetAsync(uri);
-      const album = await MediaLibrary.createAlbumAsync(
-        "bog-nimingban",
-        asset,
-        false
-      );
-      Toast.show("已保存图片", {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
+        const asset = await MediaLibrary.createAssetAsync(uri);
+        const album = await MediaLibrary.createAlbumAsync(
+          "bog-nimingban",
+          asset,
+          false
+        );
+        Toast.show("已保存图片", {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+        });
+      } catch (error) {
+        Toast.show(error);
+      }
     }
   };
   return (

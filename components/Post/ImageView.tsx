@@ -7,12 +7,13 @@ export default function ImageView(props: {
   data: Image;
   style: StyleProp<any>;
   imageStyle: StyleProp<any>;
+  path?: string;
 }) {
   return (
     <TouchableOpacity onPress={props.onPress} style={props.style}>
       <CachedImage
-        source={{ uri: getThumbnailUrl(props.data) }}
-        cacheKey={`${props.data.url}-thumb`}
+        source={{ uri: getThumbnailUrl(props.data, props.path) }}
+        cacheKey={`${props.data.url}-thumb-${props.path || ""}`}
         resizeMode="contain"
         style={props.imageStyle}
       />
@@ -20,8 +21,11 @@ export default function ImageView(props: {
   );
 }
 
-export function getThumbnailUrl(image: any) {
-  return `http://bog.ac/image/thumb/${image.url}${image.ext}`;
+export function getThumbnailUrl(image: any, path: string = "image") {
+  if (path === "image_pre") {
+    return `http://bog.ac/${path}/thumb/${image.url}`;
+  }
+  return `http://bog.ac/${path}/thumb/${image.url}${image.ext}`;
 }
 
 export function getImageUrl(image: any) {

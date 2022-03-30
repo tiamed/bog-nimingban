@@ -12,10 +12,11 @@ import Toast from "react-native-root-toast";
 import { parseISO, addSeconds, format, formatRelative } from "date-fns";
 import { zhCN } from "date-fns/locale";
 
-interface Cookie {
+export interface Cookie {
   name: string;
   code: string;
   hash: string;
+  id: string;
 }
 
 interface SignDict {
@@ -75,7 +76,7 @@ export default function ProfileScreen({
     } = await getCookie();
     if (code === 2) {
       const [name, hash] = info.split("#");
-      setCurrent({ name, code: info, hash });
+      setCurrent({ name, code: info, hash, id: name });
       setShowAddModal(true);
     } else {
       switch (code) {
@@ -90,20 +91,15 @@ export default function ProfileScreen({
             )} 才可以获取饼干`
           );
           break;
-        case 2002:
-          Toast.show("当前关闭了饼干领取");
-          break;
-        case 2003:
-          Toast.show("IP地址不合理，有可能是伪造的IP地址");
-          break;
-        case 2004:
-          Toast.show("饼干领取系统调用限制");
-          break;
-        case 2005:
-          Toast.show("IP地址不在系统允许的范围内");
-          break;
         default:
-          Toast.show(info);
+          Toast.show(
+            {
+              2002: "当前关闭了饼干领取",
+              2003: "IP地址不合理，有可能是伪造的IP地址",
+              2004: "饼干领取系统调用限制",
+              2005: "IP地址不在系统允许的范围内",
+            }[code] || info
+          );
           break;
       }
     }
@@ -178,6 +174,7 @@ function AddModal(props: { cookie?: Cookie }) {
           name: name || id,
           code: `${id}#${hash}#${id}`,
           hash: hash,
+          id,
         },
       ]);
     }
