@@ -137,7 +137,29 @@ export default function ReplyModalScreen({
         ></TextInput>
         <View style={{ flexDirection: "row" }}>
           {!replyId && <ForumPicker />}
-          <CookiePicker></CookiePicker>
+          {cookies?.length ? (
+            <Picker
+              style={{
+                ...styles.picker,
+                color: tintColor,
+                backgroundColor: backgroundColor,
+              }}
+              selectedValue={cookieCode}
+              onValueChange={(val: string) => setCookieCode(val)}
+            >
+              {cookies?.map((cookie: any) => (
+                <Picker.Item
+                  key={cookie.hash}
+                  label={cookie.name}
+                  value={cookie.code}
+                ></Picker.Item>
+              ))}
+            </Picker>
+          ) : (
+            <Text style={{ ...styles.picker, padding: 10 }}>
+              没有可用的饼干
+            </Text>
+          )}
         </View>
         <Footer></Footer>
         <EmoticonPicker
@@ -175,30 +197,6 @@ export default function ReplyModalScreen({
             ></Picker.Item>
           ))}
       </Picker>
-    );
-  }
-
-  function CookiePicker() {
-    return cookies?.length ? (
-      <Picker
-        style={{
-          ...styles.picker,
-          color: tintColor,
-          backgroundColor: backgroundColor,
-        }}
-        selectedValue={cookieCode}
-        onValueChange={(val: string) => setCookieCode(val)}
-      >
-        {cookies?.map((cookie: any) => (
-          <Picker.Item
-            key={cookie.hash}
-            label={cookie.name}
-            value={cookie.code}
-          ></Picker.Item>
-        ))}
-      </Picker>
-    ) : (
-      <Text style={{ ...styles.picker, padding: 10 }}>没有可用的饼干</Text>
     );
   }
 
