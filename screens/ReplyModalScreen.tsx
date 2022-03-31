@@ -39,6 +39,7 @@ export default function ReplyModalScreen({
   const [emoticonPickerVisible, setEmoticonPickerVisible] = useState(false);
   const [cookies] = useAtom(cookiesAtom);
   const [draft, setDraft] = useAtom(draftAtom);
+  const [selection, setSelection] = useState({ start: 0, end: 0 });
   const setPostIdRefreshing = useSetAtom(postIdRefreshingAtom);
   const tintColor = useThemeColor({}, "tint");
   const backgroundColor = useThemeColor({}, "background");
@@ -49,12 +50,20 @@ export default function ReplyModalScreen({
   };
 
   const addDice = () => {
-    setDraft(draft + "[0-9]");
+    insertDraft("[0-9]");
   };
 
   const addEmoji = () => {
     Keyboard.dismiss();
     setEmoticonPickerVisible(!emoticonPickerVisible);
+  };
+
+  const insertDraft = (str: string) => {
+    setDraft(
+      [draft.slice(0, selection.start), str, draft.slice(selection.end)].join(
+        ""
+      )
+    );
   };
 
   const addImage = async () => {
@@ -172,6 +181,10 @@ export default function ReplyModalScreen({
           selectionColor={tintColor}
           style={styles.input}
           value={draft}
+          selection={selection}
+          onSelectionChange={(event) => {
+            setSelection(event.nativeEvent.selection);
+          }}
           onChangeText={(val) => setDraft(val)}
         ></TextInput>
         <View
@@ -277,7 +290,7 @@ export default function ReplyModalScreen({
         <EmoticonPicker
           visible={emoticonPickerVisible}
           onInsert={(emoji) => {
-            setDraft(draft + emoji);
+            insertDraft(emoji);
           }}
         ></EmoticonPicker>
       </KeyboardAvoidingView>
