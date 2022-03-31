@@ -1,4 +1,5 @@
 import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import * as Clipboard from "expo-clipboard";
 
 import { Button, Text, useThemeColor, View } from "../../components/Themed";
 import { cookiesAtom, signDictAtom } from "../../atoms/index";
@@ -102,6 +103,14 @@ export default function Cookie() {
     }
   };
 
+  const handleCopy = (cookie: Cookie) => {
+    const cookieCodeDisposable = cookie.id
+      ? `${cookie.id}#${cookie.hash}`
+      : cookie.code.split("#").slice(0, 2).join("#");
+    Clipboard.setString(cookieCodeDisposable);
+    Toast.show(`饼干${cookie.name}已导出到剪贴板`);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>饼干管理</Text>
@@ -116,6 +125,12 @@ export default function Cookie() {
               }}
             >
               <TabBarIcon name="edit" color={iconColor}></TabBarIcon>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.edit}
+              onPress={handleCopy.bind(null, cookie)}
+            >
+              <TabBarIcon name="download" color={iconColor}></TabBarIcon>
             </TouchableOpacity>
             <Text style={styles.cookieName}>{cookie.name}</Text>
             <Text style={styles.cookieSigned}>
