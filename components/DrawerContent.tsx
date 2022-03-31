@@ -8,16 +8,18 @@ export default function DrawerContent(props: any) {
   const setThread = useSetAtom(threadAtom);
   return (
     <DrawerContentScrollView>
-      {forums?.map((forum) => (
-        <DrawerItem
-          key={forum.id}
-          label={forum.name}
-          onPress={() => {
-            setThread(forum.id);
-            props.navigation.closeDrawer();
-          }}
-        ></DrawerItem>
-      ))}
+      {forums
+        ?.filter((forum) => !forum.hide)
+        ?.map((forum) => (
+          <DrawerItem
+            key={forum.id}
+            label={forum.name}
+            onPress={() => {
+              setThread(forum.id);
+              props.navigation.closeDrawer();
+            }}
+          ></DrawerItem>
+        ))}
     </DrawerContentScrollView>
   );
 }
