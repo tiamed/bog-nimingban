@@ -47,7 +47,7 @@ export default function PreviewModalScreen() {
           delay: 0,
         });
       } catch (error) {
-        Toast.show(error);
+        Toast.show(error as string);
       }
     }
   };

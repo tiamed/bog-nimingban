@@ -9,7 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Text, View } from "../../components/Themed";
 import { Reply, deleteReply } from "../../api";
 import { cookiesAtom, showActionModalAtom } from "../../atoms/index";
-import { Cookie } from "../ProfileScreen";
+import { Cookie } from "../ProfileScreen/Cookie";
 
 export default function ActionModal(props: {
   item: Reply;

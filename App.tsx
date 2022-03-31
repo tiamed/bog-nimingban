@@ -5,6 +5,7 @@ import { RootSiblingParent } from "react-native-root-siblings";
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
+import { ColorSchemeProvider } from "./components/ThemeContextProvider";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -15,10 +16,12 @@ export default function App() {
   } else {
     return (
       <RootSiblingParent>
-        <SafeAreaProvider>
-          <Navigation colorScheme={colorScheme} />
-          <StatusBar />
-        </SafeAreaProvider>
+        <ColorSchemeProvider>
+          <SafeAreaProvider>
+            <Navigation colorScheme={colorScheme} />
+            <StatusBar />
+          </SafeAreaProvider>
+        </ColorSchemeProvider>
       </RootSiblingParent>
     );
   }
