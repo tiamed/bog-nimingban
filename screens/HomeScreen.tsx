@@ -118,7 +118,9 @@ export default function HomeScreen({
         data={posts}
         refreshing={isRefreshing}
         onRefresh={refreshPosts}
-        renderItem={({ item }) => <ThreadPost key={item.id} data={item} />}
+        renderItem={({ item }) => (
+          <ThreadPost key={item.id} data={item} maxLine={10} />
+        )}
         onEndReached={loadMoreData}
         onEndReachedThreshold={0.1}
         ListFooterComponent={renderFooter.bind(null, isLoading, hasNoMore)}

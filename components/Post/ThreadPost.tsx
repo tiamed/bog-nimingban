@@ -13,7 +13,11 @@ import ImageView, { getImageUrl, getThumbnailUrl } from "./ImageView";
 import Wrapper from "./Wrapper";
 import useSize from "../../hooks/useSize";
 
-export default function ThreadPost(props: { data: Partial<Post> }) {
+export default function ThreadPost(props: {
+  data: Partial<Post>;
+  onPress?: () => void;
+  maxLine?: number;
+}) {
   const forumsIdMap = useForumsIdMap();
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
@@ -30,17 +34,17 @@ export default function ThreadPost(props: { data: Partial<Post> }) {
     return result;
   }, [props.data]);
 
+  const OnPress = () => {
+    navigation.navigate("Post", {
+      id: props.data.id as number,
+      title: `${forumsIdMap.get(props.data.forum as number)} Po.${
+        props.data.id
+      }`,
+    });
+  };
+
   return (
-    <Pressable
-      onPress={() => {
-        navigation.navigate("Post", {
-          id: props.data.id as number,
-          title: `${forumsIdMap.get(props.data.forum as number)} Po.${
-            props.data.id
-          }`,
-        });
-      }}
-    >
+    <Pressable onPress={props.onPress || OnPress}>
       <Wrapper>
         <Header data={props.data} isPo={false} showForum></Header>
         <View
@@ -54,7 +58,7 @@ export default function ThreadPost(props: { data: Partial<Post> }) {
           <View
             style={{
               flex: 2,
-              maxHeight: BASE_SIZE * 1.3 * 10,
+              maxHeight: BASE_SIZE * 1.3 * (props.maxLine || 50),
             }}
           >
             <HtmlView content={props.data.content as string}></HtmlView>

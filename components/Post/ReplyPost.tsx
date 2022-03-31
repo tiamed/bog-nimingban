@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { Pressable } from "react-native";
 import { useAtom, useSetAtom } from "jotai";
 
 import { Post } from "../../api";
@@ -14,15 +14,18 @@ export default function ReplyPost(props: {
   data: Partial<Post>;
   po: string;
   onPress?: () => void;
+  width?: number | string;
+  level: number;
 }) {
   const [previews] = useAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const navigation = useNavigation();
+  const borderColor = useThemeColor({}, "border");
   const isPo = props.data.cookie === props.po;
 
   return (
-    <TouchableOpacity onPress={props.onPress}>
-      <Wrapper>
+    <Pressable onPress={props.onPress}>
+      <Wrapper width={props.width}>
         <Header data={props.data} isPo={isPo}></Header>
 
         <View
@@ -33,11 +36,16 @@ export default function ReplyPost(props: {
           }}
         >
           <View
-            style={{
-              flex: 1,
-            }}
+            style={
+              {
+                // flex: 1,
+              }
+            }
           >
-            <HtmlView content={props.data.content as string}></HtmlView>
+            <HtmlView
+              content={props.data.content as string}
+              level={props.level || 1}
+            ></HtmlView>
           </View>
           <View
             style={{
@@ -60,7 +68,7 @@ export default function ReplyPost(props: {
                 style={{
                   width: "48%",
                   aspectRatio: 1,
-                  borderColor: useThemeColor({}, "border"),
+                  borderColor: borderColor,
                   borderWidth: 1,
                   marginTop: 10,
                 }}
@@ -74,6 +82,6 @@ export default function ReplyPost(props: {
           </View>
         </View>
       </Wrapper>
-    </TouchableOpacity>
+    </Pressable>
   );
 }

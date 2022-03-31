@@ -1,22 +1,14 @@
-import React, { useEffect, useState } from "react";
-import {
-  Platform,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { useState } from "react";
+import { StyleSheet, TextInput } from "react-native";
 
-import { Button, Text, View } from "../components/Themed";
-import ThreadPost from "../components/Post/ThreadPost";
+import { Button, View } from "../components/Themed";
 import { RootStackScreenProps } from "../types";
-import { getReply } from "../api";
 import Overlay from "../components/Overlay";
 
-export default function QuoteModalScreen({
+export default function SearchModalScreen({
   route,
   navigation,
-}: RootStackScreenProps<"QuoteModal">) {
+}: RootStackScreenProps<"SearchModal">) {
   const [query, setQuery] = useState("");
   const confirm = () => {
     navigation.goBack();

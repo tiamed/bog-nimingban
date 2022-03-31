@@ -2,6 +2,7 @@ import { Dimensions } from "react-native";
 import { useThemeColor, View } from "../Themed";
 
 export default function Wrapper(props: {
+  width?: number | string;
   children: React.ReactElement | React.ReactElement[];
 }) {
   const borderColor = useThemeColor({}, "border");
@@ -9,7 +10,7 @@ export default function Wrapper(props: {
   return (
     <View
       style={{
-        width: Dimensions.get("window").width,
+        width: props.width || Dimensions.get("window").width,
         borderBottomColor: borderColor,
         alignSelf: "center",
         flexDirection: "column",

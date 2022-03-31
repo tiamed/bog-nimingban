@@ -1,10 +1,9 @@
-import { StyleSheet, FlatList, ActivityIndicator } from "react-native";
-import React, { useState, useEffect, useCallback } from "react";
+import { StyleSheet, FlatList } from "react-native";
 import { useAtom } from "jotai";
 
-import { Text, View, useThemeColor } from "../components/Themed";
+import { View } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
-import { Post, getPostsByForum } from "../api";
+import { Post } from "../api";
 import ThreadPost from "../components/Post/ThreadPost";
 import { renderFooter } from "./HomeScreen";
 import { historyAtom } from "../atoms";
@@ -29,6 +28,7 @@ export default function HistoryScreen({
             <ThreadPost
               key={(item as unknown as Post).id}
               data={item as unknown as Post}
+              maxLine={10}
             />
           )
         }

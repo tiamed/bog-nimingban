@@ -1,15 +1,16 @@
+import React, { useEffect, useState } from "react";
 import { decode } from "html-entities";
 import HTMLView from "react-native-htmlview";
-import { Linking, Pressable } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { Dimensions, Linking, Pressable } from "react-native";
+import Collapsible from "react-native-collapsible";
 
 import { View, Text } from "../Themed";
 import useSize from "../../hooks/useSize";
+import ReplyPostWithoutData from "./ReplyPostWithoutData";
 
-export default function HtmlView(props: { content: string }) {
-  const navigation = useNavigation();
-  const BASE_SIZE = useSize();
+const width = Dimensions.get("window").width;
 
+export default function HtmlView(props: { content: string; level?: number }) {
   return <HTMLView value={props.content} renderNode={renderNode}></HTMLView>;
 
   function renderNode(
@@ -21,7 +22,7 @@ export default function HtmlView(props: { content: string }) {
   ) {
     if (node.attribs?.class === "quote") {
       const quote = decode(node.children[0].data);
-      return <Quote key={index} data={quote}></Quote>;
+      return <Quote key={index} data={quote} level={props.level || 1}></Quote>;
     }
     if (node.name === "a") {
       return <Link key={index} href={node.attribs?.href}></Link>;
@@ -33,32 +34,51 @@ export default function HtmlView(props: { content: string }) {
   }
 }
 
-function Quote(props: { data: string }) {
+function Quote(props: { data: string; level: number }) {
   const { data } = props;
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const BASE_SIZE = useSize();
-  const navigation = useNavigation();
+  const quoteId = Number(data.replace(/>>Po\./g, ""));
+
   return (
     <Pressable
       onPress={() => {
-        navigation.navigate("QuoteModal", {
-          id: Number(data.replace(/>>Po\./g, "")),
-        });
+        setIsCollapsed(!isCollapsed);
       }}
     >
-      <View style={{ flexDirection: "row", margin: 2 }}>
-        <Text
-          lightColor="#666666"
-          darkColor="#999999"
+      <View style={{ flexDirection: "column", margin: 2 }}>
+        <View style={{ flexDirection: "row" }}>
+          <Text
+            lightColor="#666666"
+            darkColor="#999999"
+            style={{
+              fontSize: BASE_SIZE * 0.8,
+              backgroundColor: "#eee",
+              width: "auto",
+              borderRadius: 2,
+              overflow: "hidden",
+            }}
+          >
+            {data}
+          </Text>
+        </View>
+        <Collapsible
+          key={quoteId}
+          collapsed={isCollapsed}
           style={{
-            fontSize: BASE_SIZE * 0.8,
-            backgroundColor: "#eee",
-            width: "auto",
-            borderRadius: 2,
-            overflow: "hidden",
+            borderWidth: 1,
+            borderColor: "#eee",
           }}
+          renderChildrenCollapsed={false}
+          enablePointerEvents={true}
+          collapsedHeight={0}
         >
-          {data}
-        </Text>
+          <ReplyPostWithoutData
+            id={quoteId}
+            width={width * 0.9 ** props.level}
+            level={props.level + 1}
+          ></ReplyPostWithoutData>
+        </Collapsible>
       </View>
     </Pressable>
   );

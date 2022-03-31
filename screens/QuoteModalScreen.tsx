@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Platform, StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { useAtom } from "jotai";
 
 import { Text, useThemeColor, View } from "../components/Themed";
@@ -8,6 +8,7 @@ import { RootStackScreenProps } from "../types";
 import { getReply, Post, Reply } from "../api";
 import { currentPostAtom } from "../atoms";
 import Overlay from "../components/Overlay";
+import Toast from "react-native-root-toast";
 
 export default function QuoteModalScreen({
   route,
@@ -15,7 +16,6 @@ export default function QuoteModalScreen({
 }: RootStackScreenProps<"QuoteModal">) {
   const [data, setData] = useState<Reply>({ content: "加载中..." } as Reply);
   const [currentPost] = useAtom<Post>(currentPostAtom);
-  const tintColor = useThemeColor({}, "tint");
   const loadData = async () => {
     try {
       const {
@@ -43,26 +43,19 @@ export default function QuoteModalScreen({
       }}
     >
       <Overlay></Overlay>
-      <View style={styles.actionWrapper}>
-        <TouchableOpacity
-          onPress={() => {
+      <ThreadPost
+        data={data}
+        onPress={() => {
+          if (currentPost.id === data.res) {
+            Toast.show("已在当前串");
+          } else {
             navigation.push("Post", {
               id: data.res || data.id,
               title: "",
             });
-          }}
-          disabled={currentPost.id === data.res}
-        >
-          <Text
-            style={styles.action}
-            lightColor={tintColor}
-            darkColor={tintColor}
-          >
-            {currentPost.id === data.res ? "当前串" : "查看原串"}
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <ThreadPost data={data}></ThreadPost>
+          }
+        }}
+      ></ThreadPost>
     </View>
   );
 }

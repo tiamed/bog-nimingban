@@ -5,7 +5,6 @@ import Toast from "react-native-root-toast";
 
 import { useAtom } from "jotai";
 import React from "react";
-import { Platform, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { IImageInfo } from "react-native-image-zoom-viewer/built/image-viewer.type";
