@@ -1,4 +1,4 @@
-import { Pressable } from "react-native";
+import { PixelRatio, Pressable } from "react-native";
 import { useSetAtom } from "jotai";
 
 import { Post, Image } from "../../api";
@@ -58,7 +58,9 @@ export default function ThreadPost(props: {
           <View
             style={{
               flex: 2,
-              maxHeight: BASE_SIZE * 1.3 * (props.maxLine || 50),
+              maxHeight:
+                PixelRatio.roundToNearestPixel(BASE_SIZE * 1.3) *
+                (props.maxLine || 50),
             }}
           >
             <HtmlView content={props.data.content as string}></HtmlView>

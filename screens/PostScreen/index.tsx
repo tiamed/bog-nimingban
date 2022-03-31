@@ -23,6 +23,7 @@ import { useForumsIdMap } from "../../hooks/useForums";
 import Footer from "./Footer";
 import ActionModal from "./ActionModal";
 import PageModal from "./PageModal";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function PostScreen({
   route,
@@ -120,6 +121,17 @@ export default function PostScreen({
     }
   };
 
+  const updatePreviews = () => {
+    if (images.length) {
+      setPreviews(
+        images.map((item) => ({
+          url: getImageUrl(item),
+          originalUrl: getThumbnailUrl(item),
+        }))
+      );
+    }
+  };
+
   // 添加历史记录
   const addToHistory = () => {
     let newHistory = history.filter((x) => x.id) || [];
@@ -148,15 +160,12 @@ export default function PostScreen({
 
   // 更新预览图集合
   useEffect(() => {
-    if (images.length) {
-      setPreviews(
-        images.map((item) => ({
-          url: getImageUrl(item),
-          originalUrl: getThumbnailUrl(item),
-        }))
-      );
-    }
+    updatePreviews();
   }, [images]);
+
+  useFocusEffect(() => {
+    updatePreviews();
+  });
 
   // 更新历史记录
   useEffect(() => {

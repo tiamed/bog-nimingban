@@ -1,7 +1,7 @@
 import { Pressable } from "react-native";
 import { useAtom, useSetAtom } from "jotai";
 
-import { Post } from "../../api";
+import { Image, Post } from "../../api";
 import { View, useThemeColor } from "../Themed";
 import { previewIndexAtom, previewsAtom } from "../../atoms";
 import { useNavigation } from "@react-navigation/native";
@@ -14,14 +14,21 @@ export default function ReplyPost(props: {
   data: Partial<Post>;
   po: string;
   onPress?: () => void;
+  onImagePress?: (image: Image) => void;
   width?: number | string;
-  level: number;
+  level?: number;
 }) {
   const [previews] = useAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const navigation = useNavigation();
   const borderColor = useThemeColor({}, "border");
   const isPo = props.data.cookie === props.po;
+  const onImagePress = (image: Image) => {
+    setPreviewIndex(
+      previews.findIndex((item) => item.url === getImageUrl(image))
+    );
+    navigation.navigate("PreviewModal");
+  };
 
   return (
     <Pressable onPress={props.onPress}>
@@ -35,13 +42,7 @@ export default function ReplyPost(props: {
             flexWrap: "wrap",
           }}
         >
-          <View
-            style={
-              {
-                // flex: 1,
-              }
-            }
-          >
+          <View>
             <HtmlView
               content={props.data.content as string}
               level={props.level || 1}
@@ -57,14 +58,10 @@ export default function ReplyPost(props: {
             {props.data?.images?.map((image) => (
               <ImageView
                 key={image.url}
-                onPress={() => {
-                  setPreviewIndex(
-                    previews.findIndex(
-                      (item) => item.url === getImageUrl(image)
-                    )
-                  );
-                  navigation.navigate("PreviewModal");
-                }}
+                onPress={
+                  props.onImagePress?.bind(null, image) ||
+                  onImagePress.bind(null, image)
+                }
                 style={{
                   width: "48%",
                   aspectRatio: 1,

@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 import { Text, useThemeColor, View } from "../Themed";
 import ReplyPost from "./ReplyPost";
-import { getReply, Post, Reply } from "../../api";
-import { currentPostAtom } from "../../atoms";
+import { getReply, Post, Reply, Image } from "../../api";
+import { currentPostAtom, previewIndexAtom, previewsAtom } from "../../atoms";
 import { useNavigation } from "@react-navigation/native";
 import useSize from "../../hooks/useSize";
+import { getImageUrl, getThumbnailUrl } from "./ImageView";
 
 export default function ReplyPostWithoutData(props: {
   id: number;
@@ -17,6 +18,8 @@ export default function ReplyPostWithoutData(props: {
   const mounted = useRef(false);
   const [data, setData] = useState<Reply>({ content: "加载中..." } as Reply);
   const [currentPost] = useAtom<Post>(currentPostAtom);
+  const [previews, setPreviews] = useAtom(previewsAtom);
+  const setPreviewIndex = useSetAtom(previewIndexAtom);
   const tintColor = useThemeColor({}, "tint");
   const navigation = useNavigation();
   const BASE_SIZE = useSize();
@@ -80,6 +83,18 @@ export default function ReplyPostWithoutData(props: {
         po={currentPost.cookie}
         width={props.width}
         level={props.level}
+        onImagePress={(image: Image) => {
+          setPreviews(
+            data.images.map((item) => ({
+              url: getImageUrl(item),
+              originalUrl: getThumbnailUrl(item),
+            }))
+          );
+          setPreviewIndex(
+            data.images.findIndex((item) => item.url === image.url)
+          );
+          navigation.navigate("PreviewModal");
+        }}
       ></ReplyPost>
     </View>
   );

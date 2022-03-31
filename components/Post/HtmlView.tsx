@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { decode } from "html-entities";
 import HTMLView from "react-native-htmlview";
-import { Dimensions, Linking, Pressable } from "react-native";
+import { Dimensions, Linking, PixelRatio, Pressable } from "react-native";
 import Collapsible from "react-native-collapsible";
 
 import { View, Text } from "../Themed";
@@ -53,6 +53,7 @@ function Quote(props: { data: string; level: number }) {
             darkColor="#999999"
             style={{
               fontSize: BASE_SIZE * 0.8,
+              lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * 1.3),
               backgroundColor: "#eee",
               width: "auto",
               borderRadius: 2,
@@ -99,6 +100,7 @@ function Link(props: { href: string }) {
         darkColor="#FFB2A6"
         style={{
           fontSize: BASE_SIZE,
+          lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * 1.3),
         }}
       >
         {href}
@@ -116,7 +118,7 @@ function PureText(props: { children: any }) {
     <Text
       style={{
         fontSize: BASE_SIZE,
-        lineHeight: BASE_SIZE * 1.3,
+        lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * 1.3),
         textAlign: "left",
       }}
     >
