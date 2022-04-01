@@ -35,6 +35,9 @@ function FontPicker() {
           backgroundColor: backgroundColor,
           flex: 1,
         }}
+        itemStyle={{
+          color: tintColor,
+        }}
         selectedValue={size}
         onValueChange={(val: string) => setSize(val)}
       >
@@ -67,6 +70,9 @@ function ColorSchemePicker() {
           color: tintColor,
           backgroundColor: backgroundColor,
           flex: 1,
+        }}
+        itemStyle={{
+          color: tintColor,
         }}
         selectedValue={colorScheme}
         onValueChange={(val: any) => setColorScheme(val)}

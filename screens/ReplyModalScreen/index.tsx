@@ -5,26 +5,25 @@ import {
   StyleSheet,
   TouchableOpacity,
   KeyboardAvoidingView,
-  FlatList,
   Keyboard,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { useKeyboard } from "@react-native-community/hooks";
 import Toast from "react-native-root-toast";
 import { TextInput } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Button, Text, useThemeColor, View } from "../components/Themed";
-import { RootStackScreenProps } from "../types";
-import { cookiesAtom, draftAtom, postIdRefreshingAtom } from "../atoms";
-import TabBarIcon from "../components/TabBarIcon";
-import useForums, { useForumsIdMap } from "../hooks/useForums";
-import { addReply, uploadImage, Image } from "../api";
+import { Button, Text, useThemeColor, View } from "../../components/Themed";
+import { RootStackScreenProps } from "../../types";
+import { cookiesAtom, draftAtom, postIdRefreshingAtom } from "../../atoms";
+import TabBarIcon from "../../components/TabBarIcon";
+import useForums, { useForumsIdMap } from "../../hooks/useForums";
+import { addReply, uploadImage, Image } from "../../api";
 
-import useEmoticons from "../hooks/useEmoticons";
-import Overlay from "../components/Overlay";
-import ImageView from "../components/Post/ImageView";
+import Overlay from "../../components/Overlay";
+import ImageView from "../../components/Post/ImageView";
+import EmoticonPicker from "./EmoticonPicker";
+import Footer from "./Footer";
 
 export default function ReplyModalScreen({
   route,
@@ -154,14 +153,7 @@ export default function ReplyModalScreen({
   }, []);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#40404040",
-      }}
-    >
+    <View style={styles.modal}>
       <Overlay></Overlay>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -187,20 +179,16 @@ export default function ReplyModalScreen({
           }}
           onChangeText={(val) => setDraft(val)}
         ></TextInput>
-        <View
-          style={{
-            flexDirection: "row",
-            minHeight: 60,
-            alignItems: "center",
-            flex: 1,
-          }}
-        >
+        <View style={styles.pickerWrapper}>
           {!replyId && (
             <Picker
               style={{
                 ...styles.picker,
                 color: tintColor,
                 backgroundColor: backgroundColor,
+              }}
+              itemStyle={{
+                color: tintColor,
               }}
               selectedValue={forumId as number}
               onValueChange={(val: number) => {
@@ -227,6 +215,9 @@ export default function ReplyModalScreen({
                 color: tintColor,
                 backgroundColor: backgroundColor,
               }}
+              itemStyle={{
+                color: tintColor,
+              }}
               selectedValue={cookieCode}
               onValueChange={(val: string) => setCookieCode(val)}
             >
@@ -248,30 +239,15 @@ export default function ReplyModalScreen({
           style={{ flexDirection: "row", marginBottom: 10, flexWrap: "wrap" }}
         >
           {images.map((image) => (
-            <View
-              key={image.url}
-              style={{
-                width: "25%",
-                flexDirection: "row",
-                alignItems: "center",
-                marginTop: 10,
-              }}
-            >
+            <View key={image.url} style={styles.imageList}>
               <ImageView
                 data={image}
                 onPress={() => {}}
                 style={{
-                  aspectRatio: 1,
                   borderColor: tintColor,
-                  borderWidth: 1,
-                  marginRight: 5,
-                  width: "60%",
-                  height: "60%",
+                  ...styles.imageWrapper,
                 }}
-                imageStyle={{
-                  width: "100%",
-                  height: "100%",
-                }}
+                imageStyle={styles.image}
                 path="image_pre"
               ></ImageView>
               <TouchableOpacity
@@ -284,8 +260,15 @@ export default function ReplyModalScreen({
             </View>
           ))}
         </View>
-        <View style={{ ...styles.footer, paddingBottom: insets.bottom }}>
-          <Footer></Footer>
+        <View style={{ ...styles.footerWrapper, paddingBottom: insets.bottom }}>
+          <Footer
+            items={[
+              { icon: "smile-o", onPress: addEmoji },
+              { icon: "image", onPress: addImage },
+              { icon: "dot-circle-o", onPress: addDice },
+              { icon: "send", onPress: submit },
+            ]}
+          ></Footer>
         </View>
         <EmoticonPicker
           visible={emoticonPickerVisible}
@@ -296,81 +279,15 @@ export default function ReplyModalScreen({
       </KeyboardAvoidingView>
     </View>
   );
-
-  function Footer() {
-    return (
-      <>
-        <View style={styles.footerLeft}></View>
-        <TouchableOpacity onPress={addEmoji} style={styles.icon}>
-          <TabBarIcon color={tintColor} name="smile-o"></TabBarIcon>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={addImage} style={styles.icon}>
-          <TabBarIcon color={tintColor} name="image"></TabBarIcon>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={addDice} style={styles.icon}>
-          <TabBarIcon color={tintColor} name="dot-circle-o"></TabBarIcon>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={submit} style={styles.icon}>
-          <TabBarIcon color={tintColor} name="send"></TabBarIcon>
-        </TouchableOpacity>
-      </>
-    );
-  }
-}
-
-function EmoticonPicker(props: {
-  visible: boolean;
-  onInsert: (emoticon: string) => void;
-}) {
-  const emoticons = useEmoticons();
-  const [data, setData] = useState<string[]>([]);
-  const keyboard = useKeyboard();
-
-  useEffect(() => {
-    if (emoticons?.length) {
-      setData(emoticons?.map((x) => x?.value)?.flat());
-    }
-  }, [emoticons]);
-  return (
-    <FlatList
-      style={{
-        height: keyboard.keyboardHeight || 200,
-        overflow: "scroll",
-        display: props.visible ? "flex" : "none",
-        flex: 1,
-      }}
-      contentContainerStyle={{
-        height: "auto",
-      }}
-      columnWrapperStyle={{
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
-      numColumns={3}
-      data={data}
-      keyExtractor={(item) => item}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          onPress={() => {
-            props.onInsert(item);
-          }}
-          style={{
-            width: "33%",
-            justifyContent: "center",
-            alignItems: "center",
-            paddingTop: 5,
-            paddingBottom: 5,
-            marginTop: 1,
-          }}
-        >
-          <Text>{item}</Text>
-        </TouchableOpacity>
-      )}
-    ></FlatList>
-  );
 }
 
 const styles = StyleSheet.create({
+  modal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#40404040",
+  },
   overlay: {
     backgroundColor: "rgba(0,0,0,0.3)",
     flex: 1,
@@ -403,22 +320,38 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
   },
-  footer: {
+  pickerWrapper: {
+    flexDirection: "row",
+    minHeight: 60,
+    alignItems: "center",
+    flex: 1,
+  },
+  picker: {
+    flex: 1,
+  },
+  imageList: {
+    width: "25%",
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  imageWrapper: {
+    aspectRatio: 1,
+    borderWidth: 1,
+    marginRight: 5,
+    width: "60%",
+    height: "60%",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+  footerWrapper: {
     marginLeft: -10,
     marginRight: -10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     alignContent: "center",
-  },
-  icon: {
-    flex: 1,
-    alignItems: "center",
-  },
-  picker: {
-    flex: 1,
-  },
-  footerLeft: {
-    flex: 2,
   },
 });

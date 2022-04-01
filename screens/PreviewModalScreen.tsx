@@ -37,14 +37,7 @@ export default function PreviewModalScreen() {
           asset,
           false
         );
-        Toast.show("已保存图片", {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.BOTTOM,
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-        });
+        Toast.show("已保存图片");
       } catch (error) {
         Toast.show(error as string);
       }

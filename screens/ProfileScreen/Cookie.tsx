@@ -261,6 +261,7 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 10,
   },
   cookieSigned: {
