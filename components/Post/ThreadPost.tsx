@@ -1,10 +1,14 @@
 import { PixelRatio, Pressable } from "react-native";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 import { Post, Image } from "../../api";
 import { View } from "../Themed";
 import { useForumsIdMap } from "../../hooks/useForums";
-import { previewIndexAtom, previewsAtom } from "../../atoms";
+import {
+  previewIndexAtom,
+  previewsAtom,
+  threadDirectionAtom,
+} from "../../atoms";
 import { useNavigation } from "@react-navigation/native";
 import { useMemo } from "react";
 import HtmlView from "./HtmlView";
@@ -21,6 +25,7 @@ export default function ThreadPost(props: {
   const forumsIdMap = useForumsIdMap();
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
+  const [threadDirection] = useAtom(threadDirectionAtom);
   const navigation = useNavigation();
   const BASE_SIZE = useSize();
   const images = useMemo(() => {
@@ -49,7 +54,7 @@ export default function ThreadPost(props: {
         <Header data={props.data} isPo={false} showForum></Header>
         <View
           style={{
-            flexDirection: "row",
+            flexDirection: threadDirection,
             justifyContent: "space-between",
             overflow: "hidden",
             flexWrap: "wrap",
@@ -83,7 +88,7 @@ export default function ThreadPost(props: {
                 width: 150,
                 height: "100%",
                 minHeight: 150,
-                marginTop: 10,
+                marginTop: 2,
               }}
               style={{}}
             ></ImageView>

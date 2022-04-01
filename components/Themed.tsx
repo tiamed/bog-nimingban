@@ -11,6 +11,11 @@ import {
   Button as DefaultButton,
   TouchableOpacity,
 } from "react-native";
+import {
+  SuccessToast,
+  InfoToast,
+  ErrorToast,
+} from "react-native-toast-message";
 
 import Colors from "../constants/Colors";
 import { ColorSchemeContext } from "./ThemeContextProvider";
@@ -81,4 +86,37 @@ export function Button(props: ButtonProps) {
       </DefaultText>
     </TouchableOpacity>
   );
+}
+
+export function getToastConfig(theme: "light" | "dark") {
+  const backgroundColor = Colors[theme as "light" | "dark"]["background"];
+  const textColor = Colors[theme as "light" | "dark"]["text"];
+  const borderColor = Colors[theme as "light" | "dark"]["border"];
+
+  return {
+    success: (props: any) => (
+      <SuccessToast
+        {...props}
+        style={{ backgroundColor, borderLeftColor: "green" }}
+        text1Style={{ color: textColor }}
+        text2Style={{ color: borderColor }}
+      ></SuccessToast>
+    ),
+    info: (props: any) => (
+      <InfoToast
+        {...props}
+        style={{ backgroundColor, borderLeftColor: "gray" }}
+        text1Style={{ color: textColor }}
+        text2Style={{ color: borderColor }}
+      ></InfoToast>
+    ),
+    error: (props: any) => (
+      <ErrorToast
+        {...props}
+        style={{ backgroundColor, borderLeftColor: "red" }}
+        text1Style={{ color: textColor }}
+        text2Style={{ color: borderColor }}
+      ></ErrorToast>
+    ),
+  };
 }

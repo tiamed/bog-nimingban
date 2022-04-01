@@ -1,6 +1,8 @@
 import { StyleProp, TouchableOpacity } from "react-native";
 import CachedImage from "expo-cached-image";
 import { Image } from "../../api";
+import { thumbnailResizeAtom } from "../../atoms";
+import { useAtom } from "jotai";
 
 export default function ImageView(props: {
   onPress: () => void;
@@ -9,12 +11,13 @@ export default function ImageView(props: {
   imageStyle: StyleProp<any>;
   path?: string;
 }) {
+  const [thumbnailResize] = useAtom(thumbnailResizeAtom);
   return (
     <TouchableOpacity onPress={props.onPress} style={props.style}>
       <CachedImage
         source={{ uri: getThumbnailUrl(props.data, props.path) }}
         cacheKey={`${props.data.url}-thumb-${props.path || ""}`}
-        resizeMode="contain"
+        resizeMode={thumbnailResize}
         style={props.imageStyle}
       />
     </TouchableOpacity>

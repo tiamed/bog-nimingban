@@ -3,7 +3,7 @@ import * as Clipboard from "expo-clipboard";
 import Modal from "react-native-modal";
 import { decode } from "html-entities";
 import { useAtom } from "jotai";
-import Toast from "react-native-root-toast";
+import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 
 import { Text, View } from "../../components/Themed";
@@ -35,7 +35,7 @@ export default function ActionModal(props: {
   const onCopy = () => {
     Clipboard.setString(decode(props.item.content)?.replace(/<[^>]*>/g, ""));
     close();
-    Toast.show("已复制到剪贴板");
+    Toast.show({ type: "success", text1: "已复制到剪贴板" });
   };
 
   const onDelete = () => {
@@ -55,9 +55,12 @@ export default function ActionModal(props: {
               `${props.item.cookie}#${replyCookie?.hash}`
             );
             if (type === "OK") {
-              Toast.show("删除成功，请刷新页面");
+              Toast.show({ type: "success", text1: "删除成功，请刷新页面" });
             } else {
-              Toast.show(info.toString() || "出错了");
+              Toast.show({
+                type: "error",
+                text1: info.toString() || "出错了",
+              });
             }
           } finally {
             close();

@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Keyboard,
+  InteractionManager,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import Toast from "react-native-root-toast";
+import Toast from "react-native-toast-message";
 import { TextInput } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -35,15 +36,17 @@ export default function ReplyModalScreen({
   const [replyId, setReplyId] = useState<number | null | undefined>(null);
   const [cookieCode, setCookieCode] = useState("");
   const [images, setImages] = useState<Image[]>([]);
+  const [selection, setSelection] = useState({ start: 0, end: 0 });
+  const [showKeyboard, setShowKeyboard] = useState(true);
   const [emoticonPickerVisible, setEmoticonPickerVisible] = useState(false);
   const [cookies] = useAtom(cookiesAtom);
   const [draft, setDraft] = useAtom(draftAtom);
-  const [selection, setSelection] = useState({ start: 0, end: 0 });
   const setPostIdRefreshing = useSetAtom(postIdRefreshingAtom);
   const tintColor = useThemeColor({}, "tint");
   const backgroundColor = useThemeColor({}, "background");
   const forums = useForums();
   const forumsIdMap = useForumsIdMap();
+  const inputRef = React.useRef<any>(null);
   const close = () => {
     navigation.goBack();
   };
@@ -63,10 +66,26 @@ export default function ReplyModalScreen({
         ""
       )
     );
+    if (Platform.OS === "ios") {
+      inputRef.current.blur();
+    }
+    const targetPosition = selection.start + str.length;
     setSelection({
-      start: selection.start + str.length,
-      end: selection.end + str.length,
+      start: targetPosition,
+      end: targetPosition,
     });
+    InteractionManager.runAfterInteractions(() => {
+      inputRef.current.setNativeProps({
+        selection: { start: targetPosition, end: targetPosition },
+      });
+      global.requestAnimationFrame(() =>
+        inputRef.current.setNativeProps({ selection: null })
+      );
+    });
+
+    if (inputRef.current.setSelectionRange) {
+      inputRef.current.setSelectionRange(targetPosition, targetPosition);
+    }
   };
 
   const addImage = async () => {
@@ -89,15 +108,15 @@ export default function ReplyModalScreen({
         const { code, pic, msg } = await uploadImage(formData);
         if (code === 200) {
           if (images.find((image) => image.url === pic)) {
-            Toast.show("请勿上传重复图片");
+            Toast.show({ type: "success", text1: "请勿上传重复图片" });
           } else {
             setImages([...images, { url: pic, ext: `.${ext}` }]);
           }
         } else {
-          Toast.show(msg);
+          Toast.show({ type: "error", text1: msg });
         }
       } catch (error) {
-        Toast.show("出错了");
+        Toast.show({ type: "error", text1: "出错了" });
       }
     }
   };
@@ -119,7 +138,7 @@ export default function ReplyModalScreen({
       } = await addReply(params);
       if (/ok/i.test(type)) {
         if (typeof newPostId === "number") {
-          Toast.show("发送成功");
+          Toast.show({ type: "success", text1: "发送成功" });
         }
         if (!replyId) {
           navigation.navigate("Post", {
@@ -132,7 +151,10 @@ export default function ReplyModalScreen({
         setDraft("");
         close();
       } else {
-        Toast.show(newPostId?.toString() || "出错了");
+        Toast.show({
+          type: "error",
+          text1: newPostId?.toString() || "出错了",
+        });
       }
       return;
     }
@@ -171,16 +193,17 @@ export default function ReplyModalScreen({
           <Button title="关闭" onPress={close}></Button>
         </View>
         <TextInput
+          ref={inputRef}
           multiline
           scrollEnabled
           textAlignVertical="top"
           selectionColor={tintColor}
           style={styles.input}
           value={draft}
-          selection={selection}
           onSelectionChange={(event) => {
             setSelection(event.nativeEvent.selection);
           }}
+          showSoftInputOnFocus={showKeyboard}
           onChangeText={(val) => setDraft(val)}
         ></TextInput>
         <View style={styles.pickerWrapper}>
@@ -202,7 +225,7 @@ export default function ReplyModalScreen({
               }}
             >
               {forums
-                ?.filter((x) => x.id)
+                ?.filter((x) => x.id && !x.hide)
                 ?.map((forum: any) => (
                   <Picker.Item
                     key={forum.id}
@@ -267,6 +290,27 @@ export default function ReplyModalScreen({
         <View style={{ ...styles.footerWrapper, paddingBottom: insets.bottom }}>
           <Footer
             items={[
+              {
+                icon: showKeyboard ? "caret-down" : "caret-up",
+                onPress: () => {
+                  if (showKeyboard) {
+                    Keyboard.dismiss();
+                  } else {
+                    setTimeout(() => {
+                      inputRef.current?.blur();
+                      inputRef.current?.focus();
+                    }, 300);
+                  }
+                  setShowKeyboard(!showKeyboard);
+                },
+              },
+              {
+                icon: "question-circle",
+                onPress: () => {
+                  const current = forums.find((x) => x.id === forumId);
+                  Toast.show({ type: "info", text1: current?.info });
+                },
+              },
               { icon: "smile-o", onPress: addEmoji },
               { icon: "image", onPress: addImage },
               { icon: "dot-circle-o", onPress: addDice },

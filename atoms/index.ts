@@ -86,3 +86,13 @@ export const sizeAtom = atomWithAsyncStorage("fontSize", "normal");
 export const postIdRefreshingAtom = atom(-1);
 
 export const colorSchemeAtom = atomWithAsyncStorage("colorScheme", null);
+
+export const threadDirectionAtom = atomWithAsyncStorage(
+  "threadDirection",
+  "row"
+);
+
+export const thumbnailResizeAtom = atomWithAsyncStorage(
+  "thumnailResize",
+  "contain"
+);

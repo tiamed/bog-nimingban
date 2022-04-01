@@ -8,7 +8,7 @@ import { RootStackScreenProps } from "../types";
 import { getReply, Post, Reply } from "../api";
 import { currentPostAtom } from "../atoms";
 import Overlay from "../components/Overlay";
-import Toast from "react-native-root-toast";
+import Toast from "react-native-toast-message";
 
 export default function QuoteModalScreen({
   route,
@@ -47,7 +47,7 @@ export default function QuoteModalScreen({
         data={data}
         onPress={() => {
           if (currentPost.id === data.res) {
-            Toast.show("已在当前串");
+            Toast.show({ type: "success", text1: "已在当前串" });
           } else {
             navigation.push("Post", {
               id: data.res || data.id,

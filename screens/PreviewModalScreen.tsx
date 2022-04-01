@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
-import Toast from "react-native-root-toast";
+import Toast from "react-native-toast-message";
 
 import { useAtom } from "jotai";
 import React from "react";
@@ -37,9 +37,9 @@ export default function PreviewModalScreen() {
           asset,
           false
         );
-        Toast.show("已保存图片");
+        Toast.show({ type: "success", text1: "已保存图片" });
       } catch (error) {
-        Toast.show(error as string);
+        Toast.show({ type: "error", text1: error as string });
       }
     }
   };
@@ -51,6 +51,7 @@ export default function PreviewModalScreen() {
         imageUrls={previews as IImageInfo[]}
         enableSwipeDown={true}
         onSwipeDown={() => navigation.goBack()}
+        saveToLocalByLongPress={false}
       />
       <FloatingAction
         color={tintColor}

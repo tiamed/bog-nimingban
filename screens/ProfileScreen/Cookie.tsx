@@ -8,7 +8,7 @@ import TabBarIcon from "../../components/TabBarIcon";
 import Modal from "react-native-modal";
 import { useEffect, useState } from "react";
 import { SignInfo, signIn, getCookie } from "../../api";
-import Toast from "react-native-root-toast";
+import Toast from "react-native-toast-message";
 import { parseISO, addSeconds, format, formatRelative } from "date-fns";
 import { zhCN } from "date-fns/locale";
 
@@ -46,7 +46,7 @@ export default function Cookie() {
   const handleSign = async (cookie: Cookie) => {
     const signTime = signDict[cookie.hash]?.signtime;
     if (!getCanSign(signTime)) {
-      Toast.show("已经签到过了");
+      Toast.show({ type: "error", text1: "已经签到过了" });
       return;
     }
     const {
@@ -54,13 +54,19 @@ export default function Cookie() {
     } = await signIn(cookie.code.split("#")[0], cookie.hash);
     switch (code) {
       case 7010:
-        Toast.show("签到成功，当前已签到" + info.sign + "天");
+        Toast.show({
+          type: "success",
+          text1: "签到成功，当前已签到" + info.sign + "天",
+        });
         break;
       case 7006:
-        Toast.show("已经签到过了，已签到" + info.sign + "天");
+        Toast.show({
+          type: "error",
+          text1: "已经签到过了，已签到" + info.sign + "天",
+        });
         break;
       default:
-        Toast.show(info.toString());
+        Toast.show({ type: "error", text1: info.toString() });
         break;
     }
     if (info && info.exp) {
@@ -79,25 +85,28 @@ export default function Cookie() {
     } else {
       switch (code) {
         case 2001:
-          Toast.show(
-            `${formatRelative(
+          Toast.show({
+            type: "error",
+            text1: `${formatRelative(
               addSeconds(new Date(), Number(info)),
               Date.now(),
               {
                 locale: zhCN,
               }
-            )} 才可以获取饼干`
-          );
+            )} 才可以获取饼干`,
+          });
           break;
         default:
-          Toast.show(
-            {
-              2002: "当前关闭了饼干领取",
-              2003: "IP地址不合理，有可能是伪造的IP地址",
-              2004: "饼干领取系统调用限制",
-              2005: "IP地址不在系统允许的范围内",
-            }[code] || info
-          );
+          Toast.show({
+            type: "error",
+            text1:
+              {
+                2002: "当前关闭了饼干领取",
+                2003: "IP地址不合理，有可能是伪造的IP地址",
+                2004: "饼干领取系统调用限制",
+                2005: "IP地址不在系统允许的范围内",
+              }[code] || info,
+          });
           break;
       }
     }
@@ -108,7 +117,7 @@ export default function Cookie() {
       ? `${cookie.id}#${cookie.hash}`
       : cookie.code.split("#").slice(0, 2).join("#");
     Clipboard.setString(cookieCodeDisposable);
-    Toast.show(`饼干${cookie.name}已导出到剪贴板`);
+    Toast.show({ type: "success", text1: `饼干${cookie.name}已导出到剪贴板` });
   };
 
   return (
