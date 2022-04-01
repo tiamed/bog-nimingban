@@ -24,11 +24,13 @@ export default function ActionModal(props: {
   };
   const onReply = () => {
     close();
-    navigation.navigate("ReplyModal", {
-      postId: props.postId,
-      content: `>>Po.${props.item.id}\n`,
-      forumId: props.forumId,
-    });
+    setTimeout(() => {
+      navigation.navigate("ReplyModal", {
+        postId: props.postId,
+        content: `>>Po.${props.item.id}\n`,
+        forumId: props.forumId,
+      });
+    }, 300);
   };
   const onCopy = () => {
     Clipboard.setString(decode(props.item.content)?.replace(/<[^>]*>/g, ""));
@@ -66,13 +68,7 @@ export default function ActionModal(props: {
   };
 
   return (
-    <Modal
-      isVisible={visible}
-      onBackdropPress={close}
-      backdropOpacity={0.3}
-      animationInTiming={300}
-      animationIn="slideInUp"
-    >
+    <Modal isVisible={visible} onBackdropPress={close} backdropOpacity={0.3}>
       <View style={styles.actionModal}>
         <TouchableOpacity onPress={onReply}>
           <View style={styles.actionModalItem}>

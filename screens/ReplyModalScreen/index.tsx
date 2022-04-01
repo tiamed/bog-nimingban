@@ -63,6 +63,10 @@ export default function ReplyModalScreen({
         ""
       )
     );
+    setSelection({
+      start: selection.start + str.length,
+      end: selection.end + str.length,
+    });
   };
 
   const addImage = async () => {
@@ -138,7 +142,7 @@ export default function ReplyModalScreen({
     setTimeout(() => {
       setForumId(route.params.forumId);
       setReplyId(route.params.postId);
-      setDraft(draft + (route.params.content || ""));
+      insertDraft(route.params.content || "");
     }, 100);
   }, [route.params]);
 
