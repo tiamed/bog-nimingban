@@ -2,7 +2,7 @@
   "expo": {
     "name": "bog-nimingban",
     "slug": "bog-nimingban",
-    "version": "1.0.0",
+    "version": "1.0.0-alpha.6",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "bog",
@@ -15,19 +15,17 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "ac.bog"
+      "bundleIdentifier": "fun.tiamed"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "ac.bog",
+      "package": "fun.tiamed",
       "permissions": [
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
