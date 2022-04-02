@@ -1,7 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { useThemeColor, View } from "../../components/Themed";
-import TabBarIcon from "../../components/TabBarIcon";
+import Icon from "../../components/Icon";
 
 interface FooterItem {
   icon: React.ComponentProps<typeof FontAwesome>["name"];
@@ -19,7 +19,7 @@ export default function Footer(props: { items: FooterItem[] }) {
       ></View>
       {props.items?.map(({ icon, onPress }) => (
         <TouchableOpacity key={icon} onPress={onPress} style={styles.icon}>
-          <TabBarIcon color={tintColor} name={icon}></TabBarIcon>
+          <Icon color={tintColor} name={icon}></Icon>
         </TouchableOpacity>
       ))}
     </>

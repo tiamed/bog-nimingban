@@ -1,9 +1,9 @@
 import { StyleSheet, TouchableOpacity, TextInput } from "react-native";
 import React, { useState, useEffect } from "react";
 import Modal from "react-native-modal";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { Text, View, useThemeColor, Button } from "../../components/Themed";
-import TabBarIcon from "../../components/TabBarIcon";
 import { showPageModalAtom } from "../../atoms/index";
 import { useAtom } from "jotai";
 
@@ -42,10 +42,11 @@ export default function PageModal(props: {
               setInput("1");
             }}
           >
-            <TabBarIcon
+            <MaterialCommunityIcons
               color={useThemeColor({}, "tint")}
-              name="backward"
-            ></TabBarIcon>
+              size={24}
+              name="step-backward"
+            ></MaterialCommunityIcons>
           </TouchableOpacity>
           <View style={styles.modalInputWrapper}>
             <TextInput
@@ -60,10 +61,11 @@ export default function PageModal(props: {
               setInput(`${Math.ceil(total / 20)}`);
             }}
           >
-            <TabBarIcon
+            <MaterialCommunityIcons
               color={useThemeColor({}, "tint")}
-              name="forward"
-            ></TabBarIcon>
+              size={24}
+              name="step-forward"
+            ></MaterialCommunityIcons>
           </TouchableOpacity>
         </View>
         <View style={styles.modalFooter}>

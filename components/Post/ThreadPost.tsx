@@ -5,6 +5,7 @@ import { Post, Image } from "../../api";
 import { View } from "../Themed";
 import { useForumsIdMap } from "../../hooks/useForums";
 import {
+  lineHeightAtom,
   previewIndexAtom,
   previewsAtom,
   threadDirectionAtom,
@@ -26,6 +27,7 @@ export default function ThreadPost(props: {
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const [threadDirection] = useAtom(threadDirectionAtom);
+  const [LINE_HEIGHT] = useAtom(lineHeightAtom);
   const navigation = useNavigation();
   const BASE_SIZE = useSize();
   const images = useMemo(() => {
@@ -38,6 +40,13 @@ export default function ThreadPost(props: {
     });
     return result;
   }, [props.data]);
+  const imageSize = useMemo(() => {
+    const calculated =
+      PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) *
+        (props.maxLine || 999) -
+      2;
+    return calculated < 150 ? calculated : 150;
+  }, [props.maxLine, BASE_SIZE, LINE_HEIGHT]);
 
   const OnPress = () => {
     navigation.navigate("Post", {
@@ -64,8 +73,8 @@ export default function ThreadPost(props: {
             style={{
               flex: 2,
               maxHeight:
-                PixelRatio.roundToNearestPixel(BASE_SIZE * 1.3) *
-                (props.maxLine || 50),
+                PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) *
+                (props.maxLine || 999),
             }}
           >
             <HtmlView content={props.data.content as string}></HtmlView>
@@ -85,9 +94,9 @@ export default function ThreadPost(props: {
               data={props.data.images[0]}
               imageStyle={{
                 flex: 1,
-                width: 150,
+                width: imageSize,
                 height: "100%",
-                minHeight: 150,
+                minHeight: imageSize,
                 marginTop: 2,
               }}
               style={{}}

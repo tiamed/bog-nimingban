@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Share } from "react-native";
 
 import { Text, View, useThemeColor, Button } from "../../components/Themed";
-import TabBarIcon from "../../components/TabBarIcon";
+import Icon from "../../components/Icon";
 import { favoriteAtom, showPageModalAtom } from "../../atoms/index";
 import { useAtom, useSetAtom } from "jotai";
 import { UserFavorite } from "../FavoriteScreen";
@@ -96,7 +96,7 @@ function FooterItem(props: {
   return (
     <TouchableOpacity onPress={props.handler}>
       <View style={styles.footerItem}>
-        <TabBarIcon name={props.icon} color={tintColor} />
+        <Icon name={props.icon} color={tintColor} />
         <Text
           lightColor={tintColor}
           darkColor={tintColor}

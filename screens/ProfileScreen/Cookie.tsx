@@ -4,7 +4,7 @@ import * as Clipboard from "expo-clipboard";
 import { Button, Text, useThemeColor, View } from "../../components/Themed";
 import { cookiesAtom, signDictAtom } from "../../atoms/index";
 import { atom, useAtom, useSetAtom } from "jotai";
-import TabBarIcon from "../../components/TabBarIcon";
+import Icon from "../../components/Icon";
 import Modal from "react-native-modal";
 import { useEffect, useState } from "react";
 import { SignInfo, signIn, getCookie } from "../../api";
@@ -133,13 +133,13 @@ export default function Cookie() {
                 setShowAddModal(true);
               }}
             >
-              <TabBarIcon name="edit" color={iconColor}></TabBarIcon>
+              <Icon name="edit" color={iconColor}></Icon>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.edit}
               onPress={handleCopy.bind(null, cookie)}
             >
-              <TabBarIcon name="download" color={iconColor}></TabBarIcon>
+              <Icon name="download" color={iconColor}></Icon>
             </TouchableOpacity>
             <Text style={styles.cookieName}>{cookie.name}</Text>
             <Text style={styles.cookieSigned}>
@@ -155,7 +155,7 @@ export default function Cookie() {
                 setCookies(cookies.filter((c) => c.hash !== cookie.hash));
               }}
             >
-              <TabBarIcon name="minus-circle" color={iconColor}></TabBarIcon>
+              <Icon name="minus-circle" color={iconColor}></Icon>
             </TouchableOpacity>
           </View>
         ))}

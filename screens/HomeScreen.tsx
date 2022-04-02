@@ -9,13 +9,13 @@ import { useAtom } from "jotai";
 import { FloatingAction } from "react-native-floating-action";
 
 import { Text, View, useThemeColor } from "../components/Themed";
-import { threadAtom, tabRefreshingAtom } from "../atoms";
+import { threadAtom, tabRefreshingAtom, maxLineAtom } from "../atoms";
 import { RootTabScreenProps } from "../types";
 import { Post, getPostsByForum } from "../api";
 import ThreadPost from "../components/Post/ThreadPost";
 import Loadings from "../constants/Loadings";
 import { useForumsIdMap } from "../hooks/useForums";
-import TabBarIcon from "../components/TabBarIcon";
+import Icon from "../components/Icon";
 
 export default function HomeScreen({
   route,
@@ -24,6 +24,7 @@ export default function HomeScreen({
   const forumsIdMap = useForumsIdMap();
   const [thread] = useAtom(threadAtom);
   const [tabRefreshing, setTabRefreshing] = useAtom(tabRefreshingAtom);
+  const [maxLine] = useAtom(maxLineAtom);
   const [posts, setPosts] = useState<Post[]>([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -119,7 +120,7 @@ export default function HomeScreen({
         refreshing={isRefreshing}
         onRefresh={refreshPosts}
         renderItem={({ item }) => (
-          <ThreadPost key={item.id} data={item} maxLine={10} />
+          <ThreadPost key={item.id} data={item} maxLine={maxLine} />
         )}
         onEndReached={loadMoreData}
         onEndReachedThreshold={0.1}
@@ -129,12 +130,12 @@ export default function HomeScreen({
         color={tintColor}
         actions={[
           {
-            icon: <TabBarIcon name="edit" color="white" />,
+            icon: <Icon name="edit" color="white" />,
             name: "post",
             color: tintColor,
           },
           {
-            icon: <TabBarIcon name="search" color="white" />,
+            icon: <Icon name="search" color="white" />,
             name: "search",
             color: tintColor,
           },

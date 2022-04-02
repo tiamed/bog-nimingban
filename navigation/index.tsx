@@ -43,7 +43,7 @@ import {
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { useAtom, useSetAtom } from "jotai";
-import TabBarIcon from "../components/TabBarIcon";
+import Icon from "../components/Icon";
 import ReplyModalScreen from "../screens/ReplyModalScreen";
 import SearchModalScreen from "../screens/SearchModalScreen";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -200,7 +200,7 @@ function BottomTabNavigator() {
         options={({ navigation, route }: RootTabScreenProps<"Home">) => ({
           headerShown: false,
           title: "版块",
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarIcon: ({ color }) => <Icon name="home" color={color} />,
           tabBarLabelStyle,
         })}
         listeners={({ navigation, route }) => ({
@@ -216,7 +216,7 @@ function BottomTabNavigator() {
         component={FavoriteScreen}
         options={{
           title: "收藏",
-          tabBarIcon: ({ color }) => <TabBarIcon name="heart" color={color} />,
+          tabBarIcon: ({ color }) => <Icon name="heart" color={color} />,
           tabBarLabelStyle,
         }}
       />
@@ -225,9 +225,7 @@ function BottomTabNavigator() {
         component={HistoryScreen}
         options={{
           title: "历史",
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="clock-o" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <Icon name="clock-o" color={color} />,
           tabBarLabelStyle,
         }}
       />
@@ -236,7 +234,7 @@ function BottomTabNavigator() {
         component={ProfileScreen}
         options={{
           title: "设置",
-          tabBarIcon: ({ color }) => <TabBarIcon name="cog" color={color} />,
+          tabBarIcon: ({ color }) => <Icon name="cog" color={color} />,
           tabBarLabelStyle,
         }}
       />

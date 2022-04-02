@@ -6,7 +6,7 @@ import { RootTabScreenProps } from "../types";
 import { Post } from "../api";
 import ThreadPost from "../components/Post/ThreadPost";
 import { renderFooter } from "./HomeScreen";
-import { favoriteAtom } from "../atoms";
+import { favoriteAtom, maxLineAtom } from "../atoms";
 
 export interface UserFavorite extends Post {
   createTime: number;
@@ -17,6 +17,7 @@ export default function FavoriteScreen({
   navigation,
 }: RootTabScreenProps<"Favorite">) {
   const [favorite] = useAtom<UserFavorite[]>(favoriteAtom);
+  const [maxLine] = useAtom(maxLineAtom);
 
   return (
     <View style={styles.container}>
@@ -27,7 +28,7 @@ export default function FavoriteScreen({
             <ThreadPost
               key={(item as unknown as Post).id}
               data={item as unknown as Post}
-              maxLine={10}
+              maxLine={maxLine}
             />
           )
         }

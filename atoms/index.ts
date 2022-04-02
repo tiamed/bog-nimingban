@@ -83,6 +83,10 @@ export const showActionModalAtom = atom(false);
 
 export const sizeAtom = atomWithAsyncStorage("fontSize", "normal");
 
+export const lineHeightAtom = atomWithAsyncStorage("lineHeight", 1.4);
+
+export const maxLineAtom = atomWithAsyncStorage("maxLine", 10);
+
 export const postIdRefreshingAtom = atom(-1);
 
 export const colorSchemeAtom = atomWithAsyncStorage("colorScheme", null);

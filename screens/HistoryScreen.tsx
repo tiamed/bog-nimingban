@@ -6,7 +6,7 @@ import { RootTabScreenProps } from "../types";
 import { Post } from "../api";
 import ThreadPost from "../components/Post/ThreadPost";
 import { renderFooter } from "./HomeScreen";
-import { historyAtom } from "../atoms";
+import { historyAtom, maxLineAtom } from "../atoms";
 
 export interface UserHistory extends Post {
   createTime: number;
@@ -18,7 +18,7 @@ export default function HistoryScreen({
   navigation,
 }: RootTabScreenProps<"History">) {
   const [history] = useAtom<UserHistory[]>(historyAtom);
-
+  const [maxLine] = useAtom(maxLineAtom);
   return (
     <View style={styles.container}>
       <FlatList
@@ -28,7 +28,7 @@ export default function HistoryScreen({
             <ThreadPost
               key={(item as unknown as Post).id}
               data={item as unknown as Post}
-              maxLine={10}
+              maxLine={maxLine}
             />
           )
         }

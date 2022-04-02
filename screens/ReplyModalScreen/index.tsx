@@ -17,7 +17,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button, Text, useThemeColor, View } from "../../components/Themed";
 import { RootStackScreenProps } from "../../types";
 import { cookiesAtom, draftAtom, postIdRefreshingAtom } from "../../atoms";
-import TabBarIcon from "../../components/TabBarIcon";
+import Icon from "../../components/Icon";
 import useForums, { useForumsIdMap } from "../../hooks/useForums";
 import { addReply, uploadImage, Image } from "../../api";
 
@@ -282,7 +282,7 @@ export default function ReplyModalScreen({
                   setImages(images.filter((item) => item !== image));
                 }}
               >
-                <TabBarIcon name="times-circle" color={tintColor}></TabBarIcon>
+                <Icon name="times-circle" color={tintColor}></Icon>
               </TouchableOpacity>
             </View>
           ))}

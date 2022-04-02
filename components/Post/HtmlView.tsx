@@ -7,6 +7,8 @@ import Collapsible from "react-native-collapsible";
 import { View, Text } from "../Themed";
 import useSize from "../../hooks/useSize";
 import ReplyPostWithoutData from "./ReplyPostWithoutData";
+import { useAtom } from "jotai";
+import { lineHeightAtom } from "../../atoms";
 
 const width = Dimensions.get("window").width;
 
@@ -38,6 +40,7 @@ function Quote(props: { data: string; level: number }) {
   const { data } = props;
   const [isCollapsed, setIsCollapsed] = useState(true);
   const BASE_SIZE = useSize();
+  const [LINE_HEIGHT] = useAtom(lineHeightAtom);
   const quoteId = Number(data.replace(/>>Po\./g, ""));
 
   return (
@@ -53,7 +56,9 @@ function Quote(props: { data: string; level: number }) {
             darkColor="#999999"
             style={{
               fontSize: BASE_SIZE * 0.8,
-              lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * 1.3),
+              lineHeight: PixelRatio.roundToNearestPixel(
+                BASE_SIZE * LINE_HEIGHT
+              ),
               backgroundColor: "#eee",
               width: "auto",
               borderRadius: 2,
@@ -88,6 +93,7 @@ function Quote(props: { data: string; level: number }) {
 function Link(props: { href: string }) {
   const { href } = props;
   const BASE_SIZE = useSize();
+  const [LINE_HEIGHT] = useAtom(lineHeightAtom);
 
   return (
     <Pressable
@@ -100,7 +106,7 @@ function Link(props: { href: string }) {
         darkColor="#FFB2A6"
         style={{
           fontSize: BASE_SIZE,
-          lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * 1.3),
+          lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT),
         }}
       >
         {href}
@@ -113,12 +119,13 @@ function PureText(props: { children: any }) {
   const { children } = props;
 
   const BASE_SIZE = useSize();
+  const [LINE_HEIGHT] = useAtom(lineHeightAtom);
 
   return (
     <Text
       style={{
         fontSize: BASE_SIZE,
-        lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * 1.3),
+        lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT),
         textAlign: "left",
       }}
     >

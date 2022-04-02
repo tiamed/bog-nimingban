@@ -11,7 +11,7 @@ import { IImageInfo } from "react-native-image-zoom-viewer/built/image-viewer.ty
 import { previewIndexAtom, previewsAtom } from "../atoms";
 import { FloatingAction } from "react-native-floating-action";
 import { useThemeColor } from "../components/Themed";
-import TabBarIcon from "../components/TabBarIcon";
+import Icon from "../components/Icon";
 
 export default function PreviewModalScreen() {
   const navigation = useNavigation();
@@ -58,7 +58,7 @@ export default function PreviewModalScreen() {
         overrideWithAction={true}
         actions={[
           {
-            icon: <TabBarIcon name="save" color="white" />,
+            icon: <Icon name="save" color="white" />,
             name: "save",
           },
         ]}
