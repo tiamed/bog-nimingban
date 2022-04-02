@@ -89,6 +89,8 @@ export const maxLineAtom = atomWithAsyncStorage("maxLine", 10);
 
 export const postIdRefreshingAtom = atom(-1);
 
+export const postFilteredAtom = atom(false);
+
 export const colorSchemeAtom = atomWithAsyncStorage("colorScheme", null);
 
 export const threadDirectionAtom = atomWithAsyncStorage(

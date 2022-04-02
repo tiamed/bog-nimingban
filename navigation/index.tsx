@@ -35,7 +35,7 @@ import FavoriteScreen from "../screens/FavoriteScreen";
 import HistoryScreen, { UserHistory } from "../screens/HistoryScreen";
 import PostScreen from "../screens/PostScreen";
 import DrawerContent from "../components/DrawerContent";
-import { tabRefreshingAtom, historyAtom } from "../atoms";
+import { tabRefreshingAtom, historyAtom, postFilteredAtom } from "../atoms";
 import {
   RootStackParamList,
   RootTabParamList,
@@ -49,6 +49,7 @@ import SearchModalScreen from "../screens/SearchModalScreen";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { addClipboardListener } from "expo-clipboard";
 import { Post } from "../api";
+import { useThemeColor } from "../components/Themed";
 
 export default function Navigation({
   colorScheme,
@@ -74,6 +75,9 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   const appState = useRef(AppState.currentState);
   const navigation = useNavigation();
+  const activeColor = useThemeColor({}, "active");
+  const inactiveColor = useThemeColor({}, "inactive");
+  const [postFiltered, setPostFiltered] = useAtom(postFilteredAtom);
 
   const onClipboardChange = (
     threadId: string | undefined,
@@ -128,7 +132,21 @@ function RootNavigator() {
       <Stack.Screen
         name="Post"
         component={PostScreen}
-        options={{ title: "" }}
+        options={{
+          title: "",
+          headerRight: () => (
+            <Pressable
+              onPress={() => {
+                setPostFiltered(!postFiltered);
+              }}
+            >
+              <Icon
+                name="filter"
+                color={postFiltered ? activeColor : inactiveColor}
+              />
+            </Pressable>
+          ),
+        }}
       />
       <Stack.Screen
         name="NotFound"

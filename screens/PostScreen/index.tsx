@@ -14,6 +14,7 @@ import {
   showActionModalAtom,
   currentPostAtom,
   postIdRefreshingAtom,
+  postFilteredAtom,
 } from "../../atoms/index";
 import { getImageUrl, getThumbnailUrl } from "../../components/Post/ImageView";
 import ReplyPost from "../../components/Post/ReplyPost";
@@ -31,6 +32,7 @@ export default function PostScreen({
 }: RootStackScreenProps<"Post">) {
   const insets = useSafeAreaInsets();
   const [posts, setPosts] = useState<Reply[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Reply[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [firstPage, setFirstPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
@@ -46,6 +48,7 @@ export default function PostScreen({
     historyAtom
   );
   const [mainPost, setMainPost] = useAtom<Post, Post, void>(currentPostAtom);
+  const [postFiltered] = useAtom(postFilteredAtom);
 
   const setShowActionModal = useSetAtom(showActionModalAtom);
   const setDraft = useSetAtom(draftAtom);
@@ -206,10 +209,14 @@ export default function PostScreen({
     }
   }, [postIdRefreshing]);
 
+  useEffect(() => {
+    setFilteredPosts(posts.filter((post) => post.cookie === mainPost.cookie));
+  }, [posts]);
+
   return (
     <View style={{ ...styles.container, paddingBottom: insets.bottom }}>
       <FlatList
-        data={posts}
+        data={postFiltered ? filteredPosts : posts}
         refreshing={isRefreshing}
         onRefresh={refreshPosts}
         renderItem={({ item }) => (
