@@ -31,6 +31,18 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
   };
   const confirm = async () => {
     const [id, hash] = (props.cookie?.code || code).split("#");
+    if (props.cookie) {
+      const oldCookie = cookies.find((cookie) => cookie.id === id);
+      setCookies([
+        ...cookies.filter((cookie) => cookie.id !== id),
+        {
+          ...(oldCookie as Cookie),
+          name: name || id,
+        },
+      ]);
+      close();
+      return;
+    }
     if (id && hash) {
       const {
         data: { info, code },
@@ -39,7 +51,7 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
       if (code === 3104) {
         const newCookies = info?.map(({ cookie, remarks }) => ({
           id: cookie,
-          name: remarks || cookie,
+          name: name || remarks || cookie,
           hash,
           code: `${id}#${hash}#${cookie}`,
           master: id === cookie ? "" : id,
