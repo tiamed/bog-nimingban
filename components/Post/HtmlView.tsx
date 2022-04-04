@@ -29,7 +29,10 @@ export default function HtmlView(props: { content: string; level?: number }) {
     if (node.name === "a") {
       return <Link key={index} href={node.attribs?.href}></Link>;
     }
-    if (node.name === undefined) {
+    if (
+      node.name === undefined ||
+      (node.name === "br" && node?.next?.name === "br")
+    ) {
       return <PureText key={index}>{decode(node.data)}</PureText>;
     }
     return <View key={index}>{defaultRenderer(node.children, parent)}</View>;
