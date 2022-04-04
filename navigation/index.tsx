@@ -272,7 +272,6 @@ function DrawerNavigator() {
         name="Main"
         component={HomeScreen}
         options={{
-          // title,
           swipeEdgeWidth: 80,
         }}
       />

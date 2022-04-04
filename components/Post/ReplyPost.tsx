@@ -40,6 +40,7 @@ export default function ReplyPost(props: {
             flexDirection: "column",
             overflow: "hidden",
             flexWrap: "wrap",
+            marginRight: 8,
           }}
         >
           <View>
@@ -63,7 +64,7 @@ export default function ReplyPost(props: {
                   onImagePress.bind(null, image)
                 }
                 style={{
-                  width: "48%",
+                  flexBasis: "48%",
                   aspectRatio: 1,
                   borderColor: borderColor,
                   borderWidth: 1,
