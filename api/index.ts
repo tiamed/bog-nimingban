@@ -2,6 +2,10 @@ import { AxiosRequestConfig } from "axios";
 
 import axios from "./axios";
 
+interface CodeResponse {
+  code: number;
+}
+
 interface CommonResponse<T> {
   code: number;
   info: T;
@@ -76,6 +80,17 @@ export interface SignInfo {
   exp: number;
 }
 
+export interface CookieWithRemarks {
+  cookie: string;
+  remarks: string;
+}
+
+export interface CookieInfo extends SignInfo {
+  cookie: string;
+  vip: string;
+  list: CookieWithRemarks[];
+}
+
 // 获取版块列表
 export const getForums = () =>
   axios.post<CommonResponse<Forum[]>>("/api/forumlist");
@@ -89,11 +104,12 @@ export const getPostsByForum = (id = 0, page = 1, pageSize = 20) =>
   });
 
 // 获取某个帖子的回复列表
-export const getPostById = (id = 0, page = 1, pageSize = 20) =>
+export const getPostById = (id = 0, page = 1, pageSize = 20, order = 0) =>
   axios.post<CommonResponse<Post>>("/api/threads", {
     id,
     page,
     page_def: pageSize,
+    order,
   });
 
 export const getReply = (id = 0) =>
@@ -118,11 +134,27 @@ export const uploadImage = (image: FormData) =>
     body: image,
   }).then((res) => res.json());
 
-export const getCookie = () =>
+export const getCookies = (id: string, hash: string) =>
+  axios.post<CommonResponse<CookieInfo>>("/api/userinfo", {
+    cookie: id,
+    code: hash,
+  });
+
+export const createCookie = () =>
   axios.post<CommonResponse<string>>("/post/cookieGet");
 
-export const importCookie = (master: string, cookieadd: string) =>
-  axios.post<CommonResponse<string>>("/post/cookieAdd", { master, cookieadd });
+export const importCookie = (masterCode: string, code: string) =>
+  axios.post<CommonResponse<CookieWithRemarks[]>>("/api/cookieAdd", {
+    master: masterCode,
+    cookieadd: code,
+  });
+
+export const deleteSlaveCookie = (id: string, hash: string, slaveId: string) =>
+  axios.post<CodeResponse>("/api/cookiedel", {
+    cookie: id,
+    code: hash,
+    del: slaveId,
+  });
 
 export const getEmoticons = () =>
   axios.get<EmoticonResponse>("/static/js/kaomoji.json");

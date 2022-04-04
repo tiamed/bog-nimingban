@@ -1,31 +1,25 @@
-import { StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity } from "react-native";
 import * as Clipboard from "expo-clipboard";
 
 import { Button, Text, useThemeColor, View } from "../../components/Themed";
 import { cookiesAtom, signDictAtom } from "../../atoms/index";
 import { atom, useAtom, useSetAtom } from "jotai";
 import Icon from "../../components/Icon";
-import Modal from "react-native-modal";
-import { useEffect, useState } from "react";
-import { SignInfo, signIn, getCookie } from "../../api";
+import { useState } from "react";
+import { SignInfo, signIn, createCookie, deleteSlaveCookie } from "../../api";
 import Toast from "react-native-toast-message";
 import { parseISO, addSeconds, format, formatRelative } from "date-fns";
 import { zhCN } from "date-fns/locale";
-
-export interface Cookie {
-  name: string;
-  code: string;
-  hash: string;
-  id: string;
-}
+import AddCookieModal from "./AddCookieModal";
+import { Cookie, showAddModalAtom } from "./common";
 
 interface SignDict {
   [key: string]: SignInfo;
 }
 
-const showAddModalAtom = atom(false);
+export { Cookie } from "./common";
 
-export default function Cookie() {
+export default function Cookies() {
   const [current, setCurrent] = useState<Cookie | undefined>(undefined);
   const [cookies, setCookies] = useAtom<Cookie[], Cookie[], void>(cookiesAtom);
   const [signDict, setSignDict] = useAtom<SignDict, SignDict, void>(
@@ -74,13 +68,13 @@ export default function Cookie() {
     }
   };
 
-  const handleAddCookie = async () => {
+  const handleCreateCookie = async () => {
     const {
       data: { code, info },
-    } = await getCookie();
+    } = await createCookie();
     if (code === 2) {
       const [name, hash] = info.split("#");
-      setCurrent({ name, code: info, hash, id: name });
+      setCurrent({ name, code: info, hash, id: name, master: "" });
       setShowAddModal(true);
     } else {
       switch (code) {
@@ -120,48 +114,65 @@ export default function Cookie() {
     Toast.show({ type: "success", text1: `饼干${cookie.name}已导出到剪贴板` });
   };
 
+  const handleDelete = async (cookie: Cookie) => {
+    if (cookie.master) {
+      const {
+        data: { code },
+      } = await deleteSlaveCookie(cookie.master, cookie.hash, cookie.id);
+      if (code === 3007) {
+        Toast.show({
+          type: "success",
+          text1: "已删除影武者",
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1:
+            {
+              3001: "饼干无效，系统中没有记录这块饼干	",
+              3005: "主饼干无法删除	",
+              3006: "不是自己的饼干无法执行",
+              3103: "主饼干是无效的，无法执行影武者操作",
+              3105: "没有要执行的饼干",
+            }[code] || "出错了",
+        });
+        return;
+      }
+    }
+    setCookies(cookies.filter((c) => c.code !== cookie.code));
+  };
+
+  const confirmDelete = (cookie: Cookie) => {
+    Alert.alert("确认删除吗？", cookie.master ? "影武者删除后不可恢复" : "", [
+      { text: "取消" },
+      {
+        text: "确认",
+        onPress: handleDelete.bind(null, cookie),
+      },
+    ]);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>饼干管理</Text>
       <View>
-        {cookies.map((cookie, index) => (
-          <View style={styles.cookie} key={index}>
-            <TouchableOpacity
-              style={styles.edit}
-              onPress={() => {
-                setCurrent(cookie);
-                setShowAddModal(true);
-              }}
-            >
-              <Icon name="edit" color={iconColor}></Icon>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.edit}
-              onPress={handleCopy.bind(null, cookie)}
-            >
-              <Icon name="download" color={iconColor}></Icon>
-            </TouchableOpacity>
-            <Text style={styles.cookieName}>{cookie.name}</Text>
-            <Text style={styles.cookieSigned}>
-              已签到{signDict?.[cookie.hash]?.sign || 0}天
-            </Text>
-            <Button
-              title="签到"
-              onPress={handleSign.bind(null, cookie)}
-            ></Button>
-            <TouchableOpacity
-              style={styles.delete}
-              onPress={() => {
-                setCookies(cookies.filter((c) => c.hash !== cookie.hash));
-              }}
-            >
-              <Icon name="minus-circle" color={iconColor}></Icon>
-            </TouchableOpacity>
-          </View>
-        ))}
+        {cookies
+          .filter((cookie) => !cookie.master && cookie.id)
+          .map((cookie, index) => (
+            <View key={index} style={styles.cookieWrapper}>
+              <CookieItem cookie={cookie}></CookieItem>
+              <View style={styles.cookieSlave}>
+                {cookies
+                  .filter((slave) => slave.master === cookie.id)
+                  .map((slave, index) => (
+                    <CookieItem key={index} cookie={slave} isSlave></CookieItem>
+                  ))}
+              </View>
+            </View>
+          ))}
       </View>
       <View style={styles.cookieAction}>
-        <Button title="获取饼干" onPress={handleAddCookie} />
+        <Button title="获取饼干" onPress={handleCreateCookie} />
         <Button
           title="添加饼干"
           style={{ marginLeft: 10 }}
@@ -171,78 +182,56 @@ export default function Cookie() {
           }}
         />
       </View>
-      <AddModal cookie={current}></AddModal>
+      <AddCookieModal cookie={current}></AddCookieModal>
     </View>
   );
-}
 
-function AddModal(props: { cookie?: Cookie }) {
-  const [visible, setVisible] = useAtom(showAddModalAtom);
-  const [name, setName] = useState("");
-  const [code, setCode] = useState("");
-  const [cookies, setCookies] = useAtom<Cookie[], Cookie[], void>(cookiesAtom);
-  const close = () => {
-    setName("");
-    setCode("");
-    setVisible(false);
-  };
-  const confirm = () => {
-    const [id, hash] = (props.cookie?.code || code).split("#");
-    if (id && hash) {
-      setCookies([
-        ...cookies.filter((cookie) => cookie.hash !== hash),
-        {
-          name: name || id,
-          code: `${id}#${hash}#${id}`,
-          hash: hash,
-          id,
-        },
-      ]);
-    }
-    close();
-  };
-
-  useEffect(() => {
-    if (props.cookie) {
-      setName(props.cookie.name);
-    }
-  }, [props.cookie]);
-
-  return (
-    <Modal isVisible={visible} onBackdropPress={close}>
-      <View style={styles.modal}>
-        <Text style={styles.title}>
-          {props.cookie ? "修改饼干" : "添加饼干"}
-        </Text>
-        <TextInput
-          placeholder="饼干名字，可不填"
-          value={name}
-          onChangeText={(val) => setName(val)}
-          style={styles.input}
-        ></TextInput>
-        {!props.cookie?.hash && (
-          <TextInput
-            placeholder="饼干序列"
-            value={code}
-            onChangeText={(val) => setCode(val)}
-            style={styles.input}
-          ></TextInput>
+  function CookieItem(props: { cookie: Cookie; isSlave?: boolean }) {
+    const { cookie, isSlave } = props;
+    return (
+      <View style={styles.cookie}>
+        {isSlave && (
+          <View style={styles.edit}>
+            <Icon name="user-secret" color={iconColor}></Icon>
+          </View>
         )}
-        <View style={styles.footer}>
-          <View style={styles.footerButton}>
-            <Button title="取消" onPress={close}></Button>
-          </View>
-          <View style={styles.footerButton}>
+        <TouchableOpacity
+          style={styles.edit}
+          onPress={() => {
+            setCurrent(cookie);
+            setShowAddModal(true);
+          }}
+        >
+          <Icon name="edit" color={iconColor}></Icon>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.edit}
+          onPress={handleCopy.bind(null, cookie)}
+        >
+          <Icon name="download" color={iconColor}></Icon>
+        </TouchableOpacity>
+        <Text style={styles.cookieName}>{cookie.name}</Text>
+        {!isSlave && (
+          <>
+            <Text style={styles.cookieSigned}>
+              已签到{signDict?.[cookie.hash]?.sign || 0}天
+            </Text>
             <Button
-              title="确定"
-              onPress={confirm}
-              disabled={!Boolean(code || props.cookie?.code)}
+              title="签到"
+              onPress={handleSign.bind(null, cookie)}
             ></Button>
-          </View>
-        </View>
+          </>
+        )}
+        {isSlave && <Text style={styles.cookieSlaveLabel}>影武者</Text>}
+        <TouchableOpacity
+          style={styles.delete}
+          onPress={confirmDelete.bind(null, cookie)}
+        >
+          <Icon name="minus-circle" color={iconColor}></Icon>
+        </TouchableOpacity>
       </View>
-    </Modal>
-  );
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -255,7 +244,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginVertical: 10,
   },
   link: {
     marginTop: 15,
@@ -265,13 +254,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#2e78b7",
   },
-  cookie: {
+  cookieWrapper: {
+    flexDirection: "column",
     paddingLeft: 15,
     paddingRight: 15,
+  },
+  cookie: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 10,
+  },
+  cookieSlave: {
+    paddingLeft: 32,
+  },
+  cookieSlaveLabel: {
+    fontSize: 10,
+    borderColor: "#eee",
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingHorizontal: 5,
+    lineHeight: 20,
   },
   cookieSigned: {
     borderColor: "#eee",
@@ -290,34 +293,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 10,
   },
-  modal: {
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10,
-    overflow: "hidden",
-    padding: 10,
-  },
-  input: {
-    backgroundColor: "#eee",
-    margin: 2,
-    padding: 5,
-    borderRadius: 5,
-    overflow: "hidden",
-    width: "100%",
-  },
   edit: {
     marginRight: 10,
   },
   delete: {
     marginLeft: 40,
-  },
-  footer: {
-    flexDirection: "row",
-    alignSelf: "flex-end",
-    padding: 10,
-  },
-  footerButton: {
-    marginLeft: 20,
   },
 });
