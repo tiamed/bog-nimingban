@@ -109,7 +109,6 @@ export const TextInput = forwardRef(function (props: TextInputProps, ref) {
 export function getToastConfig(theme: "light" | "dark") {
   const backgroundColor = Colors[theme as "light" | "dark"]["background"];
   const textColor = Colors[theme as "light" | "dark"]["text"];
-  const borderColor = Colors[theme as "light" | "dark"]["border"];
 
   return {
     success: (props: any) => (
@@ -117,7 +116,7 @@ export function getToastConfig(theme: "light" | "dark") {
         {...props}
         style={{ backgroundColor, borderLeftColor: "green" }}
         text1Style={{ color: textColor }}
-        text2Style={{ color: borderColor }}
+        text2Style={{ color: textColor }}
       ></SuccessToast>
     ),
     info: (props: any) => (
@@ -125,7 +124,7 @@ export function getToastConfig(theme: "light" | "dark") {
         {...props}
         style={{ backgroundColor, borderLeftColor: "gray" }}
         text1Style={{ color: textColor }}
-        text2Style={{ color: borderColor }}
+        text2Style={{ color: textColor }}
       ></InfoToast>
     ),
     error: (props: any) => (
@@ -133,7 +132,7 @@ export function getToastConfig(theme: "light" | "dark") {
         {...props}
         style={{ backgroundColor, borderLeftColor: "red" }}
         text1Style={{ color: textColor }}
-        text2Style={{ color: borderColor }}
+        text2Style={{ color: textColor }}
       ></ErrorToast>
     ),
   };

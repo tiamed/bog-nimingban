@@ -73,9 +73,8 @@ export default function Cookies() {
       data: { code, info },
     } = await createCookie();
     if (code === 2) {
-      const [name, hash] = info.split("#");
-      setCurrent({ name, code: info, hash, id: name, master: "" });
-      setShowAddModal(true);
+      await Clipboard.setString(info);
+      Toast.show({ type: "success", text1: "饼干已复制到剪贴板", text2: info });
     } else {
       switch (code) {
         case 2001:
@@ -190,11 +189,6 @@ export default function Cookies() {
     const { cookie, isSlave } = props;
     return (
       <View style={styles.cookie}>
-        {isSlave && (
-          <View style={styles.edit}>
-            <Icon name="user-secret" color={iconColor}></Icon>
-          </View>
-        )}
         <TouchableOpacity
           style={styles.edit}
           onPress={() => {
@@ -204,12 +198,27 @@ export default function Cookies() {
         >
           <Icon name="edit" color={iconColor}></Icon>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.edit}
-          onPress={handleCopy.bind(null, cookie)}
-        >
-          <Icon name="download" color={iconColor}></Icon>
-        </TouchableOpacity>
+        {isSlave ? (
+          <TouchableOpacity
+            style={styles.edit}
+            onPress={() => {
+              Toast.show({
+                type: "error",
+                text1: "影武者无法导出",
+              });
+            }}
+          >
+            <Icon name="user-secret" color={iconColor}></Icon>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.edit}
+            onPress={handleCopy.bind(null, cookie)}
+          >
+            <Icon name="download" color={iconColor}></Icon>
+          </TouchableOpacity>
+        )}
+
         <Text style={styles.cookieName}>{cookie.name}</Text>
         {!isSlave && (
           <>

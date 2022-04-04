@@ -106,3 +106,5 @@ export const thumbnailResizeAtom = atomWithAsyncStorage(
 );
 
 export const imageWidthAtom = atomWithAsyncStorage("imageWidth", "49%");
+
+export const selectedCookieAtom = atomWithAsyncStorage("selectedCookie", null);

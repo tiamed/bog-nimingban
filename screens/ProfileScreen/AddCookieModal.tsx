@@ -44,18 +44,35 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
       return;
     }
     if (id && hash) {
+      const masterCookie = cookies.find((cookie) => cookie.id === master);
+      const masterCode = masterCookie
+        ? `${masterCookie?.id}#${masterCookie?.hash}`
+        : "0";
       const {
         data: { info, code },
-      } = await importCookie(master, `${id}#${hash}`);
+      } = await importCookie(masterCode, `${id}#${hash}`);
 
       if (code === 3104) {
-        const newCookies = info?.map(({ cookie, remarks }) => ({
-          id: cookie,
-          name: name || remarks || cookie,
-          hash,
-          code: `${id}#${hash}#${cookie}`,
-          master: id === cookie ? "" : id,
-        }));
+        let newCookies: Cookie[];
+        if (master) {
+          newCookies = info
+            ?.filter((cookie) => cookie.cookie === id)
+            ?.map(({ cookie, remarks }) => ({
+              id: cookie,
+              name: name || remarks || cookie,
+              hash,
+              code: `${masterCode}#${cookie}`,
+              master,
+            }));
+        } else {
+          newCookies = info.map(({ cookie, remarks }) => ({
+            id: cookie,
+            name: name || remarks || cookie,
+            hash,
+            code: `${id}#${hash}#${cookie}`,
+            master: cookie === id ? "" : id,
+          }));
+        }
         setCookies([
           ...cookies.filter(
             (cookie) =>
@@ -63,16 +80,24 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
           ),
           ...newCookies,
         ]);
-      } else {
         Toast.show({
           type: "success",
+          text1: "导入成功",
+        });
+      } else {
+        Toast.show({
+          type: "error",
           text1:
             {
               3001: "饼干无效，系统中没有记录这块饼干",
+              3002: "饼干已经被删除了",
               3101: "已经是影武者的饼干，无法再次导入",
+              3102: "已经是影武者的饼干，无法再次导入",
               3103: "主饼干是无效的，无法执行影武者操作	无法执行导入操",
               3106: "影武者已达上限，无法继续导入",
-            }[code] || "出错了",
+            }[code] ||
+            info.toString() ||
+            "出错了",
         });
       }
     }
@@ -127,9 +152,9 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
               ?.filter((cookie) => cookie.id && !cookie.master)
               ?.map((cookie: any) => (
                 <Picker.Item
-                  key={cookie.hash}
+                  key={cookie.id}
                   label={cookie.name}
-                  value={cookie.code}
+                  value={cookie.id}
                 ></Picker.Item>
               ))}
           </Picker>

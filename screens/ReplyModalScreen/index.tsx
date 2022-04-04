@@ -21,7 +21,12 @@ import {
   TextInput,
 } from "../../components/Themed";
 import { RootStackScreenProps } from "../../types";
-import { cookiesAtom, draftAtom, postIdRefreshingAtom } from "../../atoms";
+import {
+  cookiesAtom,
+  draftAtom,
+  postIdRefreshingAtom,
+  selectedCookieAtom,
+} from "../../atoms";
 import Icon from "../../components/Icon";
 import useForums, { useForumsIdMap } from "../../hooks/useForums";
 import { addReply, uploadImage, Image } from "../../api";
@@ -39,13 +44,13 @@ export default function ReplyModalScreen({
 
   const [forumId, setForumId] = useState<number | null | undefined>(null);
   const [replyId, setReplyId] = useState<number | null | undefined>(null);
-  const [cookieCode, setCookieCode] = useState("");
   const [images, setImages] = useState<Image[]>([]);
   const [selection, setSelection] = useState({ start: 0, end: 0 });
   const [showKeyboard, setShowKeyboard] = useState(true);
   const [emoticonPickerVisible, setEmoticonPickerVisible] = useState(false);
   const [cookies] = useAtom(cookiesAtom);
   const [draft, setDraft] = useAtom(draftAtom);
+  const [cookieCode, setCookieCode] = useAtom(selectedCookieAtom);
   const setPostIdRefreshing = useSetAtom(postIdRefreshingAtom);
   const tintColor = useThemeColor({}, "tint");
   const backgroundColor = useThemeColor({}, "background");
@@ -80,15 +85,15 @@ export default function ReplyModalScreen({
       end: targetPosition,
     });
     InteractionManager.runAfterInteractions(() => {
-      inputRef.current.setNativeProps({
+      inputRef.current?.setNativeProps({
         selection: { start: targetPosition, end: targetPosition },
       });
       global.requestAnimationFrame(() =>
-        inputRef.current.setNativeProps({ selection: null })
+        inputRef.current?.setNativeProps({ selection: null })
       );
     });
 
-    if (inputRef.current.setSelectionRange) {
+    if (inputRef.current?.setSelectionRange) {
       inputRef.current.setSelectionRange(targetPosition, targetPosition);
     }
   };
@@ -174,10 +179,6 @@ export default function ReplyModalScreen({
   }, [route.params]);
 
   useEffect(() => {
-    if (cookies?.length) setCookieCode(cookies[0].code);
-  }, [cookies]);
-
-  useEffect(() => {
     Keyboard.addListener("keyboardDidShow", () => {
       setEmoticonPickerVisible(false);
     });
@@ -257,7 +258,7 @@ export default function ReplyModalScreen({
                 ?.filter((cookie: any) => cookie.id)
                 ?.map((cookie: any) => (
                   <Picker.Item
-                    key={cookie.hash}
+                    key={cookie.id}
                     label={cookie.name}
                     value={cookie.code}
                   ></Picker.Item>

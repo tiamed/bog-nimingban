@@ -45,7 +45,7 @@ export default function ActionModal(props: {
         text: "确认",
         onPress: async () => {
           const replyCookie = cookies.find(
-            (cookie) => cookie.code.indexOf(props.item.cookie) !== -1
+            (cookie) => cookie?.code?.indexOf(props.item.cookie) !== -1
           );
           try {
             const {
@@ -84,7 +84,7 @@ export default function ActionModal(props: {
           </View>
         </TouchableOpacity>
         {cookies.find(
-          (cookie) => cookie.code.indexOf(props.item.cookie) !== -1
+          (cookie) => cookie?.code?.indexOf(props.item.cookie) !== -1
         ) && (
           <TouchableOpacity onPress={onDelete}>
             <View style={styles.actionModalItem}>

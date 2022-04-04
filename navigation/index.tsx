@@ -15,7 +15,13 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import * as Clipboard from "expo-clipboard";
 
 import * as React from "react";
-import { Alert, AppState, ColorSchemeName, Platform } from "react-native";
+import {
+  Alert,
+  AppState,
+  ColorSchemeName,
+  Dimensions,
+  Platform,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Colors from "../constants/Colors";
@@ -44,6 +50,8 @@ import ReplyModalScreen from "../screens/ReplyModalScreen";
 import SearchModalScreen from "../screens/SearchModalScreen";
 import { useEffect, useRef } from "react";
 import { Post } from "../api";
+
+const width = Dimensions.get("window").width;
 
 export default function Navigation({
   colorScheme,
@@ -257,7 +265,7 @@ function DrawerNavigator() {
         name="Main"
         component={HomeScreen}
         options={{
-          swipeEdgeWidth: 80,
+          swipeEdgeWidth: width * 0.75,
         }}
       />
     </Drawer.Navigator>
