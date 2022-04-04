@@ -1,9 +1,15 @@
-import { StyleSheet, TouchableOpacity, TextInput } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState, useEffect } from "react";
 import Modal from "react-native-modal";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { Text, View, useThemeColor, Button } from "../../components/Themed";
+import {
+  Text,
+  View,
+  useThemeColor,
+  Button,
+  TextInput,
+} from "../../components/Themed";
 import { showPageModalAtom } from "../../atoms/index";
 import { useAtom } from "jotai";
 

@@ -35,6 +35,7 @@ export type RootStackParamList = {
     title: string;
   };
   NotFound: undefined;
+  LayoutSettings: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

@@ -15,13 +15,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import * as Clipboard from "expo-clipboard";
 
 import * as React from "react";
-import {
-  Alert,
-  AppState,
-  ColorSchemeName,
-  Platform,
-  Pressable,
-} from "react-native";
+import { Alert, AppState, ColorSchemeName, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Colors from "../constants/Colors";
@@ -34,22 +28,22 @@ import HomeScreen from "../screens/HomeScreen";
 import FavoriteScreen from "../screens/FavoriteScreen";
 import HistoryScreen, { UserHistory } from "../screens/HistoryScreen";
 import PostScreen from "../screens/PostScreen";
+import LayoutSettingsScreen from "../screens/LayoutSettingsScreen";
 import DrawerContent from "../components/DrawerContent";
-import { tabRefreshingAtom, historyAtom, postFilteredAtom } from "../atoms";
+import PostScreenHeaderRight from "../screens/PostScreen/HeaderRight";
+import { tabRefreshingAtom } from "../atoms";
 import {
   RootStackParamList,
   RootTabParamList,
   RootTabScreenProps,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import Icon from "../components/Icon";
 import ReplyModalScreen from "../screens/ReplyModalScreen";
 import SearchModalScreen from "../screens/SearchModalScreen";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { addClipboardListener } from "expo-clipboard";
+import { useEffect, useRef } from "react";
 import { Post } from "../api";
-import { useThemeColor } from "../components/Themed";
 
 export default function Navigation({
   colorScheme,
@@ -75,9 +69,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   const appState = useRef(AppState.currentState);
   const navigation = useNavigation();
-  const activeColor = useThemeColor({}, "active");
-  const inactiveColor = useThemeColor({}, "inactive");
-  const [postFiltered, setPostFiltered] = useAtom(postFilteredAtom);
 
   const onClipboardChange = (
     threadId: string | undefined,
@@ -134,19 +125,13 @@ function RootNavigator() {
         component={PostScreen}
         options={{
           title: "",
-          headerRight: () => (
-            <Pressable
-              onPress={() => {
-                setPostFiltered(!postFiltered);
-              }}
-            >
-              <Icon
-                name="filter"
-                color={postFiltered ? activeColor : inactiveColor}
-              />
-            </Pressable>
-          ),
+          headerRight: PostScreenHeaderRight,
         }}
+      />
+      <Stack.Screen
+        name="LayoutSettings"
+        component={LayoutSettingsScreen}
+        options={{ title: "显示设置" }}
       />
       <Stack.Screen
         name="NotFound"

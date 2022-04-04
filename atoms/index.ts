@@ -91,6 +91,8 @@ export const postIdRefreshingAtom = atom(-1);
 
 export const postFilteredAtom = atom(false);
 
+export const orderAtom = atomWithAsyncStorage("order", 0);
+
 export const colorSchemeAtom = atomWithAsyncStorage("colorScheme", null);
 
 export const threadDirectionAtom = atomWithAsyncStorage(
@@ -102,3 +104,5 @@ export const thumbnailResizeAtom = atomWithAsyncStorage(
   "thumnailResize",
   "contain"
 );
+
+export const imageWidthAtom = atomWithAsyncStorage("imageWidth", "49%");

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { StyleSheet, TextInput } from "react-native";
+import { StyleSheet } from "react-native";
 
-import { Button, View } from "../components/Themed";
+import { Button, View, TextInput } from "../components/Themed";
 import { RootStackScreenProps } from "../types";
 import Overlay from "../components/Overlay";
 
@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     height: 30,
-    backgroundColor: "#eee",
   },
   group: {
     marginTop: 5,

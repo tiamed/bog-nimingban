@@ -15,6 +15,7 @@ import {
   currentPostAtom,
   postIdRefreshingAtom,
   postFilteredAtom,
+  orderAtom,
 } from "../../atoms/index";
 import { getImageUrl, getThumbnailUrl } from "../../components/Post/ImageView";
 import ReplyPost from "../../components/Post/ReplyPost";
@@ -49,6 +50,7 @@ export default function PostScreen({
   );
   const [mainPost, setMainPost] = useAtom<Post, Post, void>(currentPostAtom);
   const [postFiltered] = useAtom(postFilteredAtom);
+  const [order] = useAtom(orderAtom);
 
   const setShowActionModal = useSetAtom(showActionModalAtom);
   const setDraft = useSetAtom(draftAtom);
@@ -65,7 +67,7 @@ export default function PostScreen({
           type,
           info: { reply, ...rest },
         },
-      } = await getPostById(route.params.id as number, nextPage);
+      } = await getPostById(route.params.id as number, nextPage, 20, order);
 
       if (rest.id) {
         setMainPost(rest as Post);
@@ -113,7 +115,7 @@ export default function PostScreen({
       await loadData(firstPage - 1);
     }
     setIsRefreshing(false);
-  }, [firstPage]);
+  }, [firstPage, order]);
 
   const loadMoreData = async (force = false) => {
     if (isLoading || (hasNoMore && !force)) return;
@@ -203,15 +205,28 @@ export default function PostScreen({
 
   useEffect(() => {
     if (postIdRefreshing === route.params.id) {
-      loadMoreData(true).then(() => {
-        setPostIdRefreshing(-1);
-      });
+      if (order) {
+        refreshPosts().then(() => {
+          setPostIdRefreshing(-1);
+        });
+      } else {
+        loadMoreData(true).then(() => {
+          setPostIdRefreshing(-1);
+        });
+      }
     }
   }, [postIdRefreshing]);
 
   useEffect(() => {
     setFilteredPosts(posts.filter((post) => post.cookie === mainPost.cookie));
   }, [posts]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setPosts([]);
+      loadData(1, true);
+    }
+  }, [order]);
 
   return (
     <View style={{ ...styles.container, paddingBottom: insets.bottom }}>

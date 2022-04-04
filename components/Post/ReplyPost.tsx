@@ -3,7 +3,7 @@ import { useAtom, useSetAtom } from "jotai";
 
 import { Image, Post } from "../../api";
 import { View, useThemeColor } from "../Themed";
-import { previewIndexAtom, previewsAtom } from "../../atoms";
+import { imageWidthAtom, previewIndexAtom, previewsAtom } from "../../atoms";
 import { useNavigation } from "@react-navigation/native";
 import HtmlView from "./HtmlView";
 import Header from "./Header";
@@ -19,6 +19,7 @@ export default function ReplyPost(props: {
   level?: number;
 }) {
   const [previews] = useAtom(previewsAtom);
+  const [imageWidth] = useAtom(imageWidthAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const navigation = useNavigation();
   const borderColor = useThemeColor({}, "border");
@@ -53,7 +54,7 @@ export default function ReplyPost(props: {
             style={{
               flexDirection: "row",
               flexWrap: "wrap",
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
             }}
           >
             {props.data?.images?.map((image) => (
@@ -64,11 +65,12 @@ export default function ReplyPost(props: {
                   onImagePress.bind(null, image)
                 }
                 style={{
-                  flexBasis: "48%",
+                  flexBasis: imageWidth,
                   aspectRatio: 1,
                   borderColor: borderColor,
                   borderWidth: 1,
                   marginTop: 10,
+                  marginRight: "1%",
                 }}
                 imageStyle={{
                   width: "100%",

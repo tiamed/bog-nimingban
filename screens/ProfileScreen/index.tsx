@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { ScrollView } from "../../components/Themed";
 import { RootTabScreenProps } from "../../types";
 import Cookie from "./Cookie";
-import Layout from "./Layout";
+import Settings from "./Settings";
 
 export default function ProfileScreen({
   navigation,
@@ -11,7 +11,7 @@ export default function ProfileScreen({
   return (
     <ScrollView style={{ flex: 1, flexDirection: "column" }}>
       <Cookie></Cookie>
-      <Layout></Layout>
+      <Settings></Settings>
     </ScrollView>
   );
 }

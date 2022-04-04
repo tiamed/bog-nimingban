@@ -10,11 +10,16 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Toast from "react-native-toast-message";
-import { TextInput } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Button, Text, useThemeColor, View } from "../../components/Themed";
+import {
+  Button,
+  Text,
+  useThemeColor,
+  View,
+  TextInput,
+} from "../../components/Themed";
 import { RootStackScreenProps } from "../../types";
 import { cookiesAtom, draftAtom, postIdRefreshingAtom } from "../../atoms";
 import Icon from "../../components/Icon";
@@ -363,7 +368,6 @@ const styles = StyleSheet.create({
     minHeight: 120,
     maxHeight: 240,
     width: "100%",
-    backgroundColor: "#eee",
     padding: 5,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,

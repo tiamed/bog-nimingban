@@ -3,13 +3,14 @@
  * https://docs.expo.io/guides/color-schemes/
  */
 
-import { useContext } from "react";
+import { forwardRef, useContext } from "react";
 import {
   Text as DefaultText,
   View as DefaultView,
   ScrollView as DefaultScrollView,
   Button as DefaultButton,
   TouchableOpacity,
+  TextInput as DefaultTextInput,
 } from "react-native";
 import {
   SuccessToast,
@@ -45,6 +46,7 @@ export type ScrollViewProps = ThemeProps & DefaultScrollView["props"];
 export type ButtonProps = ThemeProps &
   DefaultButton["props"] &
   DefaultView["props"];
+export type TextInputProps = ThemeProps & DefaultTextInput["props"];
 
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
@@ -87,6 +89,22 @@ export function Button(props: ButtonProps) {
     </TouchableOpacity>
   );
 }
+
+export const TextInput = forwardRef(function (props: TextInputProps, ref) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    "border"
+  );
+  const textColor = useThemeColor({}, "text");
+  return (
+    <DefaultTextInput
+      ref={ref as unknown as any}
+      style={[{ backgroundColor, color: textColor }, style]}
+      {...otherProps}
+    />
+  );
+});
 
 export function getToastConfig(theme: "light" | "dark") {
   const backgroundColor = Colors[theme as "light" | "dark"]["background"];
