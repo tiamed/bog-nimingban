@@ -52,7 +52,7 @@ export default function ActionModal(props: {
               data: { type, info },
             } = await deleteReply(
               props.item.id,
-              `${props.item.cookie}#${replyCookie?.hash}`
+              `${replyCookie?.master}#${replyCookie?.hash}`
             );
             if (type === "OK") {
               Toast.show({ type: "success", text1: "删除成功，请刷新页面" });
