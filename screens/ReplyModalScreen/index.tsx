@@ -253,13 +253,15 @@ export default function ReplyModalScreen({
               selectedValue={cookieCode}
               onValueChange={(val: string) => setCookieCode(val)}
             >
-              {cookies?.map((cookie: any) => (
-                <Picker.Item
-                  key={cookie.hash}
-                  label={cookie.name}
-                  value={cookie.code}
-                ></Picker.Item>
-              ))}
+              {cookies
+                ?.filter((cookie: any) => cookie.id)
+                ?.map((cookie: any) => (
+                  <Picker.Item
+                    key={cookie.hash}
+                    label={cookie.name}
+                    value={cookie.code}
+                  ></Picker.Item>
+                ))}
             </Picker>
           ) : (
             <Text style={{ ...styles.picker, padding: 10 }}>
