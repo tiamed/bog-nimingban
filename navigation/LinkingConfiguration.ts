@@ -28,7 +28,8 @@ const linking: LinkingOptions<RootStackParamList> = {
           },
           History: {
             screens: {
-              HistoryScreen: "history",
+              BrowseHistoryScreen: "browseHistory",
+              ReplyHisotryScreen: "replyHistory",
             },
           },
           Profile: {

@@ -19,7 +19,7 @@ import {
 } from "../../atoms/index";
 import { getImageUrl, getThumbnailUrl } from "../../components/Post/ImageView";
 import ReplyPost from "../../components/Post/ReplyPost";
-import { UserHistory } from "./../HistoryScreen";
+import { UserHistory } from "./../BrowseHistoryScreen";
 import { useForumsIdMap } from "../../hooks/useForums";
 
 import Footer from "./Footer";

@@ -39,7 +39,12 @@ export default function PageModal(props: {
     close();
   };
   return (
-    <Modal isVisible={visible} onBackdropPress={close}>
+    <Modal
+      isVisible={visible}
+      onBackdropPress={close}
+      backdropOpacity={0.3}
+      backdropTransitionOutTiming={0}
+    >
       <View style={styles.modal}>
         <Text style={styles.modalTitle}>跳页</Text>
         <View style={styles.modalContent}>
@@ -113,7 +118,6 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   modalInput: {
-    backgroundColor: "#eee",
     width: 50,
     textAlign: "center",
   },

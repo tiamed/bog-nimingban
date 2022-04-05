@@ -69,6 +69,8 @@ export const favoriteAtom = atomWithAsyncStorage("favorite", []);
 
 export const historyAtom = atomWithAsyncStorage("history", [], true);
 
+export const replyHistoryAtom = atomWithAsyncStorage("replyHistory", []);
+
 export const cookiesAtom = atomWithAsyncStorage("cookies", []);
 
 export const tabRefreshingAtom = atom(false);
@@ -108,3 +110,5 @@ export const thumbnailResizeAtom = atomWithAsyncStorage(
 export const imageWidthAtom = atomWithAsyncStorage("imageWidth", "49%");
 
 export const selectedCookieAtom = atomWithAsyncStorage("selectedCookie", null);
+
+export const historyTabAtom = atomWithAsyncStorage("historyTab", 0);

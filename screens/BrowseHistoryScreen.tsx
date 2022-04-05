@@ -2,7 +2,6 @@ import { StyleSheet, FlatList } from "react-native";
 import { useAtom } from "jotai";
 
 import { View } from "../components/Themed";
-import { RootTabScreenProps } from "../types";
 import { Post } from "../api";
 import ThreadPost from "../components/Post/ThreadPost";
 import { renderFooter } from "./HomeScreen";
@@ -13,10 +12,7 @@ export interface UserHistory extends Post {
   currentPage: number;
 }
 
-export default function HistoryScreen({
-  route,
-  navigation,
-}: RootTabScreenProps<"History">) {
+export default function BrowseHistoryScreen() {
   const [history] = useAtom<UserHistory[]>(historyAtom);
   const [maxLine] = useAtom(maxLineAtom);
   return (

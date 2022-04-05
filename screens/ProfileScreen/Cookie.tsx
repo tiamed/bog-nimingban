@@ -12,6 +12,7 @@ import { parseISO, addSeconds, format, formatRelative } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import AddCookieModal from "./AddCookieModal";
 import { Cookie, showAddModalAtom } from "./common";
+import Errors from "../../constants/Errors";
 
 interface SignDict {
   [key: string]: SignInfo;
@@ -60,7 +61,7 @@ export default function Cookies() {
         });
         break;
       default:
-        Toast.show({ type: "error", text1: info.toString() });
+        Toast.show({ type: "error", text1: Errors[code] || info.toString() });
         break;
     }
     if (info && info.exp) {
@@ -92,13 +93,7 @@ export default function Cookies() {
         default:
           Toast.show({
             type: "error",
-            text1:
-              {
-                2002: "当前关闭了饼干领取",
-                2003: "IP地址不合理，有可能是伪造的IP地址",
-                2004: "饼干领取系统调用限制",
-                2005: "IP地址不在系统允许的范围内",
-              }[code] || info,
+            text1: Errors[code] || info,
           });
           break;
       }
@@ -126,14 +121,7 @@ export default function Cookies() {
       } else {
         Toast.show({
           type: "error",
-          text1:
-            {
-              3001: "饼干无效，系统中没有记录这块饼干	",
-              3005: "主饼干无法删除	",
-              3006: "不是自己的饼干无法执行",
-              3103: "主饼干是无效的，无法执行影武者操作",
-              3105: "没有要执行的饼干",
-            }[code] || "出错了",
+          text1: Errors[code] || "出错了",
         });
         return;
       }

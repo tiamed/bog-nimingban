@@ -15,6 +15,7 @@ import Modal from "react-native-modal";
 import { useEffect, useState } from "react";
 import { importCookie } from "../../api";
 import { showAddModalAtom, Cookie } from "./common";
+import Errors from "../../constants/Errors";
 
 export default function AddCookieModal(props: { cookie?: Cookie }) {
   const [visible, setVisible] = useAtom(showAddModalAtom);
@@ -30,8 +31,8 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
     setVisible(false);
   };
   const confirm = async () => {
-    const [id, hash] = (props.cookie?.code || code).split("#");
     if (props.cookie) {
+      const { id, hash } = (props.cookie || {}) as Cookie;
       const oldCookie = cookies.find((cookie) => cookie.id === id);
       setCookies([
         ...cookies.filter((cookie) => cookie.id !== id),
@@ -43,7 +44,9 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
       close();
       return;
     }
-    if (id && hash) {
+    const [id, hash] = code.split("#");
+    const validated = id?.length === 8 && hash?.length === 32;
+    if (validated) {
       const masterCookie = cookies.find((cookie) => cookie.id === master);
       const masterCode = masterCookie
         ? `${masterCookie?.id}#${masterCookie?.hash}`
@@ -67,7 +70,7 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
         } else {
           newCookies = info.map(({ cookie, remarks }) => ({
             id: cookie,
-            name: name || remarks || cookie,
+            name: cookie === id ? name || remarks || cookie : cookie,
             hash,
             code: `${id}#${hash}#${cookie}`,
             master: cookie === id ? "" : id,
@@ -87,19 +90,15 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
       } else {
         Toast.show({
           type: "error",
-          text1:
-            {
-              3001: "饼干无效，系统中没有记录这块饼干",
-              3002: "饼干已经被删除了",
-              3101: "已经是影武者的饼干，无法再次导入",
-              3102: "已经是影武者的饼干，无法再次导入",
-              3103: "主饼干是无效的，无法执行影武者操作	无法执行导入操",
-              3106: "影武者已达上限，无法继续导入",
-            }[code] ||
-            info.toString() ||
-            "出错了",
+          text1: Errors[code] || info.toString() || "出错了",
         });
       }
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "请检查饼干格式",
+        text2: "8位代号#32位代码",
+      });
     }
     close();
   };
@@ -112,7 +111,12 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
   }, [props.cookie]);
 
   return (
-    <Modal isVisible={visible} onBackdropPress={close}>
+    <Modal
+      isVisible={visible}
+      onBackdropPress={close}
+      backdropOpacity={0.3}
+      backdropTransitionOutTiming={0}
+    >
       <View style={styles.modal}>
         <Text style={styles.title}>
           {props.cookie ? "修改饼干" : "添加饼干"}

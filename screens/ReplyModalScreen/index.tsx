@@ -25,16 +25,19 @@ import {
   cookiesAtom,
   draftAtom,
   postIdRefreshingAtom,
+  replyHistoryAtom,
   selectedCookieAtom,
 } from "../../atoms";
 import Icon from "../../components/Icon";
 import useForums, { useForumsIdMap } from "../../hooks/useForums";
-import { addReply, uploadImage, Image } from "../../api";
+import { addReply, uploadImage, Image, getReply } from "../../api";
 
 import Overlay from "../../components/Overlay";
 import ImageView from "../../components/Post/ImageView";
 import EmoticonPicker from "./EmoticonPicker";
 import Footer from "./Footer";
+import Errors from "../../constants/Errors";
+import { ReplyHistory } from "../ReplyHistoryScreen";
 
 export default function ReplyModalScreen({
   route,
@@ -48,10 +51,17 @@ export default function ReplyModalScreen({
   const [selection, setSelection] = useState({ start: 0, end: 0 });
   const [showKeyboard, setShowKeyboard] = useState(true);
   const [emoticonPickerVisible, setEmoticonPickerVisible] = useState(false);
+
   const [cookies] = useAtom(cookiesAtom);
   const [draft, setDraft] = useAtom(draftAtom);
   const [cookieCode, setCookieCode] = useAtom(selectedCookieAtom);
+  const [replyHistory, setReplyHistory] = useAtom<
+    ReplyHistory[],
+    ReplyHistory[],
+    void
+  >(replyHistoryAtom);
   const setPostIdRefreshing = useSetAtom(postIdRefreshingAtom);
+
   const tintColor = useThemeColor({}, "tint");
   const backgroundColor = useThemeColor({}, "background");
   const forums = useForums();
@@ -144,14 +154,26 @@ export default function ReplyModalScreen({
         img: images.map((image) => image.url),
       };
       const {
-        data: { info: newPostId, type },
+        data: { info: newPostId, type, code },
       } = await addReply(params);
       if (/ok/i.test(type)) {
         if (typeof newPostId === "number") {
           Toast.show({ type: "success", text1: "发送成功" });
+          const {
+            data: { info },
+          } = await getReply(newPostId);
+          if (info?.id) {
+            setReplyHistory([
+              {
+                ...info,
+                createTime: Date.now(),
+              },
+              ...replyHistory,
+            ]);
+          }
         }
         if (!replyId) {
-          navigation.navigate("Post", {
+          navigation.push("Post", {
             id: newPostId,
             title: `${forumsIdMap.get(params.forum)} Po.${newPostId}`,
           });
@@ -163,7 +185,7 @@ export default function ReplyModalScreen({
       } else {
         Toast.show({
           type: "error",
-          text1: newPostId?.toString() || "出错了",
+          text1: Errors[code] || newPostId?.toString() || "出错了",
         });
       }
       return;
@@ -259,7 +281,7 @@ export default function ReplyModalScreen({
                 ?.map((cookie: any) => (
                   <Picker.Item
                     key={cookie.id}
-                    label={cookie.name}
+                    label={`${cookie.master ? "影" : "主"}·${cookie.name}`}
                     value={cookie.code}
                   ></Picker.Item>
                 ))}

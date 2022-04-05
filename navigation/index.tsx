@@ -9,9 +9,13 @@ import {
   DefaultTheme,
   DarkTheme,
   useNavigation,
+  useRoute,
+  useNavigationState,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { PageControlAji } from "react-native-chi-page-control";
 import * as Clipboard from "expo-clipboard";
 
 import * as React from "react";
@@ -32,24 +36,29 @@ import NotFoundScreen from "../screens/NotFoundScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import HomeScreen from "../screens/HomeScreen";
 import FavoriteScreen from "../screens/FavoriteScreen";
-import HistoryScreen, { UserHistory } from "../screens/HistoryScreen";
+import BrowseHistoryScreen, {
+  UserHistory,
+} from "../screens/BrowseHistoryScreen";
 import PostScreen from "../screens/PostScreen";
 import LayoutSettingsScreen from "../screens/LayoutSettingsScreen";
 import DrawerContent from "../components/DrawerContent";
 import PostScreenHeaderRight from "../screens/PostScreen/HeaderRight";
-import { tabRefreshingAtom } from "../atoms";
+import { historyTabAtom, tabRefreshingAtom } from "../atoms";
 import {
+  HistoryTabParamList,
   RootStackParamList,
   RootTabParamList,
   RootTabScreenProps,
 } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import Icon from "../components/Icon";
 import ReplyModalScreen from "../screens/ReplyModalScreen";
 import SearchModalScreen from "../screens/SearchModalScreen";
 import { useEffect, useRef } from "react";
 import { Post } from "../api";
+import { useThemeColor } from "../components/Themed";
+import ReplyHistoryScreen from "../screens/ReplyHistoryScreen";
 
 const width = Dimensions.get("window").width;
 
@@ -188,6 +197,48 @@ function RootNavigator() {
   );
 }
 
+const HistoryTab = createMaterialTopTabNavigator<HistoryTabParamList>();
+
+function HistoryTabNavigator() {
+  const setHistoryTab = useSetAtom(historyTabAtom);
+  const navigation = useNavigation();
+  const index = useNavigationState(
+    (state) =>
+      state.routes.find((route) => route.name === "History")?.state?.index || 0
+  );
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: ["浏览历史", "发言历史"][index],
+    });
+    setHistoryTab(index);
+  }, [index]);
+
+  return (
+    <HistoryTab.Navigator
+      initialRouteName="Browse"
+      backBehavior="none"
+      screenOptions={{
+        tabBarContentContainerStyle: {
+          display: "none",
+        },
+        swipeEnabled: true,
+      }}
+    >
+      <HistoryTab.Screen
+        name="Browse"
+        component={BrowseHistoryScreen}
+        options={{ tabBarLabel: "浏览历史" }}
+      ></HistoryTab.Screen>
+      <HistoryTab.Screen
+        name="Reply"
+        component={ReplyHistoryScreen}
+        options={{ tabBarLabel: "发言历史" }}
+      ></HistoryTab.Screen>
+    </HistoryTab.Navigator>
+  );
+}
+
 /**
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
  * https://reactnavigation.org/docs/bottom-tab-navigator
@@ -195,14 +246,17 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
+  const tintColor = useThemeColor({}, "tint");
+  const activeColor = useThemeColor({}, "active");
+  const inactiveColor = useThemeColor({}, "inactive");
   const setTabRefreshing = useSetAtom(tabRefreshingAtom);
+  const [historyTab] = useAtom(historyTabAtom);
 
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: tintColor,
       }}
     >
       <BottomTab.Screen
@@ -233,11 +287,20 @@ function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="History"
-        component={HistoryScreen}
+        component={HistoryTabNavigator}
         options={{
           title: "历史",
           tabBarIcon: ({ color }) => <Icon name="clock-o" color={color} />,
           tabBarLabelStyle,
+          headerRight: () => (
+            <PageControlAji
+              progress={historyTab}
+              numberOfPages={2}
+              style={{ marginHorizontal: 10 }}
+              activeTintColor={activeColor}
+              inactiveTintColor={inactiveColor}
+            ></PageControlAji>
+          ),
         }}
       />
       <BottomTab.Screen

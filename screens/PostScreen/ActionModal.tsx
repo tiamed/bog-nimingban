@@ -10,6 +10,7 @@ import { Text, View } from "../../components/Themed";
 import { Reply, deleteReply } from "../../api";
 import { cookiesAtom, showActionModalAtom } from "../../atoms/index";
 import { Cookie } from "../ProfileScreen/Cookie";
+import Errors from "../../constants/Errors";
 
 export default function ActionModal(props: {
   item: Reply;
@@ -49,7 +50,7 @@ export default function ActionModal(props: {
           );
           try {
             const {
-              data: { type, info },
+              data: { type, code, info },
             } = await deleteReply(
               props.item.id,
               `${replyCookie?.master}#${replyCookie?.hash}`
@@ -59,7 +60,7 @@ export default function ActionModal(props: {
             } else {
               Toast.show({
                 type: "error",
-                text1: info.toString() || "出错了",
+                text1: Errors[code] || info.toString() || "出错了",
               });
             }
           } finally {
@@ -71,7 +72,12 @@ export default function ActionModal(props: {
   };
 
   return (
-    <Modal isVisible={visible} onBackdropPress={close} backdropOpacity={0.3}>
+    <Modal
+      isVisible={visible}
+      onBackdropPress={close}
+      backdropOpacity={0.3}
+      backdropTransitionOutTiming={0}
+    >
       <View style={styles.actionModal}>
         <TouchableOpacity onPress={onReply}>
           <View style={styles.actionModalItem}>

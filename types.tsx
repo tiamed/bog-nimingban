@@ -4,7 +4,7 @@
  */
 
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { DrawerScreenProps } from "@react-navigation/drawer";
+import { MaterialTopTabBarProps } from "@react-navigation/material-top-tabs";
 import {
   CompositeScreenProps,
   NavigatorScreenParams,
@@ -53,3 +53,8 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
     BottomTabScreenProps<RootTabParamList, Screen>,
     NativeStackScreenProps<RootStackParamList>
   >;
+
+export type HistoryTabParamList = {
+  Browse: undefined;
+  Reply: undefined;
+};

@@ -19,7 +19,7 @@ export default function App() {
       <ColorSchemeProvider>
         <SafeAreaProvider>
           <Navigation colorScheme={colorScheme} />
-          <StatusBar />
+          <StatusBar style={colorScheme === "light" ? "dark" : "light"} />
           <Toast
             position="bottom"
             bottomOffset={100}
