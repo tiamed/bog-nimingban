@@ -89,9 +89,7 @@ export default function ActionModal(props: {
             <Text>复制</Text>
           </View>
         </TouchableOpacity>
-        {cookies.find(
-          (cookie) => cookie?.code?.indexOf(props.item.cookie) !== -1
-        ) && (
+        {cookies?.find((cookie) => cookie.id === props.item.cookie) && (
           <TouchableOpacity onPress={onDelete}>
             <View style={styles.actionModalItem}>
               <Text>删除</Text>
