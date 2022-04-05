@@ -132,7 +132,6 @@ function RootNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        statusBarAnimation: "fade",
         animation: "fade_from_bottom",
       }}
     >
@@ -328,12 +327,13 @@ function BottomTabNavigator() {
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigator() {
+  const textColor = useThemeColor({}, "text");
   return (
     <Drawer.Navigator
       initialRouteName="Main"
       drawerContent={(props) => DrawerContent(props)}
       screenOptions={{
-        headerTintColor: "white",
+        headerTintColor: textColor,
       }}
     >
       <Drawer.Screen

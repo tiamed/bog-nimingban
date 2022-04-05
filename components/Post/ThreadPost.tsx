@@ -62,6 +62,7 @@ export default function ThreadPost(props: {
     <Pressable
       onPress={props.onPress?.bind(null, props.data) || OnPress}
       onLongPress={props.onLongPress?.bind(null, props.data)}
+      delayLongPress={1000}
     >
       <Wrapper>
         <Header data={props.data} isPo={false} showForum></Header>
