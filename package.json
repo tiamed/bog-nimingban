@@ -60,7 +60,8 @@
     "react-native-tab-view": "^3.1.1",
     "react-native-toast-message": "^2.1.5",
     "react-native-web": "0.17.1",
-    "xss": "^1.0.11"
+    "xss": "^1.0.11",
+    "expo-sharing": "~10.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

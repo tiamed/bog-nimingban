@@ -5,7 +5,7 @@ import { View } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
 import { Post } from "../api";
 import ThreadPost from "../components/Post/ThreadPost";
-import { renderFooter } from "./HomeScreen";
+import renderFooter from "./HomeScreen/renderFooter";
 import { favoriteAtom, maxLineAtom } from "../atoms";
 
 export interface UserFavorite extends Post {

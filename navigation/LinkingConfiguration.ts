@@ -40,7 +40,7 @@ const linking: LinkingOptions<RootStackParamList> = {
         },
       },
       Post: "post",
-      Modal: "modal",
+      BlackList: "blacklist",
       NotFound: "*",
     },
   },

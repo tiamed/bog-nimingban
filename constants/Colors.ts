@@ -12,6 +12,7 @@ export default {
     border: "#eee",
     active: tintColorLight,
     inactive: "#ccc",
+    highlight: "#FD4C5D",
   },
   dark: {
     text: "#fff",
@@ -23,5 +24,6 @@ export default {
     border: "#333",
     active: tintColorDark,
     inactive: "#444",
+    highlight: "#FD4C5D",
   },
 };

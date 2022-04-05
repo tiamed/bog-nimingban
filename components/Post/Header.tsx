@@ -4,7 +4,7 @@ import { zhCN } from "date-fns/locale";
 import { Post } from "../../api";
 import useForums, { useForumsIdMap } from "../../hooks/useForums";
 import useSize from "../../hooks/useSize";
-import { View, Text } from "../Themed";
+import { View, Text, useThemeColor } from "../Themed";
 
 export default function Header(props: {
   data: Partial<Post>;
@@ -14,6 +14,8 @@ export default function Header(props: {
   const forums = useForums();
   const forumsIdMap = useForumsIdMap();
   const BASE_SIZE = useSize();
+  const tintColor = useThemeColor({}, "tint");
+  const highlightColor = useThemeColor({}, "highlight");
 
   return (
     <View
@@ -28,7 +30,7 @@ export default function Header(props: {
             darkColor="white"
             style={{
               fontSize: BASE_SIZE * 0.8,
-              backgroundColor: "#FC88B3",
+              backgroundColor: tintColor,
               marginRight: 2,
               borderRadius: 2,
               overflow: "hidden",
@@ -37,11 +39,7 @@ export default function Header(props: {
             Po
           </Text>
         )}
-        <Text
-          lightColor="#FC88B3"
-          darkColor="#FC88B3"
-          style={{ fontSize: BASE_SIZE * 0.8 }}
-        >
+        <Text style={{ fontSize: BASE_SIZE * 0.8, color: tintColor }}>
           {props.data.cookie}
         </Text>
       </View>
@@ -63,7 +61,7 @@ export default function Header(props: {
               darkColor="white"
               style={{
                 fontSize: BASE_SIZE * 0.8,
-                backgroundColor: "#FD4C5D",
+                backgroundColor: highlightColor,
                 padding: 2,
                 paddingLeft: 6,
                 paddingRight: 6,

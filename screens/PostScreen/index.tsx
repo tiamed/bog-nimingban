@@ -6,7 +6,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { View } from "../../components/Themed";
 import { RootStackScreenProps } from "../../types";
 import { Reply, getPostById, Post } from "../../api";
-import { renderFooter } from "../HomeScreen";
+import renderFooter from "../HomeScreen/renderFooter";
 import {
   historyAtom,
   previewsAtom,

@@ -1,10 +1,12 @@
 import { StyleSheet, FlatList } from "react-native";
 import { useAtom } from "jotai";
 
-import { View } from "../components/Themed";
+import { useThemeColor, View } from "../components/Themed";
+import Icon from "../components/Icon";
+import HistoryFloatingAction from "../components/HistoryFloatingAction";
 import { Reply } from "../api";
 import ReplyPost from "../components/Post/ReplyPost";
-import { renderFooter } from "./HomeScreen";
+import renderFooter from "./HomeScreen/renderFooter";
 import { replyHistoryAtom, maxLineAtom } from "../atoms";
 import { useNavigation } from "@react-navigation/native";
 
@@ -37,6 +39,7 @@ export default function ReplyHistoryScreen() {
         onEndReachedThreshold={0.1}
         ListFooterComponent={renderFooter.bind(null, false, true)}
       ></FlatList>
+      {/* <HistoryFloatingAction></HistoryFloatingAction> */}
     </View>
   );
 }

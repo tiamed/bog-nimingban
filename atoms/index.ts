@@ -83,6 +83,8 @@ export const showPageModalAtom = atom(false);
 
 export const showActionModalAtom = atom(false);
 
+export const showHomeActionModalAtom = atom(false);
+
 export const sizeAtom = atomWithAsyncStorage("fontSize", "normal");
 
 export const lineHeightAtom = atomWithAsyncStorage("lineHeight", 1.4);
@@ -112,3 +114,5 @@ export const imageWidthAtom = atomWithAsyncStorage("imageWidth", "49%");
 export const selectedCookieAtom = atomWithAsyncStorage("selectedCookie", null);
 
 export const historyTabAtom = atomWithAsyncStorage("historyTab", 0);
+
+export const blackListPostsAtom = atomWithAsyncStorage("blackListPosts", []);

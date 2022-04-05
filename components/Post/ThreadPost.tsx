@@ -20,7 +20,8 @@ import useSize from "../../hooks/useSize";
 
 export default function ThreadPost(props: {
   data: Partial<Post>;
-  onPress?: () => void;
+  onPress?: (item?: Partial<Post>) => void;
+  onLongPress?: (item?: Partial<Post>) => void;
   maxLine?: number;
 }) {
   const forumsIdMap = useForumsIdMap();
@@ -58,7 +59,10 @@ export default function ThreadPost(props: {
   };
 
   return (
-    <Pressable onPress={props.onPress || OnPress}>
+    <Pressable
+      onPress={props.onPress?.bind(null, props.data) || OnPress}
+      onLongPress={props.onLongPress?.bind(null, props.data)}
+    >
       <Wrapper>
         <Header data={props.data} isPo={false} showForum></Header>
         <View

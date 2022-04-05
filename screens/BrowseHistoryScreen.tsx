@@ -4,7 +4,7 @@ import { useAtom } from "jotai";
 import { View } from "../components/Themed";
 import { Post } from "../api";
 import ThreadPost from "../components/Post/ThreadPost";
-import { renderFooter } from "./HomeScreen";
+import renderFooter from "./HomeScreen/renderFooter";
 import { historyAtom, maxLineAtom } from "../atoms";
 
 export interface UserHistory extends Post {

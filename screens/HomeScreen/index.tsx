@@ -1,21 +1,22 @@
-import {
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-  Pressable,
-} from "react-native";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { useAtom } from "jotai";
-import { FloatingAction } from "react-native-floating-action";
+import { StyleSheet, FlatList } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
+import { useAtom, useSetAtom } from "jotai";
 
-import { Text, View, useThemeColor } from "../components/Themed";
-import { threadAtom, tabRefreshingAtom, maxLineAtom } from "../atoms";
-import { RootTabScreenProps } from "../types";
-import { Post, getPostsByForum } from "../api";
-import ThreadPost from "../components/Post/ThreadPost";
-import Loadings from "../constants/Loadings";
-import { useForumsIdMap } from "../hooks/useForums";
-import Icon from "../components/Icon";
+import { Text, View, useThemeColor } from "../../components/Themed";
+import {
+  threadAtom,
+  tabRefreshingAtom,
+  maxLineAtom,
+  showHomeActionModalAtom,
+  blackListPostsAtom,
+} from "../../atoms";
+import { RootTabScreenProps } from "../../types";
+import { Post, getPostsByForum } from "../../api";
+import ThreadPost from "../../components/Post/ThreadPost";
+import { useForumsIdMap } from "../../hooks/useForums";
+import HomeFloatingAction from "./HomeFloatingAction";
+import ActionModal from "./ActionModal";
+import renderFooter from "./renderFooter";
 
 export default function HomeScreen({
   route,
@@ -25,13 +26,17 @@ export default function HomeScreen({
   const [thread] = useAtom(threadAtom);
   const [tabRefreshing, setTabRefreshing] = useAtom(tabRefreshingAtom);
   const [maxLine] = useAtom(maxLineAtom);
+  const setShowHomeActionModal = useSetAtom(showHomeActionModalAtom);
+  const [blackListPosts] = useAtom(blackListPostsAtom);
+
   const [posts, setPosts] = useState<Post[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [hasNoMore, setHasNoMore] = useState(false);
+  const [focusItem, setFocusItem] = useState({} as Post);
   const listRef = React.useRef<any>(null);
-  const tintColor = useThemeColor({}, "tint");
   const loadData = async (page: number) => {
     setPage(page);
     try {
@@ -73,21 +78,6 @@ export default function HomeScreen({
     }
   };
 
-  const onPressFAB = (action: string | undefined) => {
-    switch (action) {
-      case "post":
-        navigation.navigate("ReplyModal", {
-          forumId: thread,
-        });
-        break;
-      case "search":
-        navigation.navigate("SearchModal");
-        break;
-      default:
-        break;
-    }
-  };
-
   useEffect(() => {
     setHasNoMore(false);
     if (thread !== null) {
@@ -112,36 +102,36 @@ export default function HomeScreen({
     updateTitle();
   }, [forumsIdMap, thread]);
 
+  useEffect(() => {
+    setFilteredPosts(
+      posts?.filter((post) => !blackListPosts.includes(post.id))
+    );
+  }, [posts]);
+
   return (
     <View style={styles.container}>
       <FlatList
         ref={listRef}
-        data={posts}
+        data={filteredPosts}
         refreshing={isRefreshing}
         onRefresh={refreshPosts}
         renderItem={({ item }) => (
-          <ThreadPost key={item.id} data={item} maxLine={maxLine} />
+          <ThreadPost
+            key={item.id}
+            data={item}
+            maxLine={maxLine}
+            onLongPress={(item) => {
+              setFocusItem(item as Post);
+              setShowHomeActionModal(true);
+            }}
+          />
         )}
         onEndReached={loadMoreData}
         onEndReachedThreshold={0.1}
         ListFooterComponent={renderFooter.bind(null, isLoading, hasNoMore)}
       ></FlatList>
-      <FloatingAction
-        color={tintColor}
-        actions={[
-          {
-            icon: <Icon name="edit" color="white" />,
-            name: "post",
-            color: tintColor,
-          },
-          {
-            icon: <Icon name="search" color="white" />,
-            name: "search",
-            color: tintColor,
-          },
-        ]}
-        onPressItem={onPressFAB}
-      ></FloatingAction>
+      <HomeFloatingAction></HomeFloatingAction>
+      <ActionModal item={focusItem}></ActionModal>
     </View>
   );
 }
@@ -163,49 +153,3 @@ const styles = StyleSheet.create({
     width: "80%",
   },
 });
-
-export function renderFooter(
-  loading: boolean = false,
-  hasNoMore: boolean = false,
-  loadMore: () => void = () => {}
-) {
-  const [randomIndex, setRadomIndex] = useState(0);
-  const onPress = useCallback(() => {
-    if (!loading && typeof loadMore === "function") {
-      loadMore();
-    }
-  }, [loadMore]);
-  const LoadingText = useMemo(() => {
-    if (loading) {
-      return Loadings[randomIndex];
-    } else {
-      return hasNoMore ? "已经没有更多了" : "下拉加载更多";
-    }
-    return "";
-  }, [loading, hasNoMore, randomIndex]);
-  useEffect(() => {
-    setRadomIndex((Loadings.length * Math.random()) | 0);
-  }, []);
-  return (
-    <Pressable onPress={onPress}>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          padding: 16,
-        }}
-      >
-        <Text lightColor="#666666" darkColor="#999999">
-          {LoadingText}
-        </Text>
-        {loading && (
-          <ActivityIndicator
-            size="small"
-            color={useThemeColor({}, "tint")}
-            style={{ marginLeft: 10 }}
-          ></ActivityIndicator>
-        )}
-      </View>
-    </Pressable>
-  );
-}

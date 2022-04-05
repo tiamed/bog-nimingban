@@ -28,8 +28,6 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import Colors from "../constants/Colors";
-import useColorScheme from "../hooks/useColorScheme";
 import PreviewModalScreen from "../screens/PreviewModalScreen";
 import QuoteModalScreen from "../screens/QuoteModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
@@ -59,6 +57,7 @@ import { useEffect, useRef } from "react";
 import { Post } from "../api";
 import { useThemeColor } from "../components/Themed";
 import ReplyHistoryScreen from "../screens/ReplyHistoryScreen";
+import BlackListScreen from "../screens/BlackListScreen";
 
 const width = Dimensions.get("window").width;
 
@@ -131,7 +130,12 @@ function RootNavigator() {
   }, [appState.current]);
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        statusBarAnimation: "fade",
+        animation: "fade_from_bottom",
+      }}
+    >
       <Stack.Screen
         name="Root"
         component={BottomTabNavigator}
@@ -149,6 +153,11 @@ function RootNavigator() {
         name="LayoutSettings"
         component={LayoutSettingsScreen}
         options={{ title: "显示设置" }}
+      />
+      <Stack.Screen
+        name="BlackList"
+        component={BlackListScreen}
+        options={{ title: "屏蔽串设置" }}
       />
       <Stack.Screen
         name="NotFound"
@@ -323,6 +332,9 @@ function DrawerNavigator() {
     <Drawer.Navigator
       initialRouteName="Main"
       drawerContent={(props) => DrawerContent(props)}
+      screenOptions={{
+        headerTintColor: "white",
+      }}
     >
       <Drawer.Screen
         name="Main"
