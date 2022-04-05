@@ -7,8 +7,8 @@ bog 岛第三方客户端
 ![Expo](https://img.shields.io/badge/expo-1C1E24?style=for-the-badge&logo=expo&logoColor=#D04A37)
 
 <div style="display: flex; flex-direction: row">
-  <img src="https://user-images.githubusercontent.com/20151080/161738229-0f395de7-83fd-4b78-a1d9-711f2d33128f.jpg" alt="dark theme" style="width: 120px" />
-  <img src="https://user-images.githubusercontent.com/20151080/161737547-12cd5c36-df99-49e7-9456-2730d92602fd.jpg" alt="light theme" style="width: 120px" />
+  <img src="https://user-images.githubusercontent.com/20151080/161785944-4be24436-76a4-44b9-9e3a-4544ead235f4.jpg" alt="dark theme" style="width: 120px" />
+  <img src="https://user-images.githubusercontent.com/20151080/161785958-e5a7fa70-91e0-4434-bfaf-96c58e538ae5.jpg" alt="light theme" style="width: 120px" />
 </div>
 
 ## 安装
