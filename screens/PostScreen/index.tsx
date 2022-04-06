@@ -243,7 +243,12 @@ export default function PostScreen({
             if (isShowFooter) {
               setIsShowFooter(false);
             }
-          } else {
+          } else if (
+            e.nativeEvent.contentSize.height -
+              e.nativeEvent.layoutMeasurement.height -
+              e.nativeEvent.contentOffset.y >
+            60
+          ) {
             if (!isShowFooter) {
               setIsShowFooter(true);
             }
