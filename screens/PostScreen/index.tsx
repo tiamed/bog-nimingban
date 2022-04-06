@@ -41,8 +41,9 @@ export default function PostScreen({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [hasNoMore, setHasNoMore] = useState(false);
   const [lastPageFinished, setLastPageFinished] = useState(false);
-
   const [focusItem, setFocusItem] = useState({} as Reply);
+  const [isShowFooter, setIsShowFooter] = useState(true);
+
   const [postIdRefreshing, setPostIdRefreshing] = useAtom(postIdRefreshingAtom);
   const setPreviews = useSetAtom(previewsAtom);
   const [history, setHistory] = useAtom<UserHistory[], UserHistory[], void>(
@@ -234,6 +235,20 @@ export default function PostScreen({
         data={postFiltered ? filteredPosts : posts}
         refreshing={isRefreshing}
         onRefresh={refreshPosts}
+        onScroll={(e) => {
+          if (
+            (e.nativeEvent.velocity?.y as Number) > 0 &&
+            e.nativeEvent.contentOffset.y > 100
+          ) {
+            if (isShowFooter) {
+              setIsShowFooter(false);
+            }
+          } else {
+            if (!isShowFooter) {
+              setIsShowFooter(true);
+            }
+          }
+        }}
         renderItem={({ item }) => (
           <ReplyPost
             key={item.id}
@@ -255,7 +270,11 @@ export default function PostScreen({
         )}
       ></FlatList>
 
-      <Footer id={route.params.id} mainPost={mainPost}></Footer>
+      <Footer
+        id={route.params.id}
+        mainPost={mainPost}
+        visible={isShowFooter}
+      ></Footer>
 
       <PageModal
         index={currentPage}
