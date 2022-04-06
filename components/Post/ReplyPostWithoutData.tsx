@@ -1,14 +1,16 @@
+import { useNavigation } from "@react-navigation/native";
+import type { StackNavigationProp } from "@react-navigation/stack";
+import { useAtom, useSetAtom } from "jotai";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { useAtom, useSetAtom } from "jotai";
 
-import { Text, useThemeColor, View } from "../Themed";
-import ReplyPost from "./ReplyPost";
-import { getReply, Post, Reply, Image } from "../../api";
-import { currentPostAtom, previewIndexAtom, previewsAtom } from "../../atoms";
-import { useNavigation } from "@react-navigation/native";
 import { getImageUrl, getThumbnailUrl } from "./ImageView";
-import { SizeContext } from "../ThemeContextProvider";
+import ReplyPost from "./ReplyPost";
+
+import { getReply, Post, Reply, Image } from "@/api";
+import { currentPostAtom, previewIndexAtom, previewsAtom } from "@/atoms";
+import { SizeContext } from "@/components/ThemeContextProvider";
+import { Text, useThemeColor, View } from "@/components/Themed";
 
 export default function ReplyPostWithoutData(props: {
   id: number;
@@ -18,10 +20,10 @@ export default function ReplyPostWithoutData(props: {
   const mounted = useRef(false);
   const [data, setData] = useState<Reply>({ content: "加载中..." } as Reply);
   const [currentPost] = useAtom<Post>(currentPostAtom);
-  const [previews, setPreviews] = useAtom(previewsAtom);
+  const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const tintColor = useThemeColor({}, "tint");
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const BASE_SIZE = useContext(SizeContext);
 
   const loadData = async () => {
@@ -55,8 +57,7 @@ export default function ReplyPostWithoutData(props: {
         justifyContent: "center",
         alignItems: "flex-end",
         alignContent: "stretch",
-      }}
-    >
+      }}>
       <View style={styles.actionWrapper}>
         <TouchableOpacity
           onPress={() => {
@@ -65,15 +66,13 @@ export default function ReplyPostWithoutData(props: {
               title: "",
             });
           }}
-          disabled={currentPost.id === data.res}
-        >
+          disabled={currentPost.id === data.res}>
           <Text
             style={{
               fontSize: BASE_SIZE * 0.8,
             }}
             lightColor={tintColor}
-            darkColor={tintColor}
-          >
+            darkColor={tintColor}>
             {currentPost.id === data.res ? "当前串" : "查看原串"}
           </Text>
         </TouchableOpacity>
@@ -90,12 +89,10 @@ export default function ReplyPostWithoutData(props: {
               originalUrl: getThumbnailUrl(item),
             }))
           );
-          setPreviewIndex(
-            data.images.findIndex((item) => item.url === image.url)
-          );
+          setPreviewIndex(data.images.findIndex((item) => item.url === image.url));
           navigation.navigate("PreviewModal");
         }}
-      ></ReplyPost>
+      />
     </View>
   );
 }

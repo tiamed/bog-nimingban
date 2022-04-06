@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { StyleSheet } from "react-native";
 
-import { Button, View, TextInput } from "../components/Themed";
-import { RootStackScreenProps } from "../types";
-import Overlay from "../components/Overlay";
+import Overlay from "@/components/Overlay";
+import { Button, View, TextInput } from "@/components/Themed";
+import { RootStackScreenProps } from "@/types";
 
 export default function SearchModalScreen({
   route,
@@ -20,21 +20,17 @@ export default function SearchModalScreen({
 
   return (
     <View style={styles.container}>
-      <Overlay></Overlay>
+      <Overlay />
       <View style={styles.modal}>
-        <TextInput
-          value={query}
-          onChangeText={(val) => setQuery(val)}
-          style={styles.input}
-        ></TextInput>
+        <TextInput value={query} onChangeText={(val) => setQuery(val)} style={styles.input} />
         <View style={styles.group}>
           <Button
             title="取消"
             onPress={() => {
               navigation.goBack();
             }}
-          ></Button>
-          <Button title="跳转串号" onPress={confirm}></Button>
+          />
+          <Button title="跳转串号" onPress={confirm} />
         </View>
       </View>
     </View>

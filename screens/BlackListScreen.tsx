@@ -1,15 +1,12 @@
-import { StyleSheet, FlatList, Alert } from "react-native";
-import { useAtom } from "jotai";
-
-import { View, Text, Button } from "../components/Themed";
-import { RootTabScreenProps } from "../types";
-import { blackListPostsAtom } from "../atoms";
 import { useNavigation } from "@react-navigation/native";
+import { useAtom } from "jotai";
+import { StyleSheet, FlatList, Alert } from "react-native";
 
-export default function FavoriteScreen({
-  route,
-  navigation,
-}: RootTabScreenProps<"Favorite">) {
+import { blackListPostsAtom } from "@/atoms";
+import { View, Text, Button } from "@/components/Themed";
+import { RootTabScreenProps } from "@/types";
+
+export default function FavoriteScreen({ route, navigation }: RootTabScreenProps<"Favorite">) {
   const [blackListPosts] = useAtom<number[]>(blackListPostsAtom);
 
   return (
@@ -21,21 +18,17 @@ export default function FavoriteScreen({
         onEndReachedThreshold={0.1}
         ListEmptyComponent={() => (
           <View style={styles.empty}>
-            <Text style={styles.emptyText}>
-              暂无屏蔽的串，板块列表中长按可屏蔽串
-            </Text>
+            <Text style={styles.emptyText}>暂无屏蔽的串，板块列表中长按可屏蔽串</Text>
           </View>
         )}
-      ></FlatList>
+      />
     </View>
   );
 }
 
 function Item(props: { id: number }) {
   const navigation = useNavigation();
-  const [blackListPosts, setBlackListPosts] = useAtom<number[], number[], void>(
-    blackListPostsAtom
-  );
+  const [blackListPosts, setBlackListPosts] = useAtom<number[], number[], void>(blackListPostsAtom);
   return (
     <View style={styles.item}>
       <Text style={styles.id}>{props.id}</Text>
@@ -48,7 +41,7 @@ function Item(props: { id: number }) {
             title: `Po.${props.id}`,
           });
         }}
-      ></Button>
+      />
       <Button
         style={styles.action}
         title="移除"
@@ -60,14 +53,12 @@ function Item(props: { id: number }) {
             {
               text: "确定",
               onPress: () => {
-                setBlackListPosts(
-                  blackListPosts.filter((item) => item !== props.id)
-                );
+                setBlackListPosts(blackListPosts.filter((item) => item !== props.id));
               },
             },
           ]);
         }}
-      ></Button>
+      />
     </View>
   );
 }

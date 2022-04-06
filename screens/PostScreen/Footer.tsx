@@ -1,31 +1,20 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Share } from "react-native";
-
-import { Text, View, useThemeColor, Button } from "../../components/Themed";
-import Icon from "../../components/Icon";
-import { favoriteAtom, showPageModalAtom } from "../../atoms/index";
-import { useAtom, useSetAtom } from "jotai";
-import { UserFavorite } from "../FavoriteScreen";
-import { useNavigation } from "@react-navigation/native";
-import { Post } from "../../api";
 import { FontAwesome } from "@expo/vector-icons";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import { useNavigation } from "@react-navigation/native";
+import { useAtom, useSetAtom } from "jotai";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, TouchableOpacity, Share } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export default function Footer(props: {
-  id: number;
-  mainPost: Post;
-  visible: boolean;
-}) {
+import { Post } from "@/api";
+import { favoriteAtom, showPageModalAtom } from "@/atoms/index";
+import Icon from "@/components/Icon";
+import { Text, View, useThemeColor } from "@/components/Themed";
+import { UserFavorite } from "@/screens/FavoriteScreen";
+
+export default function Footer(props: { id: number; mainPost: Post; visible: boolean }) {
   const [isFavorite, setIsFavorite] = useState(false);
-  const [favorite, setFavorite] = useAtom<UserFavorite[], UserFavorite[], void>(
-    favoriteAtom
-  );
+  const [favorite, setFavorite] = useAtom<UserFavorite[], UserFavorite[], void>(favoriteAtom);
   const setShowPageModal = useSetAtom(showPageModalAtom);
   const navigation = useNavigation();
   const tintColor = useThemeColor({}, "tint");
@@ -65,15 +54,12 @@ export default function Footer(props: {
   }, [props.visible]);
 
   return (
-    <Animated.View
-      style={[styles.footerWrapper, animatedStyle, { bottom: insets.bottom }]}
-    >
+    <Animated.View style={[styles.footerWrapper, animatedStyle, { bottom: insets.bottom }]}>
       <View
         style={{
           ...styles.footer,
           borderTopColor: tintColor,
-        }}
-      >
+        }}>
         {[
           {
             label: "收藏",
@@ -108,7 +94,7 @@ export default function Footer(props: {
             label={item.label}
             icon={item.icon as React.ComponentProps<typeof FontAwesome>["name"]}
             handler={item.handler}
-          ></FooterItem>
+          />
         ))}
       </View>
     </Animated.View>
@@ -126,11 +112,7 @@ function FooterItem(props: {
     <TouchableOpacity onPress={props.handler}>
       <View style={styles.footerItem}>
         <Icon name={props.icon} color={tintColor} />
-        <Text
-          lightColor={tintColor}
-          darkColor={tintColor}
-          style={styles.footerItemText}
-        >
+        <Text lightColor={tintColor} darkColor={tintColor} style={styles.footerItemText}>
           {props.label}
         </Text>
       </View>
@@ -140,9 +122,7 @@ function FooterItem(props: {
 
 function onShare(id: number, content: string) {
   Share.share({
-    message: `${content
-      .replace(/<[^>]+>/g, "")
-      .slice(0, 100)} http://bog.ac/t/${id}/
+    message: `${content.replace(/<[^>]+>/g, "").slice(0, 100)} http://bog.ac/t/${id}/
 
 来自B岛匿名版 https://expo.dev/@creasus/bog-nimingban`,
   });

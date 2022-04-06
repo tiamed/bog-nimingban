@@ -1,17 +1,11 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
-import React, { useState, useEffect } from "react";
-import Modal from "react-native-modal";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-import {
-  Text,
-  View,
-  useThemeColor,
-  Button,
-  TextInput,
-} from "../../components/Themed";
-import { showPageModalAtom } from "../../atoms/index";
 import { useAtom } from "jotai";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import Modal from "react-native-modal";
+
+import { showPageModalAtom } from "@/atoms/index";
+import { Text, View, useThemeColor, Button, TextInput } from "@/components/Themed";
 
 export default function PageModal(props: {
   index: number;
@@ -31,7 +25,7 @@ export default function PageModal(props: {
   };
   const confirm = () => {
     if (input) {
-      const page = parseInt(input);
+      const page = parseInt(input, 10);
       if (Number.isInteger(page) && page > 0 && page <= total) {
         props.loadData(page, true);
       }
@@ -43,21 +37,19 @@ export default function PageModal(props: {
       isVisible={visible}
       onBackdropPress={close}
       backdropOpacity={0.3}
-      backdropTransitionOutTiming={0}
-    >
+      backdropTransitionOutTiming={0}>
       <View style={styles.modal}>
         <Text style={styles.modalTitle}>跳页</Text>
         <View style={styles.modalContent}>
           <TouchableOpacity
             onPress={() => {
               setInput("1");
-            }}
-          >
+            }}>
             <MaterialCommunityIcons
               color={useThemeColor({}, "tint")}
               size={24}
               name="step-backward"
-            ></MaterialCommunityIcons>
+            />
           </TouchableOpacity>
           <View style={styles.modalInputWrapper}>
             <TextInput
@@ -70,21 +62,20 @@ export default function PageModal(props: {
           <TouchableOpacity
             onPress={() => {
               setInput(`${Math.ceil(total / 20)}`);
-            }}
-          >
+            }}>
             <MaterialCommunityIcons
               color={useThemeColor({}, "tint")}
               size={24}
               name="step-forward"
-            ></MaterialCommunityIcons>
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.modalFooter}>
           <View style={styles.modalFooterButton}>
-            <Button title="取消" onPress={close}></Button>
+            <Button title="取消" onPress={close} />
           </View>
           <View style={styles.modalFooterButton}>
-            <Button title="确定" onPress={confirm}></Button>
+            <Button title="确定" onPress={confirm} />
           </View>
         </View>
       </View>

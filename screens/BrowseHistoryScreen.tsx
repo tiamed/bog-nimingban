@@ -1,11 +1,12 @@
-import { StyleSheet, FlatList } from "react-native";
 import { useAtom } from "jotai";
+import { StyleSheet, FlatList } from "react-native";
 
-import { View } from "../components/Themed";
-import { Post } from "../api";
-import ThreadPost from "../components/Post/ThreadPost";
 import renderFooter from "./HomeScreen/renderFooter";
-import { historyAtom, maxLineAtom } from "../atoms";
+
+import { Post } from "@/api";
+import { historyAtom, maxLineAtom } from "@/atoms";
+import ThreadPost from "@/components/Post/ThreadPost";
+import { View } from "@/components/Themed";
 
 export interface UserHistory extends Post {
   createTime: number;
@@ -29,8 +30,8 @@ export default function BrowseHistoryScreen() {
           )
         }
         onEndReachedThreshold={0.1}
-        ListFooterComponent={renderFooter.bind(null, false, true)}
-      ></FlatList>
+        ListFooterComponent={() => renderFooter(false, true)}
+      />
     </View>
   );
 }

@@ -1,14 +1,14 @@
-import { StyleSheet, FlatList } from "react-native";
-import { useAtom } from "jotai";
-
-import { useThemeColor, View } from "../components/Themed";
-import Icon from "../components/Icon";
-import HistoryFloatingAction from "../components/HistoryFloatingAction";
-import { Reply } from "../api";
-import ReplyPost from "../components/Post/ReplyPost";
-import renderFooter from "./HomeScreen/renderFooter";
-import { replyHistoryAtom, maxLineAtom } from "../atoms";
 import { useNavigation } from "@react-navigation/native";
+import { useAtom } from "jotai";
+import { StyleSheet, FlatList } from "react-native";
+
+import renderFooter from "./HomeScreen/renderFooter";
+
+import { Reply } from "@/api";
+import { replyHistoryAtom } from "@/atoms";
+import HistoryFloatingAction from "@/components/HistoryFloatingAction";
+import ReplyPost from "@/components/Post/ReplyPost";
+import { View } from "@/components/Themed";
 
 export interface ReplyHistory extends Reply {
   createTime: number;
@@ -37,9 +37,9 @@ export default function ReplyHistoryScreen() {
           )
         }
         onEndReachedThreshold={0.1}
-        ListFooterComponent={renderFooter.bind(null, false, true)}
-      ></FlatList>
-      {/* <HistoryFloatingAction></HistoryFloatingAction> */}
+        ListFooterComponent={() => renderFooter(false, true)}
+      />
+      <HistoryFloatingAction />
     </View>
   );
 }

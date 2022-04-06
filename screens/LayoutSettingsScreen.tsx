@@ -1,10 +1,5 @@
 import { StyleSheet } from "react-native";
 
-import { ScrollView } from "../components/Themed";
-import { RootStackScreenProps } from "../types";
-
-import { View, Text } from "../components/Themed";
-import SettingPicker from "../components/SettingPicker";
 import {
   colorSchemeAtom,
   imageWidthAtom,
@@ -13,11 +8,12 @@ import {
   sizeAtom,
   threadDirectionAtom,
   thumbnailResizeAtom,
-} from "../atoms";
+} from "@/atoms";
+import SettingPicker from "@/components/SettingPicker";
+import { ScrollView, View } from "@/components/Themed";
+import { RootStackScreenProps } from "@/types";
 
-export default function ProfileScreen({
-  navigation,
-}: RootStackScreenProps<"LayoutSettings">) {
+export default function ProfileScreen({ navigation }: RootStackScreenProps<"LayoutSettings">) {
   return (
     <ScrollView style={{ flex: 1, flexDirection: "column" }}>
       <View style={styles.container}>
@@ -31,7 +27,7 @@ export default function ProfileScreen({
             { label: "大", value: "large" },
             { label: "特大", value: "extraLarge" },
           ]}
-        ></SettingPicker>
+        />
         <SettingPicker
           title="行距"
           atom={lineHeightAtom}
@@ -42,7 +38,7 @@ export default function ProfileScreen({
             { label: "大", value: 1.5 },
             { label: "特大", value: 1.6 },
           ]}
-        ></SettingPicker>
+        />
         <SettingPicker
           title="行数"
           atom={maxLineAtom}
@@ -53,7 +49,7 @@ export default function ProfileScreen({
             })),
             { label: "不限", value: 999 },
           ]}
-        ></SettingPicker>
+        />
         <SettingPicker
           title="主题"
           atom={colorSchemeAtom}
@@ -62,7 +58,7 @@ export default function ProfileScreen({
             { label: "亮", value: "light" },
             { label: "暗", value: "dark" },
           ]}
-        ></SettingPicker>
+        />
         <SettingPicker
           title="图片位置"
           atom={threadDirectionAtom}
@@ -70,7 +66,7 @@ export default function ProfileScreen({
             { label: "左", value: "row-reverse" },
             { label: "右", value: "row" },
           ]}
-        ></SettingPicker>
+        />
         <SettingPicker
           title="图片缩放"
           atom={thumbnailResizeAtom}
@@ -78,7 +74,7 @@ export default function ProfileScreen({
             { label: "包含", value: "contain" },
             { label: "平铺", value: "cover" },
           ]}
-        ></SettingPicker>
+        />
         <SettingPicker
           title="串内每行图片数"
           atom={imageWidthAtom}
@@ -88,7 +84,7 @@ export default function ProfileScreen({
               value: `${100 / (i + 1) - 1}%`,
             })),
           ]}
-        ></SettingPicker>
+        />
       </View>
     </ScrollView>
   );

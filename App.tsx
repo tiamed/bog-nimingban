@@ -1,12 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
+import { ColorSchemeProvider } from "./components/ThemeContextProvider";
+import { getToastConfig } from "./components/Themed";
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
-import { ColorSchemeProvider } from "./components/ThemeContextProvider";
-import Toast from "react-native-toast-message";
-import { getToastConfig } from "./components/Themed";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -25,7 +25,7 @@ export default function App() {
             bottomOffset={100}
             visibilityTime={2500}
             config={getToastConfig(colorScheme)}
-          ></Toast>
+          />
         </SafeAreaProvider>
       </ColorSchemeProvider>
     );

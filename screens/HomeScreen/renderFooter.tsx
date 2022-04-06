@@ -1,9 +1,9 @@
-import { ActivityIndicator, Pressable } from "react-native";
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { ActivityIndicator, Pressable } from "react-native";
 
-import { Text, View, useThemeColor } from "../../components/Themed";
-
-import Loadings from "../../constants/Loadings";
+import { Text, View, useThemeColor } from "@/components/Themed";
+import Loadings from "@/constants/Loadings";
 
 export default function renderFooter(
   loading: boolean = false,
@@ -22,7 +22,6 @@ export default function renderFooter(
     } else {
       return hasNoMore ? "已经没有更多了" : "下拉加载更多";
     }
-    return "";
   }, [loading, hasNoMore, randomIndex]);
   useEffect(() => {
     setRadomIndex((Loadings.length * Math.random()) | 0);
@@ -34,8 +33,7 @@ export default function renderFooter(
           flexDirection: "row",
           justifyContent: "center",
           padding: 16,
-        }}
-      >
+        }}>
         <Text lightColor="#666666" darkColor="#999999">
           {LoadingText}
         </Text>
@@ -44,7 +42,7 @@ export default function renderFooter(
             size="small"
             color={useThemeColor({}, "tint")}
             style={{ marginLeft: 10 }}
-          ></ActivityIndicator>
+          />
         )}
       </View>
     </Pressable>

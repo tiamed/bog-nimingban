@@ -1,8 +1,9 @@
 import { useKeyboard } from "@react-native-community/hooks";
 import { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, FlatList } from "react-native";
-import { Text } from "../../components/Themed";
-import useEmoticons from "../../hooks/useEmoticons";
+
+import { Text } from "@/components/Themed";
+import useEmoticons from "@/hooks/useEmoticons";
 
 export default function EmoticonPicker(props: {
   visible: boolean;
@@ -34,12 +35,11 @@ export default function EmoticonPicker(props: {
           onPress={() => {
             props.onInsert(item);
           }}
-          style={styles.item}
-        >
+          style={styles.item}>
           <Text>{item}</Text>
         </TouchableOpacity>
       )}
-    ></FlatList>
+    />
   );
 }
 

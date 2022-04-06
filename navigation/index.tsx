@@ -3,75 +3,61 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
   useNavigation,
-  useRoute,
   useNavigationState,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { PageControlAji } from "react-native-chi-page-control";
 import * as Clipboard from "expo-clipboard";
-
+import { useAtom, useSetAtom } from "jotai";
 import * as React from "react";
-import {
-  Alert,
-  AppState,
-  ColorSchemeName,
-  Dimensions,
-  Platform,
-} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useRef } from "react";
+import { Alert, AppState, ColorSchemeName, Dimensions, Platform } from "react-native";
+import { PageControlAji } from "react-native-chi-page-control";
 
-import PreviewModalScreen from "../screens/PreviewModalScreen";
-import QuoteModalScreen from "../screens/QuoteModalScreen";
-import NotFoundScreen from "../screens/NotFoundScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import HomeScreen from "../screens/HomeScreen";
-import FavoriteScreen from "../screens/FavoriteScreen";
-import BrowseHistoryScreen, {
-  UserHistory,
-} from "../screens/BrowseHistoryScreen";
-import PostScreen from "../screens/PostScreen";
-import LayoutSettingsScreen from "../screens/LayoutSettingsScreen";
-import DrawerContent from "../components/DrawerContent";
-import PostScreenHeaderRight from "../screens/PostScreen/HeaderRight";
-import { historyTabAtom, tabRefreshingAtom } from "../atoms";
+import LinkingConfiguration from "./LinkingConfiguration";
+
+import { Post } from "@/api";
+import { historyTabAtom, tabRefreshingAtom } from "@/atoms";
+import DrawerContent from "@/components/DrawerContent";
+import Icon from "@/components/Icon";
+import { useThemeColor } from "@/components/Themed";
+import BlackListScreen from "@/screens/BlackListScreen";
+import BrowseHistoryScreen, { UserHistory } from "@/screens/BrowseHistoryScreen";
+import FavoriteScreen from "@/screens/FavoriteScreen";
+import HomeScreen from "@/screens/HomeScreen";
+import LayoutSettingsScreen from "@/screens/LayoutSettingsScreen";
+import NotFoundScreen from "@/screens/NotFoundScreen";
+import PostScreen from "@/screens/PostScreen";
+import PostScreenHeaderRight from "@/screens/PostScreen/HeaderRight";
+import PreviewModalScreen from "@/screens/PreviewModalScreen";
+import ProfileScreen from "@/screens/ProfileScreen";
+import QuoteModalScreen from "@/screens/QuoteModalScreen";
+import ReplyHistoryScreen from "@/screens/ReplyHistoryScreen";
+import ReplyModalScreen from "@/screens/ReplyModalScreen";
+import SearchModalScreen from "@/screens/SearchModalScreen";
 import {
   HistoryTabParamList,
   RootStackParamList,
   RootTabParamList,
   RootTabScreenProps,
-} from "../types";
-import LinkingConfiguration from "./LinkingConfiguration";
-import { useAtom, useSetAtom } from "jotai";
-import Icon from "../components/Icon";
-import ReplyModalScreen from "../screens/ReplyModalScreen";
-import SearchModalScreen from "../screens/SearchModalScreen";
-import { useEffect, useRef } from "react";
-import { Post } from "../api";
-import { useThemeColor } from "../components/Themed";
-import ReplyHistoryScreen from "../screens/ReplyHistoryScreen";
-import BlackListScreen from "../screens/BlackListScreen";
-import useSize from "../hooks/useSize";
+} from "@/types";
 
 const width = Dimensions.get("window").width;
 
-export default function Navigation({
-  colorScheme,
-}: {
-  colorScheme: ColorSchemeName;
-}) {
+export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-    >
+      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <RootNavigator />
     </NavigationContainer>
   );
@@ -87,15 +73,10 @@ function RootNavigator() {
   const appState = useRef(AppState.currentState);
   const navigation = useNavigation();
 
-  const onClipboardChange = (
-    threadId: string | undefined,
-    history: UserHistory[]
-  ): void => {
+  const onClipboardChange = (threadId: string | undefined, history: UserHistory[]): void => {
     const shouldShowConfirm =
       threadId &&
-      !history
-        .slice(0, 5)
-        .some((item) => (item as unknown as Post)?.id === Number(threadId));
+      !history.slice(0, 5).some((item) => (item as unknown as Post)?.id === Number(threadId));
     if (shouldShowConfirm) {
       showNavigateConfirm(threadId);
     }
@@ -134,13 +115,8 @@ function RootNavigator() {
     <Stack.Navigator
       screenOptions={{
         animation: "fade_from_bottom",
-      }}
-    >
-      <Stack.Screen
-        name="Root"
-        component={BottomTabNavigator}
-        options={{ headerShown: false }}
-      />
+      }}>
+      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen
         name="Post"
         component={PostScreen}
@@ -159,16 +135,11 @@ function RootNavigator() {
         component={BlackListScreen}
         options={{ title: "屏蔽串设置" }}
       />
-      <Stack.Screen
-        name="NotFound"
-        component={NotFoundScreen}
-        options={{ title: "Oops!" }}
-      />
+      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: "Oops!" }} />
       <Stack.Group
         screenOptions={{
           presentation: Platform.OS === "ios" ? "card" : "transparentModal",
-        }}
-      >
+        }}>
         <Stack.Screen
           name="PreviewModal"
           component={PreviewModalScreen}
@@ -212,8 +183,7 @@ function HistoryTabNavigator() {
   const setHistoryTab = useSetAtom(historyTabAtom);
   const navigation = useNavigation();
   const index = useNavigationState(
-    (state) =>
-      state.routes.find((route) => route.name === "History")?.state?.index || 0
+    (state) => state.routes.find((route) => route.name === "History")?.state?.index || 0
   );
 
   useEffect(() => {
@@ -232,18 +202,17 @@ function HistoryTabNavigator() {
           display: "none",
         },
         swipeEnabled: true,
-      }}
-    >
+      }}>
       <HistoryTab.Screen
         name="Browse"
         component={BrowseHistoryScreen}
         options={{ tabBarLabel: "浏览历史" }}
-      ></HistoryTab.Screen>
+      />
       <HistoryTab.Screen
         name="Reply"
         component={ReplyHistoryScreen}
         options={{ tabBarLabel: "发言历史" }}
-      ></HistoryTab.Screen>
+      />
     </HistoryTab.Navigator>
   );
 }
@@ -267,8 +236,7 @@ function BottomTabNavigator() {
       screenOptions={{
         tabBarActiveTintColor: tintColor,
         tabBarAllowFontScaling: false,
-      }}
-    >
+      }}>
       <BottomTab.Screen
         name="Home"
         component={DrawerNavigator}
@@ -279,7 +247,7 @@ function BottomTabNavigator() {
           tabBarLabelStyle,
         })}
         listeners={({ navigation, route }) => ({
-          tabPress: (e) => {
+          tabPress: () => {
             if (navigation.isFocused()) {
               setTabRefreshing(true);
             }
@@ -309,7 +277,7 @@ function BottomTabNavigator() {
               style={{ marginHorizontal: 10 }}
               activeTintColor={activeColor}
               inactiveTintColor={inactiveColor}
-            ></PageControlAji>
+            />
           ),
         }}
       />
@@ -336,8 +304,7 @@ function DrawerNavigator() {
       drawerContent={(props) => DrawerContent(props)}
       screenOptions={{
         headerTintColor: textColor,
-      }}
-    >
+      }}>
       <Drawer.Screen
         name="Main"
         component={HomeScreen}

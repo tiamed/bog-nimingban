@@ -1,6 +1,7 @@
-import { createContext, useState } from "react";
-import useColorScheme from "../hooks/useColorScheme";
-import useSize from "../hooks/useSize";
+import { createContext } from "react";
+
+import useColorScheme from "@/hooks/useColorScheme";
+import useSize from "@/hooks/useSize";
 
 export const ColorSchemeContext = createContext("light");
 export const SizeContext = createContext(16);

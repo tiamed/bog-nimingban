@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { StyleSheet } from "react-native";
 import { FloatingAction } from "react-native-floating-action";
-import Modal from "react-native-modal";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-import { useThemeColor, View } from "../components/Themed";
-import Icon from "../components/Icon";
+import Icon from "@/components/Icon";
+import { useThemeColor } from "@/components/Themed";
 
 export default function HistoryFloatingAction() {
   const [visible, setVisible] = useState(false);
@@ -14,7 +12,7 @@ export default function HistoryFloatingAction() {
     <>
       <FloatingAction
         color={tintColor}
-        overrideWithAction={true}
+        overrideWithAction
         actions={[
           {
             icon: <Icon name="search" color="white" />,
@@ -24,7 +22,7 @@ export default function HistoryFloatingAction() {
         onPressItem={() => {
           setVisible(true);
         }}
-      ></FloatingAction>
+      />
       {/* <Modal
         isVisible={visible}
         onBackdropPress={close}

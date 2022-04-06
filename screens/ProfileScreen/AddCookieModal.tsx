@@ -1,21 +1,16 @@
-import { StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import { useAtom } from "jotai";
+import { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
+import Modal from "react-native-modal";
 import Toast from "react-native-toast-message";
 
-import {
-  Button,
-  Text,
-  useThemeColor,
-  View,
-  TextInput,
-} from "../../components/Themed";
-import { cookiesAtom } from "../../atoms/index";
-import { useAtom } from "jotai";
-import Modal from "react-native-modal";
-import { useEffect, useState } from "react";
-import { importCookie } from "../../api";
 import { showAddModalAtom, Cookie } from "./common";
-import Errors from "../../constants/Errors";
+
+import { importCookie } from "@/api";
+import { cookiesAtom } from "@/atoms/index";
+import { Button, Text, useThemeColor, View, TextInput } from "@/components/Themed";
+import Errors from "@/constants/Errors";
 
 export default function AddCookieModal(props: { cookie?: Cookie }) {
   const [visible, setVisible] = useAtom(showAddModalAtom);
@@ -32,7 +27,7 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
   };
   const confirm = async () => {
     if (props.cookie) {
-      const { id, hash } = (props.cookie || {}) as Cookie;
+      const { id } = (props.cookie || {}) as Cookie;
       const oldCookie = cookies.find((cookie) => cookie.id === id);
       setCookies([
         ...cookies.filter((cookie) => cookie.id !== id),
@@ -48,9 +43,7 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
     const validated = id?.length === 8 && hash?.length === 32;
     if (validated) {
       const masterCookie = cookies.find((cookie) => cookie.id === master);
-      const masterCode = masterCookie
-        ? `${masterCookie?.id}#${masterCookie?.hash}`
-        : "0";
+      const masterCode = masterCookie ? `${masterCookie?.id}#${masterCookie?.hash}` : "0";
       const {
         data: { info, code },
       } = await importCookie(masterCode, `${id}#${hash}`);
@@ -78,8 +71,7 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
         }
         setCookies([
           ...cookies.filter(
-            (cookie) =>
-              !newCookies.find((newCookie) => newCookie.id === cookie.id)
+            (cookie) => !newCookies.find((newCookie) => newCookie.id === cookie.id)
           ),
           ...newCookies,
         ]);
@@ -115,30 +107,25 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
       isVisible={visible}
       onBackdropPress={close}
       backdropOpacity={0.3}
-      backdropTransitionOutTiming={0}
-    >
+      backdropTransitionOutTiming={0}>
       <View style={styles.modal}>
-        <Text style={styles.title}>
-          {props.cookie ? "修改饼干" : "添加饼干"}
-        </Text>
+        <Text style={styles.title}>{props.cookie ? "修改饼干" : "添加饼干"}</Text>
         <TextInput
           placeholder="饼干名字，可不填"
           value={name}
           onChangeText={(val) => setName(val)}
           style={styles.input}
-        ></TextInput>
+        />
         {!props.cookie?.hash && (
           <TextInput
             placeholder="饼干序列"
             value={code}
             onChangeText={(val) => setCode(val)}
             style={styles.input}
-          ></TextInput>
+          />
         )}
         <View style={styles.pickerWrapper}>
-          <Text style={{ ...styles.pickerLabel, color: tintColor }}>
-            主饼干
-          </Text>
+          <Text style={{ ...styles.pickerLabel, color: tintColor }}>主饼干</Text>
           <Picker
             style={{
               ...styles.picker,
@@ -149,30 +136,21 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
               color: tintColor,
             }}
             selectedValue={master}
-            onValueChange={(val: string) => setMaster(val)}
-          >
-            <Picker.Item label="无" value=""></Picker.Item>
+            onValueChange={(val: string) => setMaster(val)}>
+            <Picker.Item label="无" value="" />
             {cookies
               ?.filter((cookie) => cookie.id && !cookie.master)
               ?.map((cookie: any) => (
-                <Picker.Item
-                  key={cookie.id}
-                  label={cookie.name}
-                  value={cookie.id}
-                ></Picker.Item>
+                <Picker.Item key={cookie.id} label={cookie.name} value={cookie.id} />
               ))}
           </Picker>
         </View>
         <View style={styles.footer}>
           <View style={styles.footerButton}>
-            <Button title="取消" onPress={close}></Button>
+            <Button title="取消" onPress={close} />
           </View>
           <View style={styles.footerButton}>
-            <Button
-              title="确定"
-              onPress={confirm}
-              disabled={!Boolean(code || props.cookie?.code)}
-            ></Button>
+            <Button title="确定" onPress={confirm} disabled={!(code || props.cookie?.code)} />
           </View>
         </View>
       </View>

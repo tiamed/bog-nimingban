@@ -1,9 +1,8 @@
 import { useAtom } from "jotai";
-
 import { useEffect } from "react";
 
-import { getEmoticons } from "../api";
-import { emoticonsAtom } from "../atoms";
+import { getEmoticons } from "@/api";
+import { emoticonsAtom } from "@/atoms";
 
 interface Emoticon {
   name: string;
@@ -11,9 +10,7 @@ interface Emoticon {
 }
 
 export default function useForums() {
-  const [emoticons, setEmoticons] = useAtom<Emoticon[], Emoticon[], void>(
-    emoticonsAtom
-  );
+  const [emoticons, setEmoticons] = useAtom<Emoticon[], Emoticon[], void>(emoticonsAtom);
   useEffect(() => {
     if (emoticons) {
       if (emoticons.length === 0) {

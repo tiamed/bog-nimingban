@@ -5,7 +5,7 @@ export default function Overlay() {
   const navigation = useNavigation();
   return (
     <TouchableWithoutFeedback onPress={navigation.goBack}>
-      <View style={styles.overlay}></View>
+      <View style={styles.overlay} />
     </TouchableWithoutFeedback>
   );
 }

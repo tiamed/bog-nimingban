@@ -1,27 +1,25 @@
-import { StyleSheet, FlatList } from "react-native";
-import React, { useState, useEffect, useCallback } from "react";
 import { useAtom, useSetAtom } from "jotai";
+import React, { useState, useEffect, useCallback } from "react";
+import { StyleSheet, FlatList } from "react-native";
 
-import { Text, View, useThemeColor } from "../../components/Themed";
+import ActionModal from "./ActionModal";
+import HomeFloatingAction from "./HomeFloatingAction";
+import renderFooter from "./renderFooter";
+
+import { Post, getPostsByForum } from "@/api";
 import {
   threadAtom,
   tabRefreshingAtom,
   maxLineAtom,
   showHomeActionModalAtom,
   blackListPostsAtom,
-} from "../../atoms";
-import { RootTabScreenProps } from "../../types";
-import { Post, getPostsByForum } from "../../api";
-import ThreadPost from "../../components/Post/ThreadPost";
-import { useForumsIdMap } from "../../hooks/useForums";
-import HomeFloatingAction from "./HomeFloatingAction";
-import ActionModal from "./ActionModal";
-import renderFooter from "./renderFooter";
+} from "@/atoms";
+import ThreadPost from "@/components/Post/ThreadPost";
+import { View } from "@/components/Themed";
+import { useForumsIdMap } from "@/hooks/useForums";
+import { RootTabScreenProps } from "@/types";
 
-export default function HomeScreen({
-  route,
-  navigation,
-}: RootTabScreenProps<"Home">) {
+export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Home">) {
   const forumsIdMap = useForumsIdMap();
   const [thread] = useAtom(threadAtom);
   const [tabRefreshing, setTabRefreshing] = useAtom(tabRefreshingAtom);
@@ -51,10 +49,7 @@ export default function HomeScreen({
       if (page === 1) {
         setPosts(info);
       } else {
-        setPosts([
-          ...posts,
-          ...info.filter((post) => !posts.find((x) => x.id === post.id)),
-        ]);
+        setPosts([...posts, ...info.filter((post) => !posts.find((x) => x.id === post.id))]);
       }
     } finally {
       setIsLoading(false);
@@ -103,9 +98,7 @@ export default function HomeScreen({
   }, [forumsIdMap, thread]);
 
   useEffect(() => {
-    setFilteredPosts(
-      posts?.filter((post) => !blackListPosts.includes(post.id))
-    );
+    setFilteredPosts(posts?.filter((post) => !blackListPosts.includes(post.id)));
   }, [posts]);
 
   return (
@@ -128,10 +121,10 @@ export default function HomeScreen({
         )}
         onEndReached={loadMoreData}
         onEndReachedThreshold={0.1}
-        ListFooterComponent={renderFooter.bind(null, isLoading, hasNoMore)}
-      ></FlatList>
-      <HomeFloatingAction></HomeFloatingAction>
-      <ActionModal item={focusItem}></ActionModal>
+        ListFooterComponent={() => renderFooter(isLoading, hasNoMore)}
+      />
+      <HomeFloatingAction />
+      <ActionModal item={focusItem} />
     </View>
   );
 }

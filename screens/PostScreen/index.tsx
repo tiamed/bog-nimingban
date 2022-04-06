@@ -1,12 +1,14 @@
-import { StyleSheet, FlatList, Platform } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { StyleSheet, FlatList, Platform } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { View } from "../../components/Themed";
-import { RootStackScreenProps } from "../../types";
-import { Reply, getPostById, Post } from "../../api";
-import renderFooter from "../HomeScreen/renderFooter";
+import ActionModal from "./ActionModal";
+import Footer from "./Footer";
+import PageModal from "./PageModal";
+
+import { Reply, getPostById, Post } from "@/api";
 import {
   historyAtom,
   previewsAtom,
@@ -16,21 +18,16 @@ import {
   postIdRefreshingAtom,
   postFilteredAtom,
   orderAtom,
-} from "../../atoms/index";
-import { getImageUrl, getThumbnailUrl } from "../../components/Post/ImageView";
-import ReplyPost from "../../components/Post/ReplyPost";
-import { UserHistory } from "./../BrowseHistoryScreen";
-import { useForumsIdMap } from "../../hooks/useForums";
+} from "@/atoms/index";
+import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
+import ReplyPost from "@/components/Post/ReplyPost";
+import { View } from "@/components/Themed";
+import { useForumsIdMap } from "@/hooks/useForums";
+import { UserHistory } from "@/screens//BrowseHistoryScreen";
+import renderFooter from "@/screens/HomeScreen/renderFooter";
+import { RootStackScreenProps } from "@/types";
 
-import Footer from "./Footer";
-import ActionModal from "./ActionModal";
-import PageModal from "./PageModal";
-import { useFocusEffect } from "@react-navigation/native";
-
-export default function PostScreen({
-  route,
-  navigation,
-}: RootStackScreenProps<"Post">) {
+export default function PostScreen({ route, navigation }: RootStackScreenProps<"Post">) {
   const insets = useSafeAreaInsets();
   const [posts, setPosts] = useState<Reply[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Reply[]>([]);
@@ -47,9 +44,7 @@ export default function PostScreen({
 
   const [postIdRefreshing, setPostIdRefreshing] = useAtom(postIdRefreshingAtom);
   const setPreviews = useSetAtom(previewsAtom);
-  const [history, setHistory] = useAtom<UserHistory[], UserHistory[], void>(
-    historyAtom
-  );
+  const [history, setHistory] = useAtom<UserHistory[], UserHistory[], void>(historyAtom);
   const [mainPost, setMainPost] = useAtom<Post, Post, void>(currentPostAtom);
   const [postFiltered] = useAtom(postFilteredAtom);
   const [order] = useAtom(orderAtom);
@@ -82,9 +77,7 @@ export default function PostScreen({
 
       let nextPosts = nextPage === 1 ? [rest, ...reply] : [...reply];
       if (!jump) {
-        nextPosts = nextPosts.filter(
-          (post) => !posts.find((x) => x.id === post.id)
-        );
+        nextPosts = nextPosts.filter((post) => !posts.find((x) => x.id === post.id));
       }
 
       if (jump) {
@@ -142,15 +135,13 @@ export default function PostScreen({
   // 添加历史记录
   const addToHistory = () => {
     let newHistory = history.filter((x) => x.id) || [];
-    if (
-      history?.find((record: { id: number }) => record.id === route.params.id)
-    ) {
+    if (history?.find((record: { id: number }) => record.id === route.params.id)) {
       newHistory = history.filter((record) => record.id !== route.params.id);
     }
     newHistory.unshift({
       ...mainPost,
       createTime: Date.now(),
-      currentPage: currentPage,
+      currentPage,
     });
     setHistory(newHistory);
   };
@@ -240,10 +231,8 @@ export default function PostScreen({
           const isScrollUp =
             Platform.OS === "ios"
               ? e.nativeEvent.contentOffset.y - lastContentOffset > 0
-              : (e.nativeEvent.velocity?.y as Number) > 0;
-          const canHide =
-            e.nativeEvent.contentSize.height >
-            e.nativeEvent.layoutMeasurement.height;
+              : (e.nativeEvent.velocity?.y as number) > 0;
+          const canHide = e.nativeEvent.contentSize.height > e.nativeEvent.layoutMeasurement.height;
 
           if (isScrollUp && e.nativeEvent.contentOffset.y > 5 && canHide) {
             if (isShowFooter) {
@@ -272,32 +261,17 @@ export default function PostScreen({
             }}
           />
         )}
-        onEndReached={loadMoreData.bind(null, false)}
+        onEndReached={() => loadMoreData(false)}
         onEndReachedThreshold={0.1}
-        ListFooterComponent={renderFooter.bind(
-          null,
-          isLoading,
-          hasNoMore,
-          loadMoreData.bind(null, true)
-        )}
-      ></FlatList>
+        ListFooterComponent={() =>
+          renderFooter(isLoading, hasNoMore, loadMoreData.bind(null, true))
+        }
+      />
 
-      <Footer
-        id={route.params.id}
-        mainPost={mainPost}
-        visible={isShowFooter}
-      ></Footer>
+      <Footer id={route.params.id} mainPost={mainPost} visible={isShowFooter} />
 
-      <PageModal
-        index={currentPage}
-        total={mainPost?.reply_count}
-        loadData={loadData}
-      ></PageModal>
-      <ActionModal
-        item={focusItem}
-        postId={mainPost.id}
-        forumId={mainPost.forum}
-      ></ActionModal>
+      <PageModal index={currentPage} total={mainPost?.reply_count} loadData={loadData} />
+      <ActionModal item={focusItem} postId={mainPost.id} forumId={mainPost.forum} />
     </View>
   );
 }

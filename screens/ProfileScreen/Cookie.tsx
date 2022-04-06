@@ -1,19 +1,20 @@
-import { Alert, StyleSheet, TouchableOpacity } from "react-native";
-import * as Clipboard from "expo-clipboard";
-
-import { Button, Text, useThemeColor, View } from "../../components/Themed";
-import { cookiesAtom, signDictAtom } from "../../atoms/index";
-import { atom, useAtom, useSetAtom } from "jotai";
-import Icon from "../../components/Icon";
-import { useContext, useState } from "react";
-import { SignInfo, signIn, createCookie, deleteSlaveCookie } from "../../api";
-import Toast from "react-native-toast-message";
-import { parseISO, addSeconds, format, formatRelative } from "date-fns";
+import { parseISO, addSeconds, formatRelative } from "date-fns";
 import { zhCN } from "date-fns/locale";
+import * as Clipboard from "expo-clipboard";
+import { useAtom, useSetAtom } from "jotai";
+import { useContext, useState } from "react";
+import { Alert, StyleSheet, TouchableOpacity } from "react-native";
+import Toast from "react-native-toast-message";
+
 import AddCookieModal from "./AddCookieModal";
 import { Cookie, showAddModalAtom } from "./common";
-import Errors from "../../constants/Errors";
-import { SizeContext } from "../../components/ThemeContextProvider";
+
+import { SignInfo, signIn, createCookie, deleteSlaveCookie } from "@/api";
+import { cookiesAtom, signDictAtom } from "@/atoms/index";
+import Icon from "@/components/Icon";
+import { SizeContext } from "@/components/ThemeContextProvider";
+import { Button, Text, useThemeColor, View } from "@/components/Themed";
+import Errors from "@/constants/Errors";
 
 interface SignDict {
   [key: string]: SignInfo;
@@ -24,9 +25,7 @@ export { Cookie } from "./common";
 export default function Cookies() {
   const [current, setCurrent] = useState<Cookie | undefined>(undefined);
   const [cookies, setCookies] = useAtom<Cookie[], Cookie[], void>(cookiesAtom);
-  const [signDict, setSignDict] = useAtom<SignDict, SignDict, void>(
-    signDictAtom
-  );
+  const [signDict, setSignDict] = useAtom<SignDict, SignDict, void>(signDictAtom);
   const setShowAddModal = useSetAtom(showAddModalAtom);
   const iconColor = useThemeColor({}, "tint");
   const BASE_SIZE = useContext(SizeContext);
@@ -83,13 +82,9 @@ export default function Cookies() {
         case 2001:
           Toast.show({
             type: "error",
-            text1: `${formatRelative(
-              addSeconds(new Date(), Number(info)),
-              Date.now(),
-              {
-                locale: zhCN,
-              }
-            )} 才可以获取饼干`,
+            text1: `${formatRelative(addSeconds(new Date(), Number(info)), Date.now(), {
+              locale: zhCN,
+            })} 才可以获取饼干`,
           });
           break;
         default:
@@ -143,20 +138,18 @@ export default function Cookies() {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, { fontSize: BASE_SIZE * 1.25 }]}>
-        饼干管理
-      </Text>
+      <Text style={[styles.title, { fontSize: BASE_SIZE * 1.25 }]}>饼干管理</Text>
       <View>
         {cookies
           .filter((cookie) => !cookie.master && cookie.id)
           .map((cookie, index) => (
             <View key={index} style={styles.cookieWrapper}>
-              <CookieItem cookie={cookie}></CookieItem>
+              <CookieItem cookie={cookie} />
               <View style={styles.cookieSlave}>
                 {cookies
                   .filter((slave) => slave.master === cookie.id)
                   .map((slave, index) => (
-                    <CookieItem key={index} cookie={slave} isSlave></CookieItem>
+                    <CookieItem key={index} cookie={slave} isSlave />
                   ))}
               </View>
             </View>
@@ -173,7 +166,7 @@ export default function Cookies() {
           }}
         />
       </View>
-      <AddCookieModal cookie={current}></AddCookieModal>
+      <AddCookieModal cookie={current} />
     </View>
   );
 
@@ -186,9 +179,8 @@ export default function Cookies() {
           onPress={() => {
             setCurrent(cookie);
             setShowAddModal(true);
-          }}
-        >
-          <Icon name="edit" color={iconColor}></Icon>
+          }}>
+          <Icon name="edit" color={iconColor} />
         </TouchableOpacity>
         {isSlave ? (
           <TouchableOpacity
@@ -198,37 +190,25 @@ export default function Cookies() {
                 type: "error",
                 text1: "影武者无法导出",
               });
-            }}
-          >
-            <Icon name="user-secret" color={iconColor}></Icon>
+            }}>
+            <Icon name="user-secret" color={iconColor} />
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity
-            style={styles.edit}
-            onPress={handleCopy.bind(null, cookie)}
-          >
-            <Icon name="download" color={iconColor}></Icon>
+          <TouchableOpacity style={styles.edit} onPress={() => handleCopy(cookie)}>
+            <Icon name="download" color={iconColor} />
           </TouchableOpacity>
         )}
 
         <Text style={styles.cookieName}>{cookie.name}</Text>
         {!isSlave && (
           <>
-            <Text style={styles.cookieSigned}>
-              已签到{signDict?.[cookie.hash]?.sign || 0}天
-            </Text>
-            <Button
-              title="签到"
-              onPress={handleSign.bind(null, cookie)}
-            ></Button>
+            <Text style={styles.cookieSigned}>已签到{signDict?.[cookie.hash]?.sign || 0}天</Text>
+            <Button title="签到" onPress={() => handleSign(cookie)} />
           </>
         )}
         {isSlave && <Text style={styles.cookieSlaveLabel}>影武者</Text>}
-        <TouchableOpacity
-          style={styles.delete}
-          onPress={confirmDelete.bind(null, cookie)}
-        >
-          <Icon name="minus-circle" color={iconColor}></Icon>
+        <TouchableOpacity style={styles.delete} onPress={() => confirmDelete(cookie)}>
+          <Icon name="minus-circle" color={iconColor} />
         </TouchableOpacity>
       </View>
     );

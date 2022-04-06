@@ -1,21 +1,19 @@
-import { StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { useAtom } from "jotai";
+import { StyleSheet, FlatList } from "react-native";
 
-import { View } from "../components/Themed";
-import { RootTabScreenProps } from "../types";
-import { Post } from "../api";
-import ThreadPost from "../components/Post/ThreadPost";
 import renderFooter from "./HomeScreen/renderFooter";
-import { favoriteAtom, maxLineAtom } from "../atoms";
+
+import { Post } from "@/api";
+import { favoriteAtom, maxLineAtom } from "@/atoms";
+import ThreadPost from "@/components/Post/ThreadPost";
+import { View } from "@/components/Themed";
+import { RootTabScreenProps } from "@/types";
 
 export interface UserFavorite extends Post {
   createTime: number;
 }
 
-export default function FavoriteScreen({
-  route,
-  navigation,
-}: RootTabScreenProps<"Favorite">) {
+export default function FavoriteScreen({ route, navigation }: RootTabScreenProps<"Favorite">) {
   const [favorite] = useAtom<UserFavorite[]>(favoriteAtom);
   const [maxLine] = useAtom(maxLineAtom);
 
@@ -33,8 +31,8 @@ export default function FavoriteScreen({
           )
         }
         onEndReachedThreshold={0.1}
-        ListFooterComponent={renderFooter.bind(null, false, true)}
-      ></FlatList>
+        ListFooterComponent={() => renderFooter(false, true)}
+      />
     </View>
   );
 }

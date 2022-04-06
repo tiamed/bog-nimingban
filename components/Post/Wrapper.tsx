@@ -1,5 +1,6 @@
 import { Dimensions } from "react-native";
-import { useThemeColor, View } from "../Themed";
+
+import { useThemeColor, View } from "@/components/Themed";
 
 export default function Wrapper(props: {
   width?: number | string;
@@ -16,8 +17,7 @@ export default function Wrapper(props: {
         flexDirection: "column",
         padding: 8,
         borderBottomWidth: 1,
-      }}
-    >
+      }}>
       {props.children}
     </View>
   );

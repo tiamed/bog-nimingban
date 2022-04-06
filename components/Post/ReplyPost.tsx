@@ -1,14 +1,15 @@
-import { Pressable } from "react-native";
-import { useAtom, useSetAtom } from "jotai";
-
-import { Image, Post } from "../../api";
-import { View, useThemeColor } from "../Themed";
-import { imageWidthAtom, previewIndexAtom, previewsAtom } from "../../atoms";
 import { useNavigation } from "@react-navigation/native";
-import HtmlView from "./HtmlView";
+import { useAtom, useSetAtom } from "jotai";
+import { Pressable } from "react-native";
+
 import Header from "./Header";
+import HtmlView from "./HtmlView";
 import ImageView, { getImageUrl } from "./ImageView";
 import Wrapper from "./Wrapper";
+
+import { Image, Post } from "@/api";
+import { imageWidthAtom, previewIndexAtom, previewsAtom } from "@/atoms";
+import { View, useThemeColor } from "@/components/Themed";
 
 export default function ReplyPost(props: {
   data: Partial<Post>;
@@ -25,16 +26,14 @@ export default function ReplyPost(props: {
   const borderColor = useThemeColor({}, "border");
   const isPo = props.data.cookie === props.po;
   const onImagePress = (image: Image) => {
-    setPreviewIndex(
-      previews.findIndex((item) => item.url === getImageUrl(image))
-    );
+    setPreviewIndex(previews.findIndex((item) => item.url === getImageUrl(image)));
     navigation.navigate("PreviewModal");
   };
 
   return (
     <Pressable onPress={props.onPress}>
       <Wrapper width={props.width}>
-        <Header data={props.data} isPo={isPo}></Header>
+        <Header data={props.data} isPo={isPo} />
 
         <View
           style={{
@@ -42,32 +41,24 @@ export default function ReplyPost(props: {
             overflow: "hidden",
             flexWrap: "wrap",
             marginRight: 8,
-          }}
-        >
+          }}>
           <View>
-            <HtmlView
-              content={props.data.content as string}
-              level={props.level || 1}
-            ></HtmlView>
+            <HtmlView content={props.data.content as string} level={props.level || 1} />
           </View>
           <View
             style={{
               flexDirection: "row",
               flexWrap: "wrap",
               justifyContent: "flex-start",
-            }}
-          >
+            }}>
             {props.data?.images?.map((image) => (
               <ImageView
                 key={image.url}
-                onPress={
-                  props.onImagePress?.bind(null, image) ||
-                  onImagePress.bind(null, image)
-                }
+                onPress={props.onImagePress?.bind(null, image) || onImagePress.bind(null, image)}
                 style={{
                   flexBasis: imageWidth,
                   aspectRatio: 1,
-                  borderColor: borderColor,
+                  borderColor,
                   borderWidth: 1,
                   marginTop: 10,
                   marginRight: "1%",

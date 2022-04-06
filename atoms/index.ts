@@ -1,10 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import { atom } from "jotai";
-
 import { IImageInfo } from "react-native-image-zoom-viewer/built/image-viewer.type";
 
-import { Forum, Post } from "../api";
+import { Forum, Post } from "@/api";
 
 export const previewsAtom = atom<IImageInfo[]>([]);
 
@@ -21,8 +19,7 @@ export const atomWithAsyncStorage = (
     (async () => {
       const item = await AsyncStorage.getItem(key);
       const lastModify = await AsyncStorage.getItem(`${key}_lastModify`);
-      const notExpired =
-        !expiresIn || Date.now() - Number(lastModify) < expiresIn;
+      const notExpired = !expiresIn || Date.now() - Number(lastModify) < expiresIn;
       if (item && notExpired) {
         setValue(JSON.parse(item));
       } else {
@@ -33,8 +30,7 @@ export const atomWithAsyncStorage = (
   const derivedAtom = atom(
     (get) => get(baseAtom),
     (get, set, update) => {
-      const nextValue =
-        typeof update === "function" ? update(get(baseAtom)) : update;
+      const nextValue = typeof update === "function" ? update(get(baseAtom)) : update;
       set(baseAtom, nextValue);
       AsyncStorage.setItem(key, JSON.stringify(nextValue));
       AsyncStorage.setItem(`${key}_lastModify`, Date.now().toString());
@@ -43,23 +39,13 @@ export const atomWithAsyncStorage = (
   return derivedAtom;
 };
 
-export const forumsAtom = atomWithAsyncStorage(
-  "forums",
-  [],
-  true,
-  1000 * 60 * 60 * 6
-); // 6 hours
+export const forumsAtom = atomWithAsyncStorage("forums", [], true, 1000 * 60 * 60 * 6); // 6 hours
 
 export const forumsIdMapAtom = atom<Map<number, string>>(
   (get) => new Map(get(forumsAtom)?.map((item: Forum) => [item.id, item.name]))
 );
 
-export const emoticonsAtom = atomWithAsyncStorage(
-  "emoticons",
-  [],
-  true,
-  1000 * 60 * 60 * 6
-);
+export const emoticonsAtom = atomWithAsyncStorage("emoticons", [], true, 1000 * 60 * 60 * 6);
 
 export const currentPostAtom = atom({} as Post);
 
@@ -99,15 +85,9 @@ export const orderAtom = atomWithAsyncStorage("order", 0);
 
 export const colorSchemeAtom = atomWithAsyncStorage("colorScheme", null);
 
-export const threadDirectionAtom = atomWithAsyncStorage(
-  "threadDirection",
-  "row"
-);
+export const threadDirectionAtom = atomWithAsyncStorage("threadDirection", "row");
 
-export const thumbnailResizeAtom = atomWithAsyncStorage(
-  "thumnailResize",
-  "contain"
-);
+export const thumbnailResizeAtom = atomWithAsyncStorage("thumbnailResize", "contain");
 
 export const imageWidthAtom = atomWithAsyncStorage("imageWidth", "49%");
 

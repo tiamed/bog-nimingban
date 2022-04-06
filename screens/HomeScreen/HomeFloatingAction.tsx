@@ -1,9 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom } from "jotai";
 import { FloatingAction } from "react-native-floating-action";
-import { threadAtom } from "../../atoms";
-import { useThemeColor } from "../../components/Themed";
-import Icon from "../../components/Icon";
+
+import { threadAtom } from "@/atoms";
+import Icon from "@/components/Icon";
+import { useThemeColor } from "@/components/Themed";
 
 export default function HomeFloatingAction() {
   const tintColor = useThemeColor({}, "tint");
@@ -40,6 +41,6 @@ export default function HomeFloatingAction() {
         },
       ]}
       onPressItem={onPressFAB}
-    ></FloatingAction>
+    />
   );
 }

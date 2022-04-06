@@ -1,22 +1,18 @@
-import { StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
-import Modal from "react-native-modal";
 import { decode } from "html-entities";
 import { useAtom } from "jotai";
+import { StyleSheet, TouchableOpacity, Alert } from "react-native";
+import Modal from "react-native-modal";
 import Toast from "react-native-toast-message";
-import { useNavigation } from "@react-navigation/native";
 
-import { Text, View } from "../../components/Themed";
-import { Reply, deleteReply } from "../../api";
-import { cookiesAtom, showActionModalAtom } from "../../atoms/index";
-import { Cookie } from "../ProfileScreen/Cookie";
-import Errors from "../../constants/Errors";
+import { Reply, deleteReply } from "@/api";
+import { cookiesAtom, showActionModalAtom } from "@/atoms/index";
+import { Text, View } from "@/components/Themed";
+import Errors from "@/constants/Errors";
+import { Cookie } from "@/screens/ProfileScreen/Cookie";
 
-export default function ActionModal(props: {
-  item: Reply;
-  postId: number;
-  forumId: number;
-}) {
+export default function ActionModal(props: { item: Reply; postId: number; forumId: number }) {
   const [visible, setVisible] = useAtom(showActionModalAtom);
   const [cookies] = useAtom<Cookie[]>(cookiesAtom);
   const navigation = useNavigation();
@@ -45,9 +41,7 @@ export default function ActionModal(props: {
       {
         text: "确认",
         onPress: async () => {
-          const replyCookie = cookies.find(
-            (cookie) => cookie?.id === props.item.cookie
-          );
+          const replyCookie = cookies.find((cookie) => cookie?.id === props.item.cookie);
           const replyCode = replyCookie?.code?.split("#").slice(0, 2).join("#");
           try {
             const {
@@ -74,8 +68,7 @@ export default function ActionModal(props: {
       isVisible={visible}
       onBackdropPress={close}
       backdropOpacity={0.3}
-      backdropTransitionOutTiming={0}
-    >
+      backdropTransitionOutTiming={0}>
       <View style={styles.actionModal}>
         <TouchableOpacity onPress={onReply}>
           <View style={styles.actionModalItem}>

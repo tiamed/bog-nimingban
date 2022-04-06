@@ -12,15 +12,11 @@ import {
   TouchableOpacity,
   TextInput as DefaultTextInput,
 } from "react-native";
-import {
-  SuccessToast,
-  InfoToast,
-  ErrorToast,
-} from "react-native-toast-message";
+import { SuccessToast, InfoToast, ErrorToast } from "react-native-toast-message";
 
-import Colors from "../constants/Colors";
-import useSize from "../hooks/useSize";
 import { ColorSchemeContext, SizeContext } from "./ThemeContextProvider";
+
+import Colors from "@/constants/Colors";
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -44,9 +40,7 @@ type ThemeProps = {
 export type TextProps = ThemeProps & DefaultText["props"];
 export type ViewProps = ThemeProps & DefaultView["props"];
 export type ScrollViewProps = ThemeProps & DefaultScrollView["props"];
-export type ButtonProps = ThemeProps &
-  DefaultButton["props"] &
-  DefaultView["props"];
+export type ButtonProps = ThemeProps & DefaultButton["props"] & DefaultView["props"];
 export type TextInputProps = ThemeProps & DefaultTextInput["props"];
 
 export function Text(props: TextProps) {
@@ -65,24 +59,16 @@ export function Text(props: TextProps) {
 
 export function View(props: ViewProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
-  const backgroundColor = useThemeColor(
-    { light: lightColor, dark: darkColor },
-    "background"
-  );
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, "background");
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
 }
 
 export function ScrollView(props: ScrollViewProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
-  const backgroundColor = useThemeColor(
-    { light: lightColor, dark: darkColor },
-    "background"
-  );
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, "background");
 
-  return (
-    <DefaultScrollView style={[{ backgroundColor }, style]} {...otherProps} />
-  );
+  return <DefaultScrollView style={[{ backgroundColor }, style]} {...otherProps} />;
 }
 
 export function Button(props: ButtonProps) {
@@ -92,10 +78,7 @@ export function Button(props: ButtonProps) {
 
   return (
     <TouchableOpacity {...otherProps}>
-      <DefaultText
-        style={[{ color, fontSize: BASE_SIZE }]}
-        allowFontScaling={false}
-      >
+      <DefaultText style={[{ color, fontSize: BASE_SIZE }]} allowFontScaling={false}>
         {otherProps.title}
       </DefaultText>
     </TouchableOpacity>
@@ -104,10 +87,7 @@ export function Button(props: ButtonProps) {
 
 export const TextInput = forwardRef(function (props: TextInputProps, ref) {
   const { style, lightColor, darkColor, ...otherProps } = props;
-  const backgroundColor = useThemeColor(
-    { light: lightColor, dark: darkColor },
-    "border"
-  );
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, "border");
   const textColor = useThemeColor({}, "text");
   return (
     <DefaultTextInput
@@ -129,7 +109,7 @@ export function getToastConfig(theme: "light" | "dark") {
         style={{ backgroundColor, borderLeftColor: "green" }}
         text1Style={{ color: textColor }}
         text2Style={{ color: textColor }}
-      ></SuccessToast>
+      />
     ),
     info: (props: any) => (
       <InfoToast
@@ -137,7 +117,7 @@ export function getToastConfig(theme: "light" | "dark") {
         style={{ backgroundColor, borderLeftColor: "gray" }}
         text1Style={{ color: textColor }}
         text2Style={{ color: textColor }}
-      ></InfoToast>
+      />
     ),
     error: (props: any) => (
       <ErrorToast
@@ -145,7 +125,7 @@ export function getToastConfig(theme: "light" | "dark") {
         style={{ backgroundColor, borderLeftColor: "red" }}
         text1Style={{ color: textColor }}
         text2Style={{ color: textColor }}
-      ></ErrorToast>
+      />
     ),
   };
 }

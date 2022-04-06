@@ -1,15 +1,11 @@
+import { useAtom } from "jotai";
 import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import Modal from "react-native-modal";
-import { useAtom } from "jotai";
 import Toast from "react-native-toast-message";
 
-import { Text, View } from "../../components/Themed";
-import { Post } from "../../api";
-import {
-  blackListPostsAtom,
-  showHomeActionModalAtom,
-  tabRefreshingAtom,
-} from "../../atoms/index";
+import { Post } from "@/api";
+import { blackListPostsAtom, showHomeActionModalAtom, tabRefreshingAtom } from "@/atoms/index";
+import { Text, View } from "@/components/Themed";
 
 export default function ActionModal(props: { item: Post }) {
   const [visible, setVisible] = useAtom(showHomeActionModalAtom);
@@ -41,8 +37,7 @@ export default function ActionModal(props: { item: Post }) {
       isVisible={visible}
       onBackdropPress={close}
       backdropOpacity={0.3}
-      backdropTransitionOutTiming={0}
-    >
+      backdropTransitionOutTiming={0}>
       <View style={styles.actionModal}>
         <TouchableOpacity onPress={onBlock}>
           <View style={styles.actionModalItem}>

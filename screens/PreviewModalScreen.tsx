@@ -1,18 +1,17 @@
-import { StatusBar } from "expo-status-bar";
-import * as MediaLibrary from "expo-media-library";
-import * as FileSystem from "expo-file-system";
-import Toast from "react-native-toast-message";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
-
 import { useAtom } from "jotai";
 import React, { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { FloatingAction } from "react-native-floating-action";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { IImageInfo } from "react-native-image-zoom-viewer/built/image-viewer.type";
-import { previewIndexAtom, previewsAtom } from "../atoms";
-import { FloatingAction } from "react-native-floating-action";
-import { useThemeColor } from "../components/Themed";
+import Toast from "react-native-toast-message";
+
+import { previewIndexAtom, previewsAtom } from "@/atoms";
+import { useThemeColor } from "@/components/Themed";
 
 export default function PreviewModalScreen() {
   const navigation = useNavigation();
@@ -50,11 +49,7 @@ export default function PreviewModalScreen() {
   const saveImage = () => {
     getImage(async (uri) => {
       const asset = await MediaLibrary.createAssetAsync(uri);
-      const album = await MediaLibrary.createAlbumAsync(
-        "bog-nimingban",
-        asset,
-        false
-      );
+      await MediaLibrary.createAlbumAsync("bog-nimingban", asset, false);
       Toast.show({ type: "success", text1: "已保存图片" });
     });
   };
@@ -70,45 +65,33 @@ export default function PreviewModalScreen() {
       <ImageViewer
         index={previewIndex}
         imageUrls={previews as IImageInfo[]}
-        enableSwipeDown={true}
+        enableSwipeDown
         onSwipeDown={() => navigation.goBack()}
         saveToLocalByLongPress={false}
       />
       <FloatingAction
         color={isLoading ? inactiveColor : activeColor}
-        overrideWithAction={true}
+        overrideWithAction
         distanceToEdge={{ horizontal: 110, vertical: 30 }}
         actions={[
           {
-            icon: (
-              <MaterialCommunityIcons
-                name="share-variant"
-                color="white"
-                size={20}
-              />
-            ),
+            icon: <MaterialCommunityIcons name="share-variant" color="white" size={20} />,
             name: "share",
           },
         ]}
         onPressItem={shareImage}
-      ></FloatingAction>
+      />
       <FloatingAction
         color={isLoading ? inactiveColor : activeColor}
-        overrideWithAction={true}
+        overrideWithAction
         actions={[
           {
-            icon: (
-              <MaterialCommunityIcons
-                name="content-save"
-                color="white"
-                size={20}
-              />
-            ),
+            icon: <MaterialCommunityIcons name="content-save" color="white" size={20} />,
             name: "save",
           },
         ]}
         onPressItem={saveImage}
-      ></FloatingAction>
+      />
     </>
   );
 }

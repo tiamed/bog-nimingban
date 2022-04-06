@@ -1,9 +1,8 @@
 import { useAtom } from "jotai";
-
 import { useEffect, useState } from "react";
 
-import { sizeAtom } from "../atoms";
-import Layout from "../constants/Layout";
+import { sizeAtom } from "@/atoms";
+import Layout from "@/constants/Layout";
 
 type Size = "small" | "normal" | "medium" | "large" | "extraLarge";
 

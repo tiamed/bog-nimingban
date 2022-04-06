@@ -1,22 +1,18 @@
-import { PixelRatio, Pressable } from "react-native";
-import { useAtom, useSetAtom } from "jotai";
-
-import { Post, Image } from "../../api";
-import { View } from "../Themed";
-import { useForumsIdMap } from "../../hooks/useForums";
-import {
-  lineHeightAtom,
-  previewIndexAtom,
-  previewsAtom,
-  threadDirectionAtom,
-} from "../../atoms";
 import { useNavigation } from "@react-navigation/native";
+import { useAtom, useSetAtom } from "jotai";
 import { useContext, useMemo } from "react";
-import HtmlView from "./HtmlView";
+import { PixelRatio, Pressable } from "react-native";
+
 import Header from "./Header";
+import HtmlView from "./HtmlView";
 import ImageView, { getImageUrl, getThumbnailUrl } from "./ImageView";
 import Wrapper from "./Wrapper";
-import { SizeContext } from "../ThemeContextProvider";
+
+import { Post, Image } from "@/api";
+import { lineHeightAtom, previewIndexAtom, previewsAtom, threadDirectionAtom } from "@/atoms";
+import { SizeContext } from "@/components/ThemeContextProvider";
+import { View } from "@/components/Themed";
+import { useForumsIdMap } from "@/hooks/useForums";
 
 export default function ThreadPost(props: {
   data: Partial<Post>;
@@ -43,18 +39,14 @@ export default function ThreadPost(props: {
   }, [props.data]);
   const imageSize = useMemo(() => {
     const calculated =
-      PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) *
-        (props.maxLine || 999) -
-      2;
+      PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) * (props.maxLine || 999) - 2;
     return calculated < 150 ? calculated : 150;
   }, [props.maxLine, BASE_SIZE, LINE_HEIGHT]);
 
   const OnPress = () => {
     navigation.navigate("Post", {
       id: props.data.id as number,
-      title: `${forumsIdMap.get(props.data.forum as number)} Po.${
-        props.data.id
-      }`,
+      title: `${forumsIdMap.get(props.data.forum as number)} Po.${props.data.id}`,
     });
   };
 
@@ -62,27 +54,23 @@ export default function ThreadPost(props: {
     <Pressable
       onPress={props.onPress?.bind(null, props.data) || OnPress}
       onLongPress={props.onLongPress?.bind(null, props.data)}
-      delayLongPress={1000}
-    >
+      delayLongPress={1000}>
       <Wrapper>
-        <Header data={props.data} isPo={false} showForum></Header>
+        <Header data={props.data} isPo={false} showForum />
         <View
           style={{
             flexDirection: threadDirection,
             justifyContent: "space-between",
             overflow: "hidden",
             flexWrap: "wrap",
-          }}
-        >
+          }}>
           <View
             style={{
               flex: 2,
               maxHeight:
-                PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) *
-                (props.maxLine || 999),
-            }}
-          >
-            <HtmlView content={props.data.content as string}></HtmlView>
+                PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) * (props.maxLine || 999),
+            }}>
+            <HtmlView content={props.data.content as string} />
           </View>
           {props.data.images && props.data.images[0] && (
             <ImageView
@@ -105,7 +93,7 @@ export default function ThreadPost(props: {
                 marginTop: 2,
               }}
               style={{}}
-            ></ImageView>
+            />
           )}
         </View>
       </Wrapper>

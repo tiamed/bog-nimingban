@@ -1,5 +1,3 @@
-import { AxiosRequestConfig } from "axios";
-
 import axios from "./axios";
 
 interface CodeResponse {
@@ -92,8 +90,7 @@ export interface CookieInfo extends SignInfo {
 }
 
 // 获取版块列表
-export const getForums = () =>
-  axios.post<CommonResponse<Forum[]>>("/api/forumlist");
+export const getForums = () => axios.post<CommonResponse<Forum[]>>("/api/forumlist");
 
 // 获取某个版块的帖子列表
 export const getPostsByForum = (id = 0, page = 1, pageSize = 20) =>
@@ -112,8 +109,7 @@ export const getPostById = (id = 0, page = 1, pageSize = 20, order = 0) =>
     order,
   });
 
-export const getReply = (id = 0) =>
-  axios.post<CommonResponse<Reply>>("/api/thread", { id });
+export const getReply = (id = 0) => axios.post<CommonResponse<Reply>>("/api/thread", { id });
 
 export const signIn = (cookie: string, hash: string) =>
   axios.post<CommonResponse<SignInfo>>("/api/sign", { cookie, code: hash });
@@ -140,8 +136,7 @@ export const getCookies = (id: string, hash: string) =>
     code: hash,
   });
 
-export const createCookie = () =>
-  axios.post<CommonResponse<string>>("/post/cookieGet");
+export const createCookie = () => axios.post<CommonResponse<string>>("/post/cookieGet");
 
 export const importCookie = (masterCode: string, code: string) =>
   axios.post<CommonResponse<CookieWithRemarks[]>>("/api/cookieAdd", {
@@ -156,5 +151,4 @@ export const deleteSlaveCookie = (id: string, hash: string, slaveId: string) =>
     del: slaveId,
   });
 
-export const getEmoticons = () =>
-  axios.get<EmoticonResponse>("/static/js/kaomoji.json");
+export const getEmoticons = () => axios.get<EmoticonResponse>("/static/js/kaomoji.json");

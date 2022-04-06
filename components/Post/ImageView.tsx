@@ -1,8 +1,9 @@
-import { StyleProp, TouchableOpacity } from "react-native";
 import CachedImage from "expo-cached-image";
-import { Image } from "../../api";
-import { thumbnailResizeAtom } from "../../atoms";
 import { useAtom } from "jotai";
+import { StyleProp, TouchableOpacity } from "react-native";
+
+import { Image } from "@/api";
+import { thumbnailResizeAtom } from "@/atoms";
 
 export default function ImageView(props: {
   onPress: () => void;

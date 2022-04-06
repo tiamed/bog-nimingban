@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
 import { useAtom } from "jotai";
-
-import { Text, useThemeColor, View } from "../components/Themed";
-import ThreadPost from "../components/Post/ThreadPost";
-import { RootStackScreenProps } from "../types";
-import { getReply, Post, Reply } from "../api";
-import { currentPostAtom } from "../atoms";
-import Overlay from "../components/Overlay";
+import React, { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
+
+import { getReply, Post, Reply } from "@/api";
+import { currentPostAtom } from "@/atoms";
+import Overlay from "@/components/Overlay";
+import ThreadPost from "@/components/Post/ThreadPost";
+import { View } from "@/components/Themed";
+import { RootStackScreenProps } from "@/types";
 
 export default function QuoteModalScreen({
   route,
@@ -34,15 +34,8 @@ export default function QuoteModalScreen({
     loadData();
   }, [route]);
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#40404040",
-      }}
-    >
-      <Overlay></Overlay>
+    <View style={styles.modal}>
+      <Overlay />
       <ThreadPost
         data={data}
         onPress={() => {
@@ -55,19 +48,16 @@ export default function QuoteModalScreen({
             });
           }
         }}
-      ></ThreadPost>
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  actionWrapper: {
-    padding: 10,
-    paddingBottom: 0,
-    alignItems: "flex-end",
-    width: "100%",
-  },
-  action: {
-    fontSize: 14,
+  modal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#40404040",
   },
 });

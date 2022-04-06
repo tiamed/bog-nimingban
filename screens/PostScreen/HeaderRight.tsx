@@ -1,10 +1,9 @@
 import { useAtom } from "jotai";
 import { Pressable, StyleSheet } from "react-native";
-import { orderAtom, postFilteredAtom } from "../../atoms";
-import { useThemeColor } from "../../components/Themed";
-import Icon from "../../components/Icon";
-import { useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+
+import { orderAtom, postFilteredAtom } from "@/atoms";
+import Icon from "@/components/Icon";
+import { useThemeColor } from "@/components/Themed";
 
 export default function HeaderRight() {
   const activeColor = useThemeColor({}, "active");
@@ -19,20 +18,15 @@ export default function HeaderRight() {
         onPress={() => {
           setOrder(Number(!order));
           // navigation.
-        }}
-      >
+        }}>
         <Icon name={order ? "sort-desc" : "sort-asc"} color={activeColor} />
       </Pressable>
       <Pressable
         style={styles.item}
         onPress={() => {
           setPostFiltered(!postFiltered);
-        }}
-      >
-        <Icon
-          name="filter"
-          color={postFiltered ? activeColor : inactiveColor}
-        />
+        }}>
+        <Icon name="filter" color={postFiltered ? activeColor : inactiveColor} />
       </Pressable>
     </>
   );

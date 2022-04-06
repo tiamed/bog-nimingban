@@ -1,7 +1,8 @@
-import useForums from "../hooks/useForums";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
-import { threadAtom } from "../atoms";
 import { useSetAtom } from "jotai";
+
+import { threadAtom } from "@/atoms";
+import useForums from "@/hooks/useForums";
 
 export default function DrawerContent(props: any) {
   const forums = useForums();
@@ -18,7 +19,7 @@ export default function DrawerContent(props: any) {
               setThread(forum.id);
               props.navigation.closeDrawer();
             }}
-          ></DrawerItem>
+          />
         ))}
     </DrawerContentScrollView>
   );

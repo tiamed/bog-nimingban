@@ -1,7 +1,8 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { useThemeColor, View } from "../../components/Themed";
-import Icon from "../../components/Icon";
+
+import Icon from "@/components/Icon";
+import { useThemeColor, View } from "@/components/Themed";
 
 interface FooterItem {
   icon: React.ComponentProps<typeof FontAwesome>["name"];
@@ -16,10 +17,10 @@ export default function Footer(props: { items: FooterItem[] }) {
         style={{
           flex: 6 - props.items.length,
         }}
-      ></View>
+      />
       {props.items?.map(({ icon, onPress }) => (
         <TouchableOpacity key={icon} onPress={onPress} style={styles.icon}>
-          <Icon color={tintColor} name={icon}></Icon>
+          <Icon color={tintColor} name={icon} />
         </TouchableOpacity>
       ))}
     </>

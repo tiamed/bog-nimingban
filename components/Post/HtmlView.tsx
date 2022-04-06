@@ -1,39 +1,34 @@
-import React, { useContext, useEffect, useState } from "react";
 import { decode } from "html-entities";
-import HTMLView from "react-native-htmlview";
+import { useAtom } from "jotai";
+import React, { useContext, useState } from "react";
 import { Dimensions, Linking, PixelRatio, Pressable } from "react-native";
 import Collapsible from "react-native-collapsible";
+import HTMLView from "react-native-htmlview";
 
-import { View, Text } from "../Themed";
 import ReplyPostWithoutData from "./ReplyPostWithoutData";
-import { useAtom } from "jotai";
-import { lineHeightAtom } from "../../atoms";
-import { SizeContext } from "../ThemeContextProvider";
+
+import { lineHeightAtom } from "@/atoms";
+import { SizeContext } from "@/components/ThemeContextProvider";
+import { View, Text } from "@/components/Themed";
 
 const width = Dimensions.get("window").width;
 
 export default function HtmlView(props: { content: string; level?: number }) {
-  return <HTMLView value={props.content} renderNode={renderNode}></HTMLView>;
+  return <HTMLView value={props.content} renderNode={renderNode} />;
 
-  function renderNode(
-    node: any,
-    index: number,
-    siblings: any,
-    parent: any,
-    defaultRenderer: any
-  ) {
+  function renderNode(node: any, index: number, siblings: any, parent: any, defaultRenderer: any) {
     if (node.attribs?.class === "quote") {
       const quote = decode(node.children[0].data || "");
-      return <Quote key={index} data={quote} level={props.level || 1}></Quote>;
+      return <Quote key={index} data={quote} level={props.level || 1} />;
     }
     if (node.name === "a") {
-      return <Link key={index} href={node.attribs?.href}></Link>;
+      return <Link key={index} href={node.attribs?.href} />;
     }
     if (node.name === undefined) {
       return <PureText key={index}>{decode(node.data)}</PureText>;
     }
     if (node.name === "br" && node?.next?.name === "br") {
-      return <EmptyLine key={index}></EmptyLine>;
+      return <EmptyLine key={index} />;
     }
     return <View key={index}>{defaultRenderer(node.children, parent)}</View>;
   }
@@ -50,8 +45,7 @@ function Quote(props: { data: string; level: number }) {
     <Pressable
       onPress={() => {
         setIsCollapsed(!isCollapsed);
-      }}
-    >
+      }}>
       <View style={{ flexDirection: "column", margin: 2 }}>
         <View style={{ flexDirection: "row" }}>
           <Text
@@ -59,14 +53,12 @@ function Quote(props: { data: string; level: number }) {
             darkColor="#999999"
             style={{
               fontSize: BASE_SIZE * 0.8,
-              lineHeight:
-                PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) - 4,
+              lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) - 4,
               backgroundColor: "#eee",
               width: "auto",
               borderRadius: 2,
               overflow: "hidden",
-            }}
-          >
+            }}>
             {data}
           </Text>
         </View>
@@ -78,14 +70,13 @@ function Quote(props: { data: string; level: number }) {
             borderColor: "#eee",
           }}
           renderChildrenCollapsed={false}
-          enablePointerEvents={true}
-          collapsedHeight={0}
-        >
+          enablePointerEvents
+          collapsedHeight={0}>
           <ReplyPostWithoutData
             id={quoteId}
             width={width * 0.9 ** props.level}
             level={props.level + 1}
-          ></ReplyPostWithoutData>
+          />
         </Collapsible>
       </View>
     </Pressable>
@@ -101,16 +92,14 @@ function Link(props: { href: string }) {
     <Pressable
       onPress={() => {
         Linking.openURL(href);
-      }}
-    >
+      }}>
       <Text
         lightColor="#FFB2A6"
         darkColor="#FFB2A6"
         style={{
           fontSize: BASE_SIZE,
           lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT),
-        }}
-      >
+        }}>
         {href}
       </Text>
     </Pressable>
@@ -129,8 +118,7 @@ function PureText(props: { children: any }) {
         fontSize: BASE_SIZE,
         lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT),
         textAlign: "left",
-      }}
-    >
+      }}>
       {children}
     </Text>
   );
@@ -145,6 +133,6 @@ function EmptyLine() {
       style={{
         height: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT),
       }}
-    ></View>
+    />
   );
 }
