@@ -23,17 +23,17 @@ export default function HtmlView(props: { content: string; level?: number }) {
     defaultRenderer: any
   ) {
     if (node.attribs?.class === "quote") {
-      const quote = decode(node.children[0].data);
+      const quote = decode(node.children[0].data || "");
       return <Quote key={index} data={quote} level={props.level || 1}></Quote>;
     }
     if (node.name === "a") {
       return <Link key={index} href={node.attribs?.href}></Link>;
     }
-    if (
-      node.name === undefined ||
-      (node.name === "br" && node?.next?.name === "br")
-    ) {
+    if (node.name === undefined) {
       return <PureText key={index}>{decode(node.data)}</PureText>;
+    }
+    if (node.name === "br" && node?.next?.name === "br") {
+      return <EmptyLine key={index}></EmptyLine>;
     }
     return <View key={index}>{defaultRenderer(node.children, parent)}</View>;
   }
@@ -59,9 +59,8 @@ function Quote(props: { data: string; level: number }) {
             darkColor="#999999"
             style={{
               fontSize: BASE_SIZE * 0.8,
-              lineHeight: PixelRatio.roundToNearestPixel(
-                BASE_SIZE * LINE_HEIGHT
-              ),
+              lineHeight:
+                PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) - 4,
               backgroundColor: "#eee",
               width: "auto",
               borderRadius: 2,
@@ -134,5 +133,18 @@ function PureText(props: { children: any }) {
     >
       {children}
     </Text>
+  );
+}
+
+function EmptyLine() {
+  const BASE_SIZE = useSize();
+  const [LINE_HEIGHT] = useAtom(lineHeightAtom);
+
+  return (
+    <View
+      style={{
+        height: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT),
+      }}
+    ></View>
   );
 }

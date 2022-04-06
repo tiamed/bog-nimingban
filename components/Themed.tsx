@@ -19,6 +19,7 @@ import {
 } from "react-native-toast-message";
 
 import Colors from "../constants/Colors";
+import useSize from "../hooks/useSize";
 import { ColorSchemeContext } from "./ThemeContextProvider";
 
 export function useThemeColor(
@@ -51,8 +52,15 @@ export type TextInputProps = ThemeProps & DefaultTextInput["props"];
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
+  const BASE_SIZE = useSize();
 
-  return <DefaultText style={[{ color }, style]} {...otherProps} />;
+  return (
+    <DefaultText
+      style={[{ color, fontSize: BASE_SIZE }, style]}
+      allowFontScaling={false}
+      {...otherProps}
+    />
+  );
 }
 
 export function View(props: ViewProps) {
@@ -80,10 +88,14 @@ export function ScrollView(props: ScrollViewProps) {
 export function Button(props: ButtonProps) {
   const { lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "button");
+  const BASE_SIZE = useSize();
 
   return (
     <TouchableOpacity {...otherProps}>
-      <DefaultText style={[{ color, fontSize: 14 }]}>
+      <DefaultText
+        style={[{ color, fontSize: BASE_SIZE }]}
+        allowFontScaling={false}
+      >
         {otherProps.title}
       </DefaultText>
     </TouchableOpacity>

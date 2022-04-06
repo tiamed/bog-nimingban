@@ -3,11 +3,15 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { View, Text, useThemeColor } from "../../components/Themed";
 import { RootStackParamList } from "../../types";
+import useSize from "../../hooks/useSize";
 
 export default function Settings() {
+  const BASE_SIZE = useSize();
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>应用设置</Text>
+      <Text style={[styles.title, { fontSize: BASE_SIZE * 1.25 }]}>
+        应用设置
+      </Text>
       <JumpToSettings title="显示设置" navigateTo="LayoutSettings" />
       <JumpToSettings title="屏蔽串设置" navigateTo="BlackList" />
     </View>
@@ -20,6 +24,7 @@ function JumpToSettings(props: {
 }) {
   const navigation = useNavigation();
   const tintColor = useThemeColor({}, "tint");
+  const BASE_SIZE = useSize();
   return (
     <View>
       <TouchableOpacity
@@ -34,7 +39,7 @@ function JumpToSettings(props: {
         <FontAwesome
           name="chevron-right"
           color={tintColor}
-          size={12}
+          size={BASE_SIZE}
         ></FontAwesome>
       </TouchableOpacity>
     </View>
@@ -50,7 +55,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   title: {
-    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
   },

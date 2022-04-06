@@ -13,6 +13,7 @@ import { zhCN } from "date-fns/locale";
 import AddCookieModal from "./AddCookieModal";
 import { Cookie, showAddModalAtom } from "./common";
 import Errors from "../../constants/Errors";
+import useSize from "../../hooks/useSize";
 
 interface SignDict {
   [key: string]: SignInfo;
@@ -28,6 +29,7 @@ export default function Cookies() {
   );
   const setShowAddModal = useSetAtom(showAddModalAtom);
   const iconColor = useThemeColor({}, "tint");
+  const BASE_SIZE = useSize();
 
   const getCanSign = (utcTimeString: string) => {
     const signTime = parseISO(utcTimeString);
@@ -141,7 +143,9 @@ export default function Cookies() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>饼干管理</Text>
+      <Text style={[styles.title, { fontSize: BASE_SIZE * 1.25 }]}>
+        饼干管理
+      </Text>
       <View>
         {cookies
           .filter((cookie) => !cookie.master && cookie.id)
@@ -239,7 +243,6 @@ const styles = StyleSheet.create({
     paddingRight: 15,
   },
   title: {
-    fontSize: 20,
     fontWeight: "bold",
     marginVertical: 10,
   },

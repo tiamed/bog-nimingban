@@ -58,6 +58,7 @@ import { Post } from "../api";
 import { useThemeColor } from "../components/Themed";
 import ReplyHistoryScreen from "../screens/ReplyHistoryScreen";
 import BlackListScreen from "../screens/BlackListScreen";
+import useSize from "../hooks/useSize";
 
 const width = Dimensions.get("window").width;
 
@@ -259,12 +260,14 @@ function BottomTabNavigator() {
   const inactiveColor = useThemeColor({}, "inactive");
   const setTabRefreshing = useSetAtom(tabRefreshingAtom);
   const [historyTab] = useAtom(historyTabAtom);
+  const BASE_SIZE = useSize();
 
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
       screenOptions={{
         tabBarActiveTintColor: tintColor,
+        tabBarAllowFontScaling: false,
       }}
     >
       <BottomTab.Screen
