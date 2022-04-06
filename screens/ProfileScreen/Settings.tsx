@@ -3,10 +3,11 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { View, Text, useThemeColor } from "../../components/Themed";
 import { RootStackParamList } from "../../types";
-import useSize from "../../hooks/useSize";
+import { useContext } from "react";
+import { SizeContext } from "../../components/ThemeContextProvider";
 
 export default function Settings() {
-  const BASE_SIZE = useSize();
+  const BASE_SIZE = useContext(SizeContext);
   return (
     <View style={styles.container}>
       <Text style={[styles.title, { fontSize: BASE_SIZE * 1.25 }]}>
@@ -24,7 +25,7 @@ function JumpToSettings(props: {
 }) {
   const navigation = useNavigation();
   const tintColor = useThemeColor({}, "tint");
-  const BASE_SIZE = useSize();
+  const BASE_SIZE = useContext(SizeContext);
   return (
     <View>
       <TouchableOpacity

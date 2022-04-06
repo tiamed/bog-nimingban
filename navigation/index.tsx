@@ -260,7 +260,6 @@ function BottomTabNavigator() {
   const inactiveColor = useThemeColor({}, "inactive");
   const setTabRefreshing = useSetAtom(tabRefreshingAtom);
   const [historyTab] = useAtom(historyTabAtom);
-  const BASE_SIZE = useSize();
 
   return (
     <BottomTab.Navigator

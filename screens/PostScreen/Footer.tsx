@@ -15,6 +15,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Footer(props: {
   id: number;
@@ -29,6 +30,7 @@ export default function Footer(props: {
   const navigation = useNavigation();
   const tintColor = useThemeColor({}, "tint");
   const height = useSharedValue(50);
+  const insets = useSafeAreaInsets();
   const animatedStyle = useAnimatedStyle(() => {
     return {
       height: height.value,
@@ -63,7 +65,9 @@ export default function Footer(props: {
   }, [props.visible]);
 
   return (
-    <Animated.View style={[styles.footerWrapper, animatedStyle]}>
+    <Animated.View
+      style={[styles.footerWrapper, animatedStyle, { bottom: insets.bottom }]}
+    >
       <View
         style={{
           ...styles.footer,

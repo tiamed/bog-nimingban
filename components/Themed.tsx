@@ -20,7 +20,7 @@ import {
 
 import Colors from "../constants/Colors";
 import useSize from "../hooks/useSize";
-import { ColorSchemeContext } from "./ThemeContextProvider";
+import { ColorSchemeContext, SizeContext } from "./ThemeContextProvider";
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -52,7 +52,7 @@ export type TextInputProps = ThemeProps & DefaultTextInput["props"];
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
-  const BASE_SIZE = useSize();
+  const BASE_SIZE = useContext(SizeContext);
 
   return (
     <DefaultText
@@ -88,7 +88,7 @@ export function ScrollView(props: ScrollViewProps) {
 export function Button(props: ButtonProps) {
   const { lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "button");
-  const BASE_SIZE = useSize();
+  const BASE_SIZE = useContext(SizeContext);
 
   return (
     <TouchableOpacity {...otherProps}>

@@ -1,9 +1,10 @@
 import { formatRelative, formatDistance } from "date-fns";
 import { zhCN } from "date-fns/locale";
+import { useContext } from "react";
 
 import { Post } from "../../api";
 import useForums, { useForumsIdMap } from "../../hooks/useForums";
-import useSize from "../../hooks/useSize";
+import { SizeContext } from "../ThemeContextProvider";
 import { View, Text, useThemeColor } from "../Themed";
 
 export default function Header(props: {
@@ -13,7 +14,7 @@ export default function Header(props: {
 }) {
   const forums = useForums();
   const forumsIdMap = useForumsIdMap();
-  const BASE_SIZE = useSize();
+  const BASE_SIZE = useContext(SizeContext);
   const tintColor = useThemeColor({}, "tint");
   const highlightColor = useThemeColor({}, "highlight");
 

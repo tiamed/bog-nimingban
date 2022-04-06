@@ -1,4 +1,4 @@
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, Platform } from "react-native";
 import { useAtom, useSetAtom } from "jotai";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useState, useEffect, useCallback, useMemo } from "react";
@@ -43,6 +43,7 @@ export default function PostScreen({
   const [lastPageFinished, setLastPageFinished] = useState(false);
   const [focusItem, setFocusItem] = useState({} as Reply);
   const [isShowFooter, setIsShowFooter] = useState(true);
+  const [lastContentOffset, setLastContentOffset] = useState(0);
 
   const [postIdRefreshing, setPostIdRefreshing] = useAtom(postIdRefreshingAtom);
   const setPreviews = useSetAtom(previewsAtom);
@@ -236,10 +237,15 @@ export default function PostScreen({
         refreshing={isRefreshing}
         onRefresh={refreshPosts}
         onScroll={(e) => {
-          if (
-            (e.nativeEvent.velocity?.y as Number) > 0 &&
-            e.nativeEvent.contentOffset.y > 100
-          ) {
+          const isScrollUp =
+            Platform.OS === "ios"
+              ? e.nativeEvent.contentOffset.y - lastContentOffset > 0
+              : (e.nativeEvent.velocity?.y as Number) > 0;
+          const canHide =
+            e.nativeEvent.contentSize.height >
+            e.nativeEvent.layoutMeasurement.height;
+
+          if (isScrollUp && e.nativeEvent.contentOffset.y > 5 && canHide) {
             if (isShowFooter) {
               setIsShowFooter(false);
             }
@@ -247,12 +253,13 @@ export default function PostScreen({
             e.nativeEvent.contentSize.height -
               e.nativeEvent.layoutMeasurement.height -
               e.nativeEvent.contentOffset.y >
-            60
+            5
           ) {
             if (!isShowFooter) {
               setIsShowFooter(true);
             }
           }
+          setLastContentOffset(e.nativeEvent.contentOffset.y);
         }}
         renderItem={({ item }) => (
           <ReplyPost

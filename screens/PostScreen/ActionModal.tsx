@@ -46,15 +46,13 @@ export default function ActionModal(props: {
         text: "确认",
         onPress: async () => {
           const replyCookie = cookies.find(
-            (cookie) => cookie?.code?.indexOf(props.item.cookie) !== -1
+            (cookie) => cookie?.id === props.item.cookie
           );
+          const replyCode = replyCookie?.code?.split("#").slice(0, 2).join("#");
           try {
             const {
               data: { type, code, info },
-            } = await deleteReply(
-              props.item.id,
-              `${replyCookie?.master}#${replyCookie?.hash}`
-            );
+            } = await deleteReply(props.item.id, replyCode as string);
             if (type === "OK") {
               Toast.show({ type: "success", text1: "删除成功，请刷新页面" });
             } else {

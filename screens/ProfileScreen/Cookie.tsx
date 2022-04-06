@@ -5,7 +5,7 @@ import { Button, Text, useThemeColor, View } from "../../components/Themed";
 import { cookiesAtom, signDictAtom } from "../../atoms/index";
 import { atom, useAtom, useSetAtom } from "jotai";
 import Icon from "../../components/Icon";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { SignInfo, signIn, createCookie, deleteSlaveCookie } from "../../api";
 import Toast from "react-native-toast-message";
 import { parseISO, addSeconds, format, formatRelative } from "date-fns";
@@ -13,7 +13,7 @@ import { zhCN } from "date-fns/locale";
 import AddCookieModal from "./AddCookieModal";
 import { Cookie, showAddModalAtom } from "./common";
 import Errors from "../../constants/Errors";
-import useSize from "../../hooks/useSize";
+import { SizeContext } from "../../components/ThemeContextProvider";
 
 interface SignDict {
   [key: string]: SignInfo;
@@ -29,7 +29,7 @@ export default function Cookies() {
   );
   const setShowAddModal = useSetAtom(showAddModalAtom);
   const iconColor = useThemeColor({}, "tint");
-  const BASE_SIZE = useSize();
+  const BASE_SIZE = useContext(SizeContext);
 
   const getCanSign = (utcTimeString: string) => {
     const signTime = parseISO(utcTimeString);

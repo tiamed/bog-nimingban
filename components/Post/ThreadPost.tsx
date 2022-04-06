@@ -11,12 +11,12 @@ import {
   threadDirectionAtom,
 } from "../../atoms";
 import { useNavigation } from "@react-navigation/native";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import HtmlView from "./HtmlView";
 import Header from "./Header";
 import ImageView, { getImageUrl, getThumbnailUrl } from "./ImageView";
 import Wrapper from "./Wrapper";
-import useSize from "../../hooks/useSize";
+import { SizeContext } from "../ThemeContextProvider";
 
 export default function ThreadPost(props: {
   data: Partial<Post>;
@@ -30,7 +30,7 @@ export default function ThreadPost(props: {
   const [threadDirection] = useAtom(threadDirectionAtom);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
   const navigation = useNavigation();
-  const BASE_SIZE = useSize();
+  const BASE_SIZE = useContext(SizeContext);
   const images = useMemo(() => {
     const { data } = props;
     const result: Image[] = data.images || [];

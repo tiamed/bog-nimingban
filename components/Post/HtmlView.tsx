@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { decode } from "html-entities";
 import HTMLView from "react-native-htmlview";
 import { Dimensions, Linking, PixelRatio, Pressable } from "react-native";
 import Collapsible from "react-native-collapsible";
 
 import { View, Text } from "../Themed";
-import useSize from "../../hooks/useSize";
 import ReplyPostWithoutData from "./ReplyPostWithoutData";
 import { useAtom } from "jotai";
 import { lineHeightAtom } from "../../atoms";
+import { SizeContext } from "../ThemeContextProvider";
 
 const width = Dimensions.get("window").width;
 
@@ -42,7 +42,7 @@ export default function HtmlView(props: { content: string; level?: number }) {
 function Quote(props: { data: string; level: number }) {
   const { data } = props;
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const BASE_SIZE = useSize();
+  const BASE_SIZE = useContext(SizeContext);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
   const quoteId = Number(data.replace(/>>Po\./g, ""));
 
@@ -94,7 +94,7 @@ function Quote(props: { data: string; level: number }) {
 
 function Link(props: { href: string }) {
   const { href } = props;
-  const BASE_SIZE = useSize();
+  const BASE_SIZE = useContext(SizeContext);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
 
   return (
@@ -120,7 +120,7 @@ function Link(props: { href: string }) {
 function PureText(props: { children: any }) {
   const { children } = props;
 
-  const BASE_SIZE = useSize();
+  const BASE_SIZE = useContext(SizeContext);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
 
   return (
@@ -137,7 +137,7 @@ function PureText(props: { children: any }) {
 }
 
 function EmptyLine() {
-  const BASE_SIZE = useSize();
+  const BASE_SIZE = useContext(SizeContext);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
 
   return (

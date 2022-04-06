@@ -142,54 +142,52 @@ export default function ReplyModalScreen({
   };
 
   const submit = async () => {
-    if (forumId && cookieCode) {
-      const params = {
-        comment: draft,
-        forum: forumId || 1,
-        res: replyId || 0,
-        title: "",
-        name: "",
-        cookie: cookieCode,
-        webapp: 1,
-        img: images.map((image) => image.url),
-      };
-      const {
-        data: { info: newPostId, type, code },
-      } = await addReply(params);
-      if (/ok/i.test(type)) {
-        if (typeof newPostId === "number") {
-          Toast.show({ type: "success", text1: "发送成功" });
-          const {
-            data: { info },
-          } = await getReply(newPostId);
-          if (info?.id) {
-            setReplyHistory([
-              {
-                ...info,
-                createTime: Date.now(),
-              },
-              ...replyHistory,
-            ]);
-          }
+    const params = {
+      comment: draft,
+      forum: forumId || 1,
+      res: replyId || 0,
+      title: "",
+      name: "",
+      cookie: cookieCode,
+      webapp: 1,
+      img: images.map((image) => image.url),
+    };
+    const {
+      data: { info: newPostId, type, code },
+    } = await addReply(params);
+    if (/ok/i.test(type)) {
+      if (typeof newPostId === "number") {
+        Toast.show({ type: "success", text1: "发送成功" });
+        const {
+          data: { info },
+        } = await getReply(newPostId);
+        if (info?.id) {
+          setReplyHistory([
+            {
+              ...info,
+              createTime: Date.now(),
+            },
+            ...replyHistory,
+          ]);
         }
-        if (!replyId) {
-          navigation.push("Post", {
-            id: newPostId,
-            title: `${forumsIdMap.get(params.forum)} Po.${newPostId}`,
-          });
-        } else {
-          setPostIdRefreshing(replyId);
-        }
-        setDraft("");
-        close();
-      } else {
-        Toast.show({
-          type: "error",
-          text1: Errors[code] || newPostId?.toString() || "出错了",
-        });
       }
-      return;
+      if (!replyId) {
+        navigation.push("Post", {
+          id: newPostId,
+          title: `${forumsIdMap.get(params.forum)} Po.${newPostId}`,
+        });
+      } else {
+        setPostIdRefreshing(replyId);
+      }
+      setDraft("");
+      close();
+    } else {
+      Toast.show({
+        type: "error",
+        text1: Errors[code] || newPostId?.toString() || "出错了",
+      });
     }
+    return;
   };
 
   useEffect(() => {
@@ -205,6 +203,12 @@ export default function ReplyModalScreen({
       setEmoticonPickerVisible(false);
     });
   }, []);
+
+  useEffect(() => {
+    if (!cookieCode && cookies?.filter((cookie: any) => cookie.id)?.length) {
+      setCookieCode(cookies[0]?.code);
+    }
+  }, [cookieCode]);
 
   return (
     <View style={styles.modal}>

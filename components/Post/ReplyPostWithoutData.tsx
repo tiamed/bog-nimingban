@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { useAtom, useSetAtom } from "jotai";
 
@@ -7,8 +7,8 @@ import ReplyPost from "./ReplyPost";
 import { getReply, Post, Reply, Image } from "../../api";
 import { currentPostAtom, previewIndexAtom, previewsAtom } from "../../atoms";
 import { useNavigation } from "@react-navigation/native";
-import useSize from "../../hooks/useSize";
 import { getImageUrl, getThumbnailUrl } from "./ImageView";
+import { SizeContext } from "../ThemeContextProvider";
 
 export default function ReplyPostWithoutData(props: {
   id: number;
@@ -22,7 +22,7 @@ export default function ReplyPostWithoutData(props: {
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const tintColor = useThemeColor({}, "tint");
   const navigation = useNavigation();
-  const BASE_SIZE = useSize();
+  const BASE_SIZE = useContext(SizeContext);
 
   const loadData = async () => {
     try {
