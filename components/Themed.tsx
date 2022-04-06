@@ -14,21 +14,23 @@ import {
 } from "react-native";
 import { SuccessToast, InfoToast, ErrorToast } from "react-native-toast-message";
 
+import Colors from "../constants/Colors";
 import { ColorSchemeContext, SizeContext } from "./ThemeContextProvider";
 
-import Colors from "@/constants/Colors";
+import useColor from "@/hooks/useColor";
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
   colorName: keyof typeof Colors.light & keyof typeof Colors.dark
 ) {
+  const colors = useColor();
   const theme = useContext(ColorSchemeContext);
   const colorFromProps = props[theme as "light" | "dark"];
 
   if (colorFromProps) {
     return colorFromProps;
   } else {
-    return Colors[theme as "light" | "dark"][colorName];
+    return colors[theme as "light" | "dark"][colorName];
   }
 }
 

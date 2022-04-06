@@ -71,6 +71,8 @@ export const showActionModalAtom = atom(false);
 
 export const showHomeActionModalAtom = atom(false);
 
+export const showColorPickerModalAtom = atom(false);
+
 export const sizeAtom = atomWithAsyncStorage("fontSize", "normal");
 
 export const lineHeightAtom = atomWithAsyncStorage("lineHeight", 1.4);
@@ -96,3 +98,7 @@ export const selectedCookieAtom = atomWithAsyncStorage("selectedCookie", null);
 export const historyTabAtom = atomWithAsyncStorage("historyTab", 0);
 
 export const blackListPostsAtom = atomWithAsyncStorage("blackListPosts", []);
+
+export const tintColorAtom = atomWithAsyncStorage("tintColor", "#FC88B3");
+
+export const highlightColorAtom = atomWithAsyncStorage("highlightColor", "#FD4C5D");

@@ -1,19 +1,30 @@
-import { StyleSheet } from "react-native";
+import { useSetAtom } from "jotai";
+import { useState } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
+
+import ColorPickerModal from "./ColorPickerModal";
 
 import {
   colorSchemeAtom,
   imageWidthAtom,
   lineHeightAtom,
   maxLineAtom,
+  showColorPickerModalAtom,
   sizeAtom,
   threadDirectionAtom,
   thumbnailResizeAtom,
+  tintColorAtom,
+  highlightColorAtom,
 } from "@/atoms";
+import Icon from "@/components/Icon";
 import SettingPicker from "@/components/SettingPicker";
-import { ScrollView, View } from "@/components/Themed";
+import { ScrollView, View, Text, useThemeColor } from "@/components/Themed";
 import { RootStackScreenProps } from "@/types";
 
 export default function ProfileScreen({ navigation }: RootStackScreenProps<"LayoutSettings">) {
+  const setColorPickerModalVisible = useSetAtom(showColorPickerModalAtom);
+  const tintColor = useThemeColor({}, "tint");
+  const [currentAtom, setCurrentAtom] = useState(tintColorAtom);
   return (
     <ScrollView style={{ flex: 1, flexDirection: "column" }}>
       <View style={styles.container}>
@@ -85,6 +96,29 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
             })),
           ]}
         />
+        <View>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => {
+              setCurrentAtom(tintColorAtom);
+              setColorPickerModalVisible(true);
+            }}>
+            <Text style={{ ...styles.itemLabel }}>主题色</Text>
+            <Icon name="chevron-right" color={tintColor} />
+          </TouchableOpacity>
+        </View>
+        <View>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => {
+              setCurrentAtom(highlightColorAtom);
+              setColorPickerModalVisible(true);
+            }}>
+            <Text style={{ ...styles.itemLabel }}>强调色</Text>
+            <Icon name="chevron-right" color={tintColor} />
+          </TouchableOpacity>
+        </View>
+        <ColorPickerModal atom={currentAtom} />
       </View>
     </ScrollView>
   );
@@ -97,5 +131,16 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     marginTop: 15,
+    paddingBottom: 50,
+  },
+  item: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    alignItems: "center",
+    height: 40,
+  },
+  itemLabel: {
+    minWidth: "20%",
   },
 });
