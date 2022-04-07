@@ -1,10 +1,10 @@
-import { Picker } from "@react-native-picker/picker";
 import { useAtom } from "jotai";
 import { useContext } from "react";
 import { StyleSheet } from "react-native";
 
+import Picker from "./Picker";
 import { SizeContext } from "./ThemeContextProvider";
-import { useThemeColor, View, Text } from "./Themed";
+import { View, Text } from "./Themed";
 
 interface Option {
   label: string;
@@ -12,8 +12,6 @@ interface Option {
 }
 
 export default function SettingPicker(props: { title: string; atom: any; options: Option[] }) {
-  const tintColor = useThemeColor({}, "tint");
-  const backgroundColor = useThemeColor({}, "background");
   const [value, setValue] = useAtom(props.atom);
   const BASE_SIZE = useContext(SizeContext);
 
@@ -21,20 +19,10 @@ export default function SettingPicker(props: { title: string; atom: any; options
     <View style={[styles.item, { minHeight: BASE_SIZE * 4 }]}>
       <Text style={styles.itemLabel}>{props.title}</Text>
       <Picker
-        style={{
-          color: tintColor,
-          backgroundColor,
-          flex: 1,
-        }}
-        itemStyle={{
-          color: tintColor,
-        }}
         selectedValue={value as string | undefined}
-        onValueChange={(val: string) => setValue(val)}>
-        {props.options?.map((option: any) => (
-          <Picker.Item key={option.value} label={option.label} value={option.value} />
-        ))}
-      </Picker>
+        onValueChange={(val: string) => setValue(val)}
+        options={props.options}
+      />
     </View>
   );
 }

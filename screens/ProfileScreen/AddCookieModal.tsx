@@ -1,4 +1,3 @@
-import { Picker } from "@react-native-picker/picker";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
@@ -9,6 +8,7 @@ import { showAddModalAtom, Cookie } from "./common";
 
 import { importCookie } from "@/api";
 import { cookiesAtom } from "@/atoms/index";
+import Picker from "@/components/Picker";
 import { Button, Text, useThemeColor, View, TextInput } from "@/components/Themed";
 import Errors from "@/constants/Errors";
 
@@ -19,7 +19,6 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
   const [master, setMaster] = useState("");
   const [cookies, setCookies] = useAtom<Cookie[], Cookie[], void>(cookiesAtom);
   const tintColor = useThemeColor({}, "tint");
-  const backgroundColor = useThemeColor({}, "background");
   const close = () => {
     setName("");
     setCode("");
@@ -128,23 +127,15 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
         <View style={styles.pickerWrapper}>
           <Text style={{ ...styles.pickerLabel, color: tintColor }}>主饼干</Text>
           <Picker
-            style={{
-              ...styles.picker,
-              color: tintColor,
-              backgroundColor,
-            }}
-            itemStyle={{
-              color: tintColor,
-            }}
             selectedValue={master}
-            onValueChange={(val: string) => setMaster(val)}>
-            <Picker.Item label="无" value="" />
-            {cookies
-              ?.filter((cookie) => cookie.id && !cookie.master)
-              ?.map((cookie: any) => (
-                <Picker.Item key={cookie.id} label={cookie.name} value={cookie.id} />
-              ))}
-          </Picker>
+            onValueChange={(val: string) => setMaster(val)}
+            options={[
+              { label: "无", value: "" },
+              ...cookies
+                ?.filter((cookie) => cookie.id && !cookie.master)
+                ?.map((cookie: any) => ({ label: cookie.name, value: cookie.id })),
+            ]}
+          />
         </View>
         <View style={styles.footer}>
           <View style={styles.footerButton}>
@@ -172,6 +163,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: "hidden",
     padding: 20,
+    paddingVertical: 40,
   },
   input: {
     margin: 2,
@@ -193,7 +185,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   pickerWrapper: {
-    minHeight: 30,
+    minHeight: 60,
     maxHeight: 60,
     marginBottom: 10,
     flexDirection: "row",

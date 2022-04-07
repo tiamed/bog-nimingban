@@ -15,7 +15,7 @@ export default function HomeFloatingAction() {
     switch (action) {
       case "post":
         navigation.navigate("ReplyModal", {
-          forumId: thread,
+          forumId: thread || 1,
         });
         break;
       case "search":

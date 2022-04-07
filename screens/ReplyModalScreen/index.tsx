@@ -1,4 +1,3 @@
-import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { useAtom, useSetAtom } from "jotai";
 import React, { useEffect, useState } from "react";
@@ -26,6 +25,7 @@ import {
 } from "@/atoms";
 import Icon from "@/components/Icon";
 import Overlay from "@/components/Overlay";
+import Picker from "@/components/Picker";
 import ImageView from "@/components/Post/ImageView";
 import { Button, Text, useThemeColor, View, TextInput } from "@/components/Themed";
 import Errors from "@/constants/Errors";
@@ -225,49 +225,29 @@ export default function ReplyModalScreen({
         <View style={styles.pickerWrapper}>
           {!replyId && (
             <Picker
-              style={{
-                ...styles.picker,
-                color: tintColor,
-                backgroundColor,
-              }}
-              itemStyle={{
-                color: tintColor,
-              }}
               selectedValue={forumId as number}
               onValueChange={(val: number) => {
                 if (val !== forumId) {
                   setForumId(val);
                 }
-              }}>
-              {forums
+              }}
+              options={forums
                 ?.filter((x) => x.id && !x.hide)
-                ?.map((forum: any) => (
-                  <Picker.Item key={forum.id} label={forum.name} value={forum.id} />
-                ))}
-            </Picker>
+                ?.map((forum: any) => ({ label: forum.name, value: forum.id }))}
+            />
           )}
           {cookies?.length ? (
             <Picker
-              style={{
-                ...styles.picker,
-                color: tintColor,
-                backgroundColor,
-              }}
-              itemStyle={{
-                color: tintColor,
-              }}
               selectedValue={cookieCode}
-              onValueChange={(val: string) => setCookieCode(val)}>
-              {cookies
+              onValueChange={(val: string) => setCookieCode(val)}
+              options={cookies
                 ?.filter((cookie: any) => cookie.id)
-                ?.map((cookie: any) => (
-                  <Picker.Item
-                    key={cookie.id}
-                    label={`${cookie.master ? "影" : "主"}·${cookie.name}`}
-                    value={cookie.code}
-                  />
-                ))}
-            </Picker>
+                ?.map((cookie: any) => ({
+                  key: cookie.id,
+                  label: `${cookie.master ? "影" : "主"}·${cookie.name}`,
+                  value: cookie.code,
+                }))}
+            />
           ) : (
             <Text style={{ ...styles.picker, padding: 10 }}>没有可用的饼干</Text>
           )}
