@@ -7,7 +7,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "prerelease": "standard-version commitizen --prerelease"
   },
   "jest": {
     "preset": "jest-expo"
@@ -79,6 +80,7 @@
     "jest-expo": "~44.0.1",
     "prettier": "^2.6.2",
     "react-test-renderer": "17.0.1",
+    "standard-version": "^9.3.2",
     "typescript": "~4.3.5"
   },
   "private": true
