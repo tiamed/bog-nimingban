@@ -15,9 +15,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "fun.tiamed"
@@ -33,7 +31,9 @@
         "WRITE_EXTERNAL_STORAGE",
         "ACCESS_MEDIA_LOCATION",
         "CAMERA"
-      ]
+      ],
+      "softwareKeyboardLayoutMode": "pan",
+      "allowBackup": true
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
