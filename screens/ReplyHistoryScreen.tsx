@@ -1,14 +1,22 @@
 import { useNavigation } from "@react-navigation/native";
-import { useAtom } from "jotai";
+import { endOfDay, sub, startOfDay } from "date-fns";
+import { atom, useAtom, useSetAtom } from "jotai";
+import { useEffect, useState } from "react";
 import { StyleSheet, FlatList } from "react-native";
 
 import renderFooter from "./HomeScreen/renderFooter";
 
-import { Reply } from "@/api";
-import { replyHistoryAtom } from "@/atoms";
+import { Reply, Image } from "@/api";
+import { previewIndexAtom, previewsAtom, replyHistoryAtom } from "@/atoms";
 import HistoryFloatingAction from "@/components/HistoryFloatingAction";
+import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
 import { View } from "@/components/Themed";
+
+const rangeAtom = atom({
+  start: startOfDay(sub(new Date(), { days: 7 })).getTime(),
+  end: endOfDay(new Date()).getTime(),
+});
 
 export interface ReplyHistory extends Reply {
   createTime: number;
@@ -16,11 +24,28 @@ export interface ReplyHistory extends Reply {
 
 export default function ReplyHistoryScreen() {
   const [history] = useAtom<ReplyHistory[]>(replyHistoryAtom);
+  const [filteredHistory, setFilteredHistory] = useState<ReplyHistory[]>([]);
+  const [range, setRange] = useAtom(rangeAtom);
+  const setPreviews = useSetAtom(previewsAtom);
+  const setPreviewIndex = useSetAtom(previewIndexAtom);
   const navigation = useNavigation();
+
+  const updateHistory = () => {
+    setFilteredHistory(
+      history.filter(({ createTime }) => {
+        return createTime >= range.start && createTime < range.end;
+      })
+    );
+  };
+
+  useEffect(() => {
+    updateHistory();
+  }, [range, history]);
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={history}
+        data={filteredHistory}
         renderItem={({ item }) =>
           item && (
             <ReplyPost
@@ -34,13 +59,29 @@ export default function ReplyHistoryScreen() {
                   title: `Po.${res || id}`,
                 });
               }}
+              onImagePress={(image: Image) => {
+                setPreviews(
+                  item.images.map((item) => ({
+                    url: getImageUrl(item),
+                    originalUrl: getThumbnailUrl(item),
+                  }))
+                );
+                setPreviewIndex(item.images.findIndex((x) => x.url === image.url));
+                navigation.navigate("PreviewModal");
+              }}
             />
           )
         }
         onEndReachedThreshold={0.1}
         ListFooterComponent={() => renderFooter(false, true)}
       />
-      <HistoryFloatingAction />
+      <HistoryFloatingAction
+        start={range.start}
+        end={range.end}
+        onChange={(start, end) => {
+          setRange({ start, end });
+        }}
+      />
     </View>
   );
 }
