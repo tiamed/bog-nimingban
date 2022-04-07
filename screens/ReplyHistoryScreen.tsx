@@ -32,9 +32,9 @@ export default function ReplyHistoryScreen() {
 
   const updateHistory = () => {
     setFilteredHistory(
-      history.filter(({ createTime }) => {
+      history?.filter(({ createTime }) => {
         return createTime >= range.start && createTime < range.end;
-      })
+      }) ?? []
     );
   };
 

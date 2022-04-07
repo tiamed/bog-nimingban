@@ -29,7 +29,7 @@ export default function BrowseHistoryScreen() {
 
   const updateHistory = () => {
     setFilteredHistory(
-      history.filter(({ createTime }) => {
+      history?.filter(({ createTime }) => {
         return createTime >= range.start && createTime < range.end;
       })
     );
