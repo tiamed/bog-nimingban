@@ -12,6 +12,7 @@ import Toast from "react-native-toast-message";
 
 import { previewIndexAtom, previewsAtom } from "@/atoms";
 import { useThemeColor } from "@/components/Themed";
+import Urls from "@/constants/Urls";
 
 export default function PreviewModalScreen() {
   const navigation = useNavigation();
@@ -34,7 +35,7 @@ export default function PreviewModalScreen() {
         const { uri } = await FileSystem.downloadAsync(
           previews[previewIndex].url,
           FileSystem.documentDirectory +
-            previews[previewIndex].url.replace("http://bog.ac/image/large/", "")
+            previews[previewIndex].url.replace(`${Urls.baseURL}image/large/`, "")
         );
 
         await callback(uri);

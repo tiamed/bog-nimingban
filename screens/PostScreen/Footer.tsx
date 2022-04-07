@@ -10,6 +10,7 @@ import { Post } from "@/api";
 import { favoriteAtom, showPageModalAtom } from "@/atoms/index";
 import Icon from "@/components/Icon";
 import { Text, View, useThemeColor } from "@/components/Themed";
+import Urls from "@/constants/Urls";
 import { UserFavorite } from "@/screens/FavoriteScreen";
 
 export default function Footer(props: { id: number; mainPost: Post; visible: boolean }) {
@@ -122,7 +123,7 @@ function FooterItem(props: {
 
 function onShare(id: number, content: string) {
   Share.share({
-    message: `${content.replace(/<[^>]+>/g, "").slice(0, 100)} http://bog.ac/t/${id}/
+    message: `${content.replace(/<[^>]+>/g, "").slice(0, 100)} ${Urls.baseURL}t/${id}/
 
 来自B岛匿名版 https://expo.dev/@creasus/bog-nimingban`,
   });

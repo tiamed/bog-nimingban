@@ -138,7 +138,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     alignItems: "center",
-    height: 40,
   },
   itemLabel: {
     minWidth: "20%",

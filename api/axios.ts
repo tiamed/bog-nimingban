@@ -2,8 +2,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import qs from "qs";
 
+import Urls from "@/constants/Urls";
+
 const http = axios.create({
-  baseURL: "http://bog.ac/",
+  baseURL: Urls.baseURL,
 });
 
 const reqInterceptor = async (config: any) => {

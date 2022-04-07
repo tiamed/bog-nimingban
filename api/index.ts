@@ -1,5 +1,7 @@
 import axios from "./axios";
 
+import Urls from "@/constants/Urls";
+
 interface CodeResponse {
   code: number;
 }
@@ -121,7 +123,7 @@ export const deleteReply = (id: number, cookie: string) =>
   axios.post(`/post/del/${id}`, { cookie });
 
 export const uploadImage = (image: FormData) =>
-  fetch("http://bog.ac/post/upload", {
+  fetch(`${Urls.baseURL}post/upload`, {
     headers: {
       Accept: "application/json",
       "Content-Type": "multipart/form-data",

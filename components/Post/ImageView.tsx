@@ -4,6 +4,7 @@ import { StyleProp, TouchableOpacity } from "react-native";
 
 import { Image } from "@/api";
 import { thumbnailResizeAtom } from "@/atoms";
+import Urls from "@/constants/Urls";
 
 export default function ImageView(props: {
   onPress: () => void;
@@ -27,11 +28,11 @@ export default function ImageView(props: {
 
 export function getThumbnailUrl(image: any, path: string = "image") {
   if (path === "image_pre") {
-    return `http://bog.ac/${path}/thumb/${image.url}`;
+    return `${Urls.baseURL}${path}/thumb/${image.url}`;
   }
-  return `http://bog.ac/${path}/thumb/${image.url}${image.ext}`;
+  return `${Urls.baseURL}${path}/thumb/${image.url}${image.ext}`;
 }
 
 export function getImageUrl(image: any) {
-  return `http://bog.ac/image/large/${image.url}${image.ext}`;
+  return `${Urls.baseURL}image/large/${image.url}${image.ext}`;
 }

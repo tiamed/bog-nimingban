@@ -1,11 +1,11 @@
 import { useAtom } from "jotai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import Modal from "react-native-modal";
 import ColorPicker from "react-native-wheel-color-picker";
 
 import { showColorPickerModalAtom } from "@/atoms";
-import { Button, View } from "@/components/Themed";
+import { Button, TextInput, View } from "@/components/Themed";
 
 const PALETTE = [
   "#FC4C5D",
@@ -23,10 +23,19 @@ const PALETTE = [
 export default function ColorPickerModal(props: { atom: any }) {
   const [visible, setVisible] = useAtom(showColorPickerModalAtom);
   const [color, setColor] = useAtom(props.atom);
+  const [hex, setHex] = useState(color);
+  const [selectedColor, setSelectedColor] = useState(color);
   const close = () => {
     setVisible(false);
   };
-  const [selectedColor, setSelectedColor] = useState(color);
+  useEffect(() => {
+    setSelectedColor(color);
+  }, [color]);
+  useEffect(() => {
+    if (selectedColor !== hex) {
+      setHex(selectedColor);
+    }
+  }, [selectedColor]);
   return (
     <Modal
       isVisible={visible}
@@ -42,11 +51,21 @@ export default function ColorPickerModal(props: { atom: any }) {
           thumbSize={40}
           sliderSize={40}
           noSnap
-          row={false}
+          row
           swatches
           palette={PALETTE}
         />
         <View style={styles.footer}>
+          <TextInput
+            style={styles.input}
+            value={hex as string}
+            onChangeText={(val) => {
+              setHex(val);
+              if (/^#([0-9a-f]{6})$/i.test(val)) {
+                setSelectedColor(val);
+              }
+            }}
+          />
           <Button title="取消" style={styles.footerButton} onPress={close} />
           <Button
             title="确定"
@@ -80,5 +99,8 @@ const styles = StyleSheet.create({
   },
   footerButton: {
     marginLeft: 20,
+  },
+  input: {
+    minWidth: 60,
   },
 });
