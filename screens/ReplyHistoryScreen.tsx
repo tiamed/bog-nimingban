@@ -28,9 +28,10 @@ export default function ReplyHistoryScreen() {
               data={item as unknown as Reply}
               po=""
               onPress={() => {
+                const { id, res } = item as unknown as Reply;
                 navigation.navigate("Post", {
-                  id: item.res,
-                  title: `Po.${item.res}`,
+                  id: res || id,
+                  title: `Po.${res || id}`,
                 });
               }}
             />
