@@ -63,7 +63,8 @@
     "react-native-toast-message": "^2.1.5",
     "react-native-web": "0.17.1",
     "react-native-wheel-color-picker": "^1.2.0",
-    "xss": "^1.0.11"
+    "xss": "^1.0.11",
+    "expo-document-picker": "~10.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

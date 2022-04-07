@@ -43,6 +43,21 @@ export default function Footer(props: { id: number; mainPost: Post; visible: boo
   };
 
   useEffect(() => {
+    if (props.mainPost?.id && isFavorite) {
+      const updatedFavorite = favorite.map((record) => {
+        if (record.id === props.mainPost.id) {
+          return {
+            ...record,
+            ...props.mainPost,
+          };
+        }
+        return record;
+      });
+      setFavorite(updatedFavorite);
+    }
+  }, [props.mainPost]);
+
+  useEffect(() => {
     setIsFavorite(Boolean(favorite.find((x) => x.id === props.mainPost?.id)));
   }, [favorite, props.mainPost]);
 

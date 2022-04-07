@@ -40,7 +40,7 @@ export default function PreviewModalScreen() {
 
         await callback(uri);
       } catch (error) {
-        Toast.show({ type: "error", text1: error as string });
+        Toast.show({ type: "error", text1: (error as Error).message });
       } finally {
         setIsLoading(false);
       }
@@ -62,7 +62,6 @@ export default function PreviewModalScreen() {
   };
   return (
     <>
-      {/* <StatusBar hidden /> */}
       <ImageViewer
         index={previewIndex}
         imageUrls={previews as IImageInfo[]}
