@@ -9,6 +9,7 @@ import { SizeContext } from "./ThemeContextProvider";
 export default function Icon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
+  size?: number;
 }) {
   const BASE_SIZE = useContext(SizeContext);
   return <FontAwesome size={BASE_SIZE * 1.25} style={{ marginBottom: 0 }} {...props} />;

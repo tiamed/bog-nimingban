@@ -1,6 +1,6 @@
 import { endOfDay, startOfDay } from "date-fns";
 import { useState } from "react";
-import { InteractionManager } from "react-native";
+import { InteractionManager, Platform } from "react-native";
 import { FloatingAction } from "react-native-floating-action";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Toast from "react-native-toast-message";
@@ -49,9 +49,13 @@ export default function HistoryFloatingAction(props: {
         onConfirm={(val) => {
           setStartDate(startOfDay(val).getTime());
           setStartVisible(false);
-          InteractionManager.runAfterInteractions(() => {
+          if (Platform.OS === "ios") {
+            InteractionManager.runAfterInteractions(() => {
+              setEndVisible(true);
+            });
+          } else {
             setEndVisible(true);
-          });
+          }
           Toast.show({
             type: "info",
             text1: "请选择结束日期",

@@ -1,6 +1,6 @@
 import * as ImagePicker from "expo-image-picker";
 import { useAtom, useSetAtom } from "jotai";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Platform,
   StyleSheet,
@@ -32,6 +32,7 @@ import Errors from "@/constants/Errors";
 import useForums, { useForumsIdMap } from "@/hooks/useForums";
 import { ReplyHistory } from "@/screens/ReplyHistoryScreen";
 import { RootStackScreenProps } from "@/types";
+import { SizeContext } from "@/components/ThemeContextProvider";
 
 export default function ReplyModalScreen({
   route,
@@ -43,8 +44,11 @@ export default function ReplyModalScreen({
   const [replyId, setReplyId] = useState<number | null | undefined>(null);
   const [images, setImages] = useState<Image[]>([]);
   const [selection, setSelection] = useState({ start: 0, end: 0 });
+  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
   const [showKeyboard, setShowKeyboard] = useState(true);
-  const [emoticonPickerVisible, setEmoticonPickerVisible] = useState(false);
+  const [showEmoticonPicker, setShowEmoticonPicker] = useState(false);
+  const [showPrefixInput, setShowPrefixInput] = useState(false);
 
   const [cookies] = useAtom(cookiesAtom);
   const [draft, setDraft] = useAtom(draftAtom);
@@ -58,6 +62,7 @@ export default function ReplyModalScreen({
   const backgroundColor = useThemeColor({}, "background");
   const forums = useForums();
   const forumsIdMap = useForumsIdMap();
+  const BASE_SIZE = useContext(SizeContext);
   const inputRef = React.useRef<any>(null);
   const close = () => {
     navigation.goBack();
@@ -69,7 +74,7 @@ export default function ReplyModalScreen({
 
   const addEmoji = () => {
     Keyboard.dismiss();
-    setEmoticonPickerVisible(!emoticonPickerVisible);
+    setShowEmoticonPicker(!showEmoticonPicker);
   };
 
   const insertDraft = (str: string) => {
@@ -132,8 +137,8 @@ export default function ReplyModalScreen({
       comment: draft,
       forum: forumId || 1,
       res: replyId || 0,
-      title: "",
-      name: "",
+      title,
+      name,
       cookie: cookieCode,
       webapp: 1,
       img: images.map((image) => image.url),
@@ -185,7 +190,7 @@ export default function ReplyModalScreen({
 
   useEffect(() => {
     Keyboard.addListener("keyboardDidShow", () => {
-      setEmoticonPickerVisible(false);
+      setShowEmoticonPicker(false);
     });
   }, []);
 
@@ -205,9 +210,38 @@ export default function ReplyModalScreen({
           backgroundColor,
         }}>
         <View style={styles.header}>
-          <Text>{replyId ? `回复 >${replyId}` : "发布新串 >"}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}>
+            <TouchableOpacity
+              onPress={() => setShowPrefixInput(!showPrefixInput)}
+              style={{ paddingRight: BASE_SIZE * 0.2 }}>
+              <Icon name="hashtag" color={tintColor} size={BASE_SIZE} />
+            </TouchableOpacity>
+            <Text>{replyId ? `回复 >${replyId}` : "发布新串 >"}</Text>
+          </View>
           <Button title="关闭" onPress={close} />
         </View>
+        {showPrefixInput && (
+          <>
+            <TextInput
+              value={name}
+              selectionColor={tintColor}
+              onChangeText={(val) => setName(val)}
+              placeholder="昵称"
+              style={styles.inputPrefix}
+            />
+            <TextInput
+              value={title}
+              selectionColor={tintColor}
+              onChangeText={(val) => setTitle(val)}
+              placeholder="标题"
+              style={styles.inputPrefix}
+            />
+          </>
+        )}
         <TextInput
           ref={inputRef}
           multiline
@@ -306,7 +340,7 @@ export default function ReplyModalScreen({
           />
         </View>
         <EmoticonPicker
-          visible={emoticonPickerVisible}
+          visible={showEmoticonPicker}
           onInsert={(emoji) => {
             insertDraft(emoji);
           }}
@@ -353,6 +387,13 @@ const styles = StyleSheet.create({
     padding: 5,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
+    overflow: "hidden",
+  },
+  inputPrefix: {
+    marginBottom: 2,
+    paddingHorizontal: 5,
+    borderRadius: 5,
+    overflow: "hidden",
   },
   pickerWrapper: {
     flexDirection: "row",

@@ -18,37 +18,71 @@ export default function Header(props: {
   const highlightColor = useThemeColor({}, "highlight");
 
   return (
-    <View
-      style={{
-        flexDirection: "row",
-      }}>
-      <View style={{ width: "32%", flexDirection: "row" }}>
-        {props.isPo && (
-          <Text
-            lightColor="white"
-            darkColor="white"
-            style={{
-              fontSize: BASE_SIZE * 0.8,
-              backgroundColor: tintColor,
-              marginRight: 2,
-              borderRadius: 2,
-              overflow: "hidden",
-            }}>
-            Po
-          </Text>
-        )}
-        <Text style={{ fontSize: BASE_SIZE * 0.8, color: tintColor }}>{props.data.cookie}</Text>
-      </View>
-      <Text style={{ fontSize: BASE_SIZE * 0.8, flex: 1 }}>Po.{props.data.id}</Text>
-      <View style={{ flex: 2, flexDirection: "column" }}>
+    <>
+      <View
+        style={{
+          flexDirection: "row",
+        }}>
+        <View style={{ width: "32%", flexDirection: "row" }}>
+          {props.isPo && (
+            <Text
+              lightColor="white"
+              darkColor="white"
+              style={{
+                fontSize: BASE_SIZE * 0.8,
+                backgroundColor: tintColor,
+                marginRight: 2,
+                borderRadius: 2,
+                overflow: "hidden",
+              }}>
+              Po
+            </Text>
+          )}
+          <Text style={{ fontSize: BASE_SIZE * 0.8, color: tintColor }}>{props.data.cookie}</Text>
+        </View>
+        <Text style={{ fontSize: BASE_SIZE * 0.8, flex: 1 }}>Po.{props.data.id}</Text>
         <Text
           lightColor="#666666"
           darkColor="#999999"
           style={{ fontSize: BASE_SIZE * 0.8, flex: 2, textAlign: "right" }}>
           {renderTime(props.data.root, props.data.time)}
         </Text>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}>
+        <View style={{ flexDirection: "column", flexWrap: "wrap" }}>
+          {Boolean(props.data.name) && (
+            <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+              <Text
+                lightColor="white"
+                darkColor="white"
+                style={{
+                  fontSize: BASE_SIZE * 0.8,
+                  color: tintColor,
+                }}>
+                {props.data.name}
+              </Text>
+            </View>
+          )}
+          {Boolean(props.data.title) && (
+            <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+              <Text
+                lightColor="white"
+                darkColor="white"
+                style={{
+                  fontSize: BASE_SIZE * 0.8,
+                  color: highlightColor,
+                }}>
+                {props.data.title}
+              </Text>
+            </View>
+          )}
+        </View>
         {props.showForum && props.data.reply_count !== undefined && (
-          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+          <View style={{ flexDirection: "row", alignSelf: "flex-start" }}>
             <Text
               lightColor="white"
               darkColor="white"
@@ -67,7 +101,7 @@ export default function Header(props: {
           </View>
         )}
       </View>
-    </View>
+    </>
   );
 }
 
