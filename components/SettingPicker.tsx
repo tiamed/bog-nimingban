@@ -1,7 +1,9 @@
 import { Picker } from "@react-native-picker/picker";
 import { useAtom } from "jotai";
+import { useContext } from "react";
 import { StyleSheet } from "react-native";
 
+import { SizeContext } from "./ThemeContextProvider";
 import { useThemeColor, View, Text } from "./Themed";
 
 interface Option {
@@ -13,9 +15,10 @@ export default function SettingPicker(props: { title: string; atom: any; options
   const tintColor = useThemeColor({}, "tint");
   const backgroundColor = useThemeColor({}, "background");
   const [value, setValue] = useAtom(props.atom);
+  const BASE_SIZE = useContext(SizeContext);
 
   return (
-    <View style={styles.item}>
+    <View style={[styles.item, { minHeight: BASE_SIZE * 4 }]}>
       <Text style={styles.itemLabel}>{props.title}</Text>
       <Picker
         style={{

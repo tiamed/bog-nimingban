@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     height: 40,
+    paddingRight: 20,
   },
   itemLabel: {
     minWidth: "20%",

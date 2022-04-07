@@ -41,7 +41,8 @@ export default function ColorPickerModal(props: { atom: any }) {
       isVisible={visible}
       onBackdropPress={close}
       backdropOpacity={0.3}
-      backdropTransitionOutTiming={0}>
+      backdropTransitionOutTiming={0}
+      avoidKeyboard>
       <View style={styles.modal}>
         <ColorPicker
           color={selectedColor as string}

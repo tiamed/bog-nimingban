@@ -37,7 +37,8 @@ export default function PageModal(props: {
       isVisible={visible}
       onBackdropPress={close}
       backdropOpacity={0.3}
-      backdropTransitionOutTiming={0}>
+      backdropTransitionOutTiming={0}
+      avoidKeyboard>
       <View style={styles.modal}>
         <Text style={styles.modalTitle}>跳页</Text>
         <View style={styles.modalContent}>

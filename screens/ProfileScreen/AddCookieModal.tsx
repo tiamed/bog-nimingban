@@ -107,7 +107,8 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
       isVisible={visible}
       onBackdropPress={close}
       backdropOpacity={0.3}
-      backdropTransitionOutTiming={0}>
+      backdropTransitionOutTiming={0}
+      avoidKeyboard>
       <View style={styles.modal}>
         <Text style={styles.title}>{props.cookie ? "修改饼干" : "添加饼干"}</Text>
         <TextInput

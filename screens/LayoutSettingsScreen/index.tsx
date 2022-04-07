@@ -1,5 +1,5 @@
 import { useSetAtom } from "jotai";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 import ColorPickerModal from "./ColorPickerModal";
@@ -18,13 +18,16 @@ import {
 } from "@/atoms";
 import Icon from "@/components/Icon";
 import SettingPicker from "@/components/SettingPicker";
+import { SizeContext } from "@/components/ThemeContextProvider";
 import { ScrollView, View, Text, useThemeColor } from "@/components/Themed";
 import { RootStackScreenProps } from "@/types";
 
 export default function ProfileScreen({ navigation }: RootStackScreenProps<"LayoutSettings">) {
   const setColorPickerModalVisible = useSetAtom(showColorPickerModalAtom);
   const tintColor = useThemeColor({}, "tint");
+  const highlightColor = useThemeColor({}, "highlight");
   const [currentAtom, setCurrentAtom] = useState(tintColorAtom);
+  const BASE_SIZE = useContext(SizeContext);
   return (
     <ScrollView style={{ flex: 1, flexDirection: "column" }}>
       <View style={styles.container}>
@@ -96,28 +99,24 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
             })),
           ]}
         />
-        <View>
-          <TouchableOpacity
-            style={styles.item}
-            onPress={() => {
-              setCurrentAtom(tintColorAtom);
-              setColorPickerModalVisible(true);
-            }}>
-            <Text style={{ ...styles.itemLabel }}>主题色</Text>
-            <Icon name="chevron-right" color={tintColor} />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <TouchableOpacity
-            style={styles.item}
-            onPress={() => {
-              setCurrentAtom(highlightColorAtom);
-              setColorPickerModalVisible(true);
-            }}>
-            <Text style={{ ...styles.itemLabel }}>强调色</Text>
-            <Icon name="chevron-right" color={tintColor} />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          style={[styles.item, { height: BASE_SIZE * 5 }]}
+          onPress={() => {
+            setCurrentAtom(tintColorAtom);
+            setColorPickerModalVisible(true);
+          }}>
+          <Text style={{ ...styles.itemLabel }}>主题色</Text>
+          <Icon name="tint" color={tintColor} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.item, { height: BASE_SIZE * 2 }]}
+          onPress={() => {
+            setCurrentAtom(highlightColorAtom);
+            setColorPickerModalVisible(true);
+          }}>
+          <Text style={{ ...styles.itemLabel }}>强调色</Text>
+          <Icon name="tint" color={highlightColor} />
+        </TouchableOpacity>
         <ColorPickerModal atom={currentAtom} />
       </View>
     </ScrollView>
@@ -137,6 +136,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
+    paddingRight: 20,
     alignItems: "center",
   },
   itemLabel: {
