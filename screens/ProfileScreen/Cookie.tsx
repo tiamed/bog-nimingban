@@ -122,8 +122,10 @@ export default function Cookies() {
         });
         return;
       }
+      setCookies(cookies.filter((c) => c.code !== cookie.code));
+    } else {
+      setCookies(cookies.filter((c) => c.hash !== cookie.hash));
     }
-    setCookies(cookies.filter((c) => c.code !== cookie.code));
   };
 
   const confirmDelete = (cookie: Cookie) => {

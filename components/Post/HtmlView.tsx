@@ -2,10 +2,10 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { decode } from "html-entities";
 import { useAtom } from "jotai";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Dimensions, Linking, PixelRatio, Pressable } from "react-native";
-import Collapsible from "react-native-collapsible";
 import HTMLView from "react-native-htmlview";
+import { useCollapsible, AnimatedSection } from "reanimated-collapsible-helpers";
 
 import ReplyPostWithoutData from "./ReplyPostWithoutData";
 
@@ -66,18 +66,40 @@ export default function HtmlView(props: { content: string; level?: number }) {
 
 function Quote(props: { data: string; level: number }) {
   const { data } = props;
-  const [isCollapsed, setIsCollapsed] = useState(true);
   const BASE_SIZE = useContext(SizeContext);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
+  const [loadingText, setLoadingText] = useState("");
   const quoteId = Number(data.replace(/>>Po\./g, ""));
+  const { animatedHeight, onPress, onLayout, state } = useCollapsible({ duration: 200 });
+  useEffect(() => {
+    if (state === "expanded") {
+      setTimeout(() => {
+        setLoadingText("");
+      }, 300);
+    }
+  }, [state]);
 
   return (
-    <Pressable
-      onPress={() => {
-        setIsCollapsed(!isCollapsed);
+    <View
+      style={{
+        flexDirection: "column",
+        alignItems: "stretch",
+        justifyContent: "center",
+        alignContent: "center",
+        marginVertical: 2,
       }}>
-      <View style={{ flexDirection: "column", margin: 2 }}>
-        <View style={{ flexDirection: "row" }}>
+      <View
+        style={{
+          flexDirection: "row",
+        }}>
+        <Pressable
+          hitSlop={50}
+          onPress={() => {
+            if (state === "collapsed") {
+              setLoadingText("加载中");
+            }
+            onPress();
+          }}>
           <Text
             lightColor="#666666"
             darkColor="#999999"
@@ -91,27 +113,42 @@ function Quote(props: { data: string; level: number }) {
             }}>
             {data}
           </Text>
-        </View>
-        <Collapsible
-          key={quoteId}
-          collapsed={isCollapsed}
+        </Pressable>
+        <Text
           style={{
-            borderWidth: 1,
-            borderColor: "#eee",
-          }}
-          renderChildrenCollapsed={false}
-          easing="linear"
-          align="top"
-          duration={0}
-          enablePointerEvents>
+            fontSize: BASE_SIZE * 0.8,
+            lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) - 4,
+            marginLeft: 5,
+          }}>
+          {loadingText}
+        </Text>
+      </View>
+      <AnimatedSection
+        key={quoteId}
+        animatedHeight={animatedHeight}
+        onLayout={onLayout}
+        state={state}
+        style={{
+          borderWidth: 1,
+          borderColor: "#eee",
+          flexDirection: "row",
+          flexWrap: "wrap",
+          justifyContent: "center",
+        }}>
+        {state === "expanded" && (
           <ReplyPostWithoutData
             id={quoteId}
-            width={width * 0.9 ** props.level}
+            width={width - 20 * props.level}
             level={props.level + 1}
+            onLoaded={() => {
+              setTimeout(() => {
+                setLoadingText("");
+              }, 300);
+            }}
           />
-        </Collapsible>
-      </View>
-    </Pressable>
+        )}
+      </AnimatedSection>
+    </View>
   );
 }
 
@@ -150,6 +187,7 @@ function PureText(props: { children: any }) {
         fontSize: BASE_SIZE,
         lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT),
         textAlign: "left",
+        minWidth: "100%",
       }}>
       {children}
     </Text>

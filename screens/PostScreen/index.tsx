@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, createContext } from "react";
 import { StyleSheet, FlatList, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -14,7 +14,6 @@ import {
   previewsAtom,
   draftAtom,
   showActionModalAtom,
-  currentPostAtom,
   postIdRefreshingAtom,
   postFilteredAtom,
   orderAtom,
@@ -26,6 +25,8 @@ import { useForumsIdMap } from "@/hooks/useForums";
 import { UserHistory } from "@/screens//BrowseHistoryScreen";
 import renderFooter from "@/screens/HomeScreen/renderFooter";
 import { RootStackScreenProps } from "@/types";
+
+export const MainPostContext = createContext({} as Post);
 
 export default function PostScreen({ route, navigation }: RootStackScreenProps<"Post">) {
   const insets = useSafeAreaInsets();
@@ -41,11 +42,11 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   const [focusItem, setFocusItem] = useState({} as Reply);
   const [isShowFooter, setIsShowFooter] = useState(true);
   const [lastContentOffset, setLastContentOffset] = useState(0);
+  const [mainPost, setMainPost] = useState<Post>({} as Post);
 
   const [postIdRefreshing, setPostIdRefreshing] = useAtom(postIdRefreshingAtom);
   const setPreviews = useSetAtom(previewsAtom);
   const [history, setHistory] = useAtom<UserHistory[], UserHistory[], void>(historyAtom);
-  const [mainPost, setMainPost] = useAtom<Post, Post, void>(currentPostAtom);
   const [postFiltered] = useAtom(postFilteredAtom);
   const [order] = useAtom(orderAtom);
 
@@ -222,57 +223,60 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   }, [order]);
 
   return (
-    <View style={{ ...styles.container, paddingBottom: insets.bottom }}>
-      <FlatList
-        data={postFiltered ? filteredPosts : posts}
-        refreshing={isRefreshing}
-        onRefresh={refreshPosts}
-        onScroll={(e) => {
-          const isScrollUp =
-            Platform.OS === "ios"
-              ? e.nativeEvent.contentOffset.y - lastContentOffset > 0
-              : (e.nativeEvent.velocity?.y as number) > 0;
-          const canHide = e.nativeEvent.contentSize.height > e.nativeEvent.layoutMeasurement.height;
+    <MainPostContext.Provider value={mainPost}>
+      <View style={{ ...styles.container, paddingBottom: insets.bottom }}>
+        <FlatList
+          data={postFiltered ? filteredPosts : posts}
+          refreshing={isRefreshing}
+          onRefresh={refreshPosts}
+          onScroll={(e) => {
+            const isScrollUp =
+              Platform.OS === "ios"
+                ? e.nativeEvent.contentOffset.y - lastContentOffset > 0
+                : (e.nativeEvent.velocity?.y as number) > 0;
+            const canHide =
+              e.nativeEvent.contentSize.height > e.nativeEvent.layoutMeasurement.height;
 
-          if (isScrollUp && e.nativeEvent.contentOffset.y > 5 && canHide) {
-            if (isShowFooter) {
-              setIsShowFooter(false);
+            if (isScrollUp && e.nativeEvent.contentOffset.y > 5 && canHide) {
+              if (isShowFooter) {
+                setIsShowFooter(false);
+              }
+            } else if (
+              e.nativeEvent.contentSize.height -
+                e.nativeEvent.layoutMeasurement.height -
+                e.nativeEvent.contentOffset.y >
+              5
+            ) {
+              if (!isShowFooter) {
+                setIsShowFooter(true);
+              }
             }
-          } else if (
-            e.nativeEvent.contentSize.height -
-              e.nativeEvent.layoutMeasurement.height -
-              e.nativeEvent.contentOffset.y >
-            5
-          ) {
-            if (!isShowFooter) {
-              setIsShowFooter(true);
-            }
+            setLastContentOffset(e.nativeEvent.contentOffset.y);
+          }}
+          renderItem={({ item }) => (
+            <ReplyPost
+              key={item.id}
+              data={item}
+              po={mainPost.cookie}
+              onPress={() => {
+                setFocusItem(item);
+                setShowActionModal(true);
+              }}
+            />
+          )}
+          onEndReached={() => loadMoreData(false)}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={() =>
+            renderFooter(isLoading, hasNoMore, loadMoreData.bind(null, true))
           }
-          setLastContentOffset(e.nativeEvent.contentOffset.y);
-        }}
-        renderItem={({ item }) => (
-          <ReplyPost
-            key={item.id}
-            data={item}
-            po={mainPost.cookie}
-            onPress={() => {
-              setFocusItem(item);
-              setShowActionModal(true);
-            }}
-          />
-        )}
-        onEndReached={() => loadMoreData(false)}
-        onEndReachedThreshold={0.1}
-        ListFooterComponent={() =>
-          renderFooter(isLoading, hasNoMore, loadMoreData.bind(null, true))
-        }
-      />
+        />
 
-      <Footer id={route.params.id} mainPost={mainPost} visible={isShowFooter} />
+        <Footer id={route.params.id} mainPost={mainPost} visible={isShowFooter} />
 
-      <PageModal index={currentPage} total={mainPost?.reply_count} loadData={loadData} />
-      <ActionModal item={focusItem} postId={mainPost.id} forumId={mainPost.forum} />
-    </View>
+        <PageModal index={currentPage} total={mainPost?.reply_count} loadData={loadData} />
+        <ActionModal item={focusItem} postId={mainPost.id} forumId={mainPost.forum} />
+      </View>
+    </MainPostContext.Provider>
   );
 }
 

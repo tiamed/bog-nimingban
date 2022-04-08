@@ -23,7 +23,13 @@ export default function Header(props: {
         style={{
           flexDirection: "row",
         }}>
-        <View style={{ width: "32%", flexDirection: "row" }}>
+        <View
+          style={{
+            width: "32%",
+            flexDirection: "row",
+            alignItems: "flex-start",
+            flexWrap: "wrap",
+          }}>
           {props.isPo && (
             <Text
               lightColor="white"

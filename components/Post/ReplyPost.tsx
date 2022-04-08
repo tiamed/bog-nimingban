@@ -40,7 +40,6 @@ export default function ReplyPost(props: {
             flexDirection: "column",
             overflow: "hidden",
             flexWrap: "wrap",
-            marginRight: 8,
           }}>
           <View>
             <HtmlView content={props.data.content as string} level={props.level || 1} />

@@ -68,8 +68,9 @@ export default function ActionModal(props: { item: Reply; postId: number; forumI
       isVisible={visible}
       onBackdropPress={close}
       backdropOpacity={0.3}
-      backdropTransitionOutTiming={0}>
-      <View style={styles.actionModal}>
+      backdropTransitionOutTiming={0}
+      style={styles.modalWrapper}>
+      <View style={styles.modal}>
         <TouchableOpacity onPress={onReply}>
           <View style={styles.actionModalItem}>
             <Text>回复</Text>
@@ -93,15 +94,18 @@ export default function ActionModal(props: { item: Reply; postId: number; forumI
 }
 
 const styles = StyleSheet.create({
-  actionModal: {
+  modalWrapper: {
     flexDirection: "column",
     justifyContent: "center",
     alignSelf: "center",
     alignItems: "flex-start",
-    borderRadius: 10,
-    overflow: "hidden",
     width: 300,
     padding: 6,
+    flex: 1,
+  },
+  modal: {
+    borderRadius: 10,
+    overflow: "hidden",
   },
   actionModalItem: {
     padding: 10,

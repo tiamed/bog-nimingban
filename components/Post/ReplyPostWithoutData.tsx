@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import type { StackNavigationProp } from "@react-navigation/stack";
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
@@ -8,23 +8,25 @@ import { getImageUrl, getThumbnailUrl } from "./ImageView";
 import ReplyPost from "./ReplyPost";
 
 import { getReply, Post, Reply, Image } from "@/api";
-import { currentPostAtom, previewIndexAtom, previewsAtom } from "@/atoms";
+import { previewIndexAtom, previewsAtom } from "@/atoms";
 import { SizeContext } from "@/components/ThemeContextProvider";
 import { Text, useThemeColor, View } from "@/components/Themed";
+import { MainPostContext } from "@/screens/PostScreen";
 
 export default function ReplyPostWithoutData(props: {
   id: number;
   width: string | number;
   level: number;
+  onLoaded?: () => void;
 }) {
   const mounted = useRef(false);
   const [data, setData] = useState<Reply>({ content: "加载中..." } as Reply);
-  const [currentPost] = useAtom<Post>(currentPostAtom);
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const tintColor = useThemeColor({}, "tint");
   const navigation = useNavigation<StackNavigationProp<any>>();
   const BASE_SIZE = useContext(SizeContext);
+  const mainPost = useContext<Post>(MainPostContext);
 
   const loadData = async () => {
     try {
@@ -44,7 +46,11 @@ export default function ReplyPostWithoutData(props: {
     mounted.current = true;
 
     if (mounted.current) {
-      loadData().then(() => {});
+      loadData().then(() => {
+        if (props.onLoaded) {
+          props.onLoaded();
+        }
+      });
     }
 
     return () => {
@@ -52,47 +58,51 @@ export default function ReplyPostWithoutData(props: {
     };
   }, [props.id]);
   return (
-    <View
-      style={{
-        justifyContent: "center",
-        alignItems: "flex-end",
-        alignContent: "stretch",
-      }}>
-      <View style={styles.actionWrapper}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.push("Post", {
-              id: data.res || data.id,
-              title: "",
-            });
-          }}
-          disabled={currentPost.id === data.res}>
-          <Text
-            style={{
-              fontSize: BASE_SIZE * 0.8,
+    <View style={{ flexDirection: "row", width: "100%" }}>
+      {!!data.id && (
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "flex-end",
+            alignContent: "stretch",
+          }}>
+          <View style={styles.actionWrapper}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.push("Post", {
+                  id: data.res || data.id,
+                  title: "",
+                });
+              }}
+              disabled={mainPost.id === data.res}>
+              <Text
+                style={{
+                  fontSize: BASE_SIZE * 0.8,
+                }}
+                lightColor={tintColor}
+                darkColor={tintColor}>
+                {mainPost.id === data.res ? "当前串" : "查看原串"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <ReplyPost
+            data={data}
+            po={mainPost.cookie}
+            width={props.width}
+            level={props.level}
+            onImagePress={(image: Image) => {
+              setPreviews(
+                data.images.map((item) => ({
+                  url: getImageUrl(item),
+                  originalUrl: getThumbnailUrl(item),
+                }))
+              );
+              setPreviewIndex(data.images.findIndex((item) => item.url === image.url));
+              navigation.navigate("PreviewModal");
             }}
-            lightColor={tintColor}
-            darkColor={tintColor}>
-            {currentPost.id === data.res ? "当前串" : "查看原串"}
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <ReplyPost
-        data={data}
-        po={currentPost.cookie}
-        width={props.width}
-        level={props.level}
-        onImagePress={(image: Image) => {
-          setPreviews(
-            data.images.map((item) => ({
-              url: getImageUrl(item),
-              originalUrl: getThumbnailUrl(item),
-            }))
-          );
-          setPreviewIndex(data.images.findIndex((item) => item.url === image.url));
-          navigation.navigate("PreviewModal");
-        }}
-      />
+          />
+        </View>
+      )}
     </View>
   );
 }
