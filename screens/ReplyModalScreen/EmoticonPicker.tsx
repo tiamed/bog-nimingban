@@ -46,7 +46,6 @@ export default function EmoticonPicker(props: {
 const styles = StyleSheet.create({
   list: {
     overflow: "scroll",
-    flex: 1,
   },
   contentContainer: {
     height: "auto",

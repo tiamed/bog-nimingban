@@ -27,12 +27,12 @@ import Icon from "@/components/Icon";
 import Overlay from "@/components/Overlay";
 import Picker from "@/components/Picker";
 import ImageView from "@/components/Post/ImageView";
+import { SizeContext } from "@/components/ThemeContextProvider";
 import { Button, Text, useThemeColor, View, TextInput } from "@/components/Themed";
 import Errors from "@/constants/Errors";
 import useForums, { useForumsIdMap } from "@/hooks/useForums";
 import { ReplyHistory } from "@/screens/ReplyHistoryScreen";
 import { RootStackScreenProps } from "@/types";
-import { SizeContext } from "@/components/ThemeContextProvider";
 
 export default function ReplyModalScreen({
   route,
@@ -353,7 +353,8 @@ export default function ReplyModalScreen({
 const styles = StyleSheet.create({
   modal: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-end",
+    margin: 0,
     alignItems: "center",
     backgroundColor: "#40404040",
   },
@@ -363,8 +364,6 @@ const styles = StyleSheet.create({
   },
   container: {
     justifyContent: "center",
-    position: "absolute",
-    bottom: 0,
     width: "100%",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
@@ -397,9 +396,8 @@ const styles = StyleSheet.create({
   },
   pickerWrapper: {
     flexDirection: "row",
-    minHeight: 60,
+    minHeight: 50,
     alignItems: "center",
-    flex: 1,
   },
   picker: {
     flex: 1,

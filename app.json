@@ -32,7 +32,7 @@
         "ACCESS_MEDIA_LOCATION",
         "CAMERA"
       ],
-      "softwareKeyboardLayoutMode": "pan",
+      "softwareKeyboardLayoutMode": "resize",
       "allowBackup": true
     },
     "web": {
