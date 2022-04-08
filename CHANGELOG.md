@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.16](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.15...v1.0.0-alpha.16) (2022-04-08)
+
+
+### Bug Fixes
+
+* keyboard avoiding ([a35943d](https://github.com/tiamed/bog-nimingban/commit/a35943d4dcd4e2688143d3f31dc049f485833064))
+* **quote:** collapsible animation and navigation, ios backdrop ([0b2e0c4](https://github.com/tiamed/bog-nimingban/commit/0b2e0c47dfb1c82513b6a2280c457e20bbf6a090))
+
 ## [1.0.0-alpha.15](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.14...v1.0.0-alpha.15) (2022-04-07)
 
 
