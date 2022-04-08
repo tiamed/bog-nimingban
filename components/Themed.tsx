@@ -89,13 +89,11 @@ export function Button(props: ButtonProps) {
 
 export const TextInput = forwardRef(function (props: TextInputProps, ref) {
   const { style, lightColor, darkColor, ...otherProps } = props;
-  const tintColor = useThemeColor({}, "tint");
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, "border");
   const textColor = useThemeColor({}, "text");
   return (
     <DefaultTextInput
       ref={ref as unknown as any}
-      selectionColor={tintColor}
       style={[{ backgroundColor, color: textColor }, style]}
       {...otherProps}
     />

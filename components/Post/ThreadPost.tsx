@@ -1,7 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
+import * as Haptics from "expo-haptics";
 import { useAtom, useSetAtom } from "jotai";
-import { useContext, useMemo } from "react";
+import { Fragment, useContext, useMemo } from "react";
 import { PixelRatio, Pressable } from "react-native";
+import { TapGestureHandler } from "react-native-gesture-handler";
 
 import Header from "./Header";
 import HtmlView from "./HtmlView";
@@ -18,6 +20,7 @@ export default function ThreadPost(props: {
   data: Partial<Post>;
   onPress?: (item?: Partial<Post>) => void;
   onLongPress?: (item?: Partial<Post>) => void;
+  gestureEnabled?: boolean;
   maxLine?: number;
 }) {
   const forumsIdMap = useForumsIdMap();
@@ -50,53 +53,60 @@ export default function ThreadPost(props: {
     });
   };
 
+  const PressableWrapper = props.gestureEnabled ? TapGestureHandler : Fragment;
+
   return (
-    <Pressable
-      onPress={props.onPress?.bind(null, props.data) || OnPress}
-      onLongPress={props.onLongPress?.bind(null, props.data)}
-      delayLongPress={1000}>
-      <Wrapper>
-        <Header data={props.data} isPo={false} showForum />
-        <View
-          style={{
-            flexDirection: threadDirection,
-            justifyContent: "space-between",
-            overflow: "hidden",
-            flexWrap: "wrap",
-          }}>
+    <PressableWrapper>
+      <Pressable
+        onPress={props.onPress?.bind(null, props.data) || OnPress}
+        onLongPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+          props.onLongPress?.(props.data);
+        }}
+        delayLongPress={800}>
+        <Wrapper>
+          <Header data={props.data} isPo={false} showForum />
           <View
             style={{
-              flex: 2,
-              maxHeight:
-                PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) * (props.maxLine || 999),
+              flexDirection: threadDirection,
+              justifyContent: "space-between",
+              overflow: "hidden",
+              flexWrap: "wrap",
             }}>
-            <HtmlView content={props.data.content as string} />
+            <View
+              style={{
+                flex: 2,
+                maxHeight:
+                  PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) * (props.maxLine || 999),
+              }}>
+              <HtmlView content={props.data.content as string} />
+            </View>
+            {props.data.images && props.data.images[0] && (
+              <ImageView
+                onPress={() => {
+                  setPreviewIndex(0);
+                  setPreviews(
+                    images.map((item) => ({
+                      url: getImageUrl(item),
+                      originalUrl: getThumbnailUrl(item),
+                    }))
+                  );
+                  navigation.navigate("PreviewModal");
+                }}
+                data={props.data.images[0]}
+                imageStyle={{
+                  flex: 1,
+                  width: imageSize,
+                  height: "100%",
+                  minHeight: imageSize,
+                  marginTop: 2,
+                }}
+                style={{}}
+              />
+            )}
           </View>
-          {props.data.images && props.data.images[0] && (
-            <ImageView
-              onPress={() => {
-                setPreviewIndex(0);
-                setPreviews(
-                  images.map((item) => ({
-                    url: getImageUrl(item),
-                    originalUrl: getThumbnailUrl(item),
-                  }))
-                );
-                navigation.navigate("PreviewModal");
-              }}
-              data={props.data.images[0]}
-              imageStyle={{
-                flex: 1,
-                width: imageSize,
-                height: "100%",
-                minHeight: imageSize,
-                marginTop: 2,
-              }}
-              style={{}}
-            />
-          )}
-        </View>
-      </Wrapper>
-    </Pressable>
+        </Wrapper>
+      </Pressable>
+    </PressableWrapper>
   );
 }

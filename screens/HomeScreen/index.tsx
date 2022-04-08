@@ -117,6 +117,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
               setFocusItem(item as Post);
               setShowHomeActionModal(true);
             }}
+            gestureEnabled
           />
         )}
         onEndReached={loadMoreData}
