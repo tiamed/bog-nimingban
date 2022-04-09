@@ -91,6 +91,7 @@ function Quote(props: { data: string; level: number }) {
       <View
         style={{
           flexDirection: "row",
+          minWidth: "100%",
         }}>
         <Pressable
           hitSlop={50}
