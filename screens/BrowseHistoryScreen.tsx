@@ -1,4 +1,4 @@
-import { endOfDay, sub, startOfDay } from "date-fns";
+import { endOfDay, startOfDay, sub, add } from "date-fns";
 import { atom, useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { StyleSheet, FlatList } from "react-native";
@@ -14,7 +14,7 @@ import { View } from "@/components/Themed";
 
 const rangeAtom = atom({
   start: startOfDay(sub(new Date(), { days: 7 })).getTime(),
-  end: endOfDay(new Date()).getTime(),
+  end: endOfDay(add(new Date(), { days: 7 })).getTime(),
 });
 export interface UserHistory extends Post {
   createTime: number;

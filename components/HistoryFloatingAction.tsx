@@ -64,6 +64,12 @@ export default function HistoryFloatingAction(props: {
         }}
         onCancel={() => {
           setStartVisible(false);
+          Toast.show({
+            type: "info",
+            text1: "已取消过滤",
+            position: "top",
+            visibilityTime: 500,
+          });
         }}
       />
       <DateTimePickerModal
@@ -77,9 +83,21 @@ export default function HistoryFloatingAction(props: {
           setEndDate(endOfDay(val).getTime());
           setEndVisible(false);
           onChange(startDate, endDate);
+          Toast.show({
+            type: "success",
+            text1: "已过滤历史记录",
+            position: "top",
+            visibilityTime: 500,
+          });
         }}
         onCancel={() => {
           setEndVisible(false);
+          Toast.show({
+            type: "info",
+            text1: "已取消过滤",
+            position: "top",
+            visibilityTime: 500,
+          });
         }}
       />
     </>
