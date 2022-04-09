@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, FlatListProps } from "react-native";
 
 import renderFooter from "./HomeScreen/renderFooter";
 
@@ -16,20 +16,20 @@ export interface UserFavorite extends Post {
 export default function FavoriteScreen({ route, navigation }: RootTabScreenProps<"Favorite">) {
   const [favorite] = useAtom<UserFavorite[]>(favoriteAtom);
   const [maxLine] = useAtom(maxLineAtom);
+  const renderItem: FlatListProps<UserFavorite>["renderItem"] = ({ item }) =>
+    item && (
+      <ThreadPost
+        key={(item as unknown as Post).id}
+        data={item as unknown as Post}
+        maxLine={maxLine}
+      />
+    );
 
   return (
     <View style={styles.container}>
       <FlatList
         data={favorite}
-        renderItem={({ item }) =>
-          item && (
-            <ThreadPost
-              key={(item as unknown as Post).id}
-              data={item as unknown as Post}
-              maxLine={maxLine}
-            />
-          )
-        }
+        renderItem={renderItem}
         onEndReachedThreshold={0.1}
         ListFooterComponent={() => renderFooter(false, true)}
       />

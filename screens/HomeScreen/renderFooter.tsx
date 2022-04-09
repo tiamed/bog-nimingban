@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { ActivityIndicator, Pressable } from "react-native";
+import { ActivityIndicator, Pressable, TouchableOpacity } from "react-native";
 
 import { Text, View, useThemeColor } from "@/components/Themed";
 import Loadings from "@/constants/Loadings";
@@ -27,7 +27,7 @@ export default function renderFooter(
     setRadomIndex((Loadings.length * Math.random()) | 0);
   }, []);
   return (
-    <Pressable onPress={onPress}>
+    <TouchableOpacity onPress={onPress}>
       <View
         style={{
           flexDirection: "row",
@@ -45,6 +45,6 @@ export default function renderFooter(
           />
         )}
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 }

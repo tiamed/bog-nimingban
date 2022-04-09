@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { endOfDay, startOfDay, sub, add } from "date-fns";
 import { atom, useAtom, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, FlatListProps } from "react-native";
 
 import renderFooter from "./HomeScreen/renderFooter";
 
@@ -38,6 +38,32 @@ export default function ReplyHistoryScreen() {
     );
   };
 
+  const renderItem: FlatListProps<ReplyHistory>["renderItem"] = ({ item }) =>
+    item && (
+      <ReplyPost
+        key={(item as unknown as Reply).id}
+        data={item as unknown as Reply}
+        po=""
+        onPress={() => {
+          const { id, res } = item as unknown as Reply;
+          navigation.navigate("Post", {
+            id: res || id,
+            title: `Po.${res || id}`,
+          });
+        }}
+        onImagePress={(image: Image) => {
+          setPreviews(
+            item.images.map((item) => ({
+              url: getImageUrl(item),
+              originalUrl: getThumbnailUrl(item),
+            }))
+          );
+          setPreviewIndex(item.images.findIndex((x) => x.url === image.url));
+          navigation.navigate("PreviewModal");
+        }}
+      />
+    );
+
   useEffect(() => {
     updateHistory();
   }, [range, history]);
@@ -46,32 +72,7 @@ export default function ReplyHistoryScreen() {
     <View style={styles.container}>
       <FlatList
         data={filteredHistory}
-        renderItem={({ item }) =>
-          item && (
-            <ReplyPost
-              key={(item as unknown as Reply).id}
-              data={item as unknown as Reply}
-              po=""
-              onPress={() => {
-                const { id, res } = item as unknown as Reply;
-                navigation.navigate("Post", {
-                  id: res || id,
-                  title: `Po.${res || id}`,
-                });
-              }}
-              onImagePress={(image: Image) => {
-                setPreviews(
-                  item.images.map((item) => ({
-                    url: getImageUrl(item),
-                    originalUrl: getThumbnailUrl(item),
-                  }))
-                );
-                setPreviewIndex(item.images.findIndex((x) => x.url === image.url));
-                navigation.navigate("PreviewModal");
-              }}
-            />
-          )
-        }
+        renderItem={renderItem}
         onEndReachedThreshold={0.1}
         ListFooterComponent={() => renderFooter(false, true)}
       />

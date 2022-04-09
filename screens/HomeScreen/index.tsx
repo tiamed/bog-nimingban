@@ -1,6 +1,6 @@
 import { useAtom, useSetAtom } from "jotai";
 import React, { useState, useEffect, useCallback } from "react";
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, FlatListProps } from "react-native";
 
 import ActionModal from "./ActionModal";
 import HomeFloatingAction from "./HomeFloatingAction";
@@ -73,6 +73,19 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
     }
   };
 
+  const renderItem: FlatListProps<Post>["renderItem"] = ({ item }) => (
+    <ThreadPost
+      key={item.id}
+      data={item}
+      maxLine={maxLine}
+      onLongPress={(item) => {
+        setFocusItem(item as Post);
+        setShowHomeActionModal(true);
+      }}
+      gestureEnabled
+    />
+  );
+
   useEffect(() => {
     setHasNoMore(false);
     if (thread !== null) {
@@ -108,18 +121,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
         data={filteredPosts}
         refreshing={isRefreshing}
         onRefresh={refreshPosts}
-        renderItem={({ item }) => (
-          <ThreadPost
-            key={item.id}
-            data={item}
-            maxLine={maxLine}
-            onLongPress={(item) => {
-              setFocusItem(item as Post);
-              setShowHomeActionModal(true);
-            }}
-            gestureEnabled
-          />
-        )}
+        renderItem={renderItem}
         onEndReached={loadMoreData}
         onEndReachedThreshold={0.1}
         ListFooterComponent={() => renderFooter(isLoading, hasNoMore)}

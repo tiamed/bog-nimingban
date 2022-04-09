@@ -1,10 +1,9 @@
 import { endOfDay, startOfDay, sub, add } from "date-fns";
 import { atom, useAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, FlatListProps } from "react-native";
 
 import renderFooter from "./HomeScreen/renderFooter";
-import { ReplyHistory } from "./ReplyHistoryScreen";
 
 import { Post } from "@/api";
 import { historyAtom, maxLineAtom } from "@/atoms";
@@ -25,7 +24,7 @@ export interface UserHistory extends Post {
 export default function BrowseHistoryScreen() {
   const [history] = useAtom<UserHistory[]>(historyAtom);
   const [maxLine] = useAtom(maxLineAtom);
-  const [filteredHistory, setFilteredHistory] = useState<ReplyHistory[]>([]);
+  const [filteredHistory, setFilteredHistory] = useState<UserHistory[]>([]);
   const [range, setRange] = useAtom(rangeAtom);
 
   const updateHistory = () => {
@@ -36,6 +35,9 @@ export default function BrowseHistoryScreen() {
     );
   };
 
+  const renderItem: FlatListProps<UserHistory>["renderItem"] = ({ item }) =>
+    item && <ThreadPost key={item.id} data={item} maxLine={maxLine} />;
+
   useEffect(() => {
     updateHistory();
   }, [range, history]);
@@ -44,15 +46,7 @@ export default function BrowseHistoryScreen() {
     <View style={styles.container}>
       <FlatList
         data={filteredHistory}
-        renderItem={({ item }) =>
-          item && (
-            <ThreadPost
-              key={(item as unknown as Post).id}
-              data={item as unknown as Post}
-              maxLine={maxLine}
-            />
-          )
-        }
+        renderItem={renderItem}
         onEndReachedThreshold={0.1}
         ListFooterComponent={() => renderFooter(false, true)}
       />

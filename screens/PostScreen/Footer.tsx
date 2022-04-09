@@ -1,11 +1,11 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { StyleSheet, TouchableOpacity, Share } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
+import * as Haptics from "expo-haptics";
 import { Post } from "@/api";
 import { favoriteAtom, showPageModalAtom } from "@/atoms/index";
 import Icon from "@/components/Icon";
@@ -13,7 +13,12 @@ import { Text, View, useThemeColor } from "@/components/Themed";
 import Urls from "@/constants/Urls";
 import { UserFavorite } from "@/screens/FavoriteScreen";
 
-export default function Footer(props: { id: number; mainPost: Post; visible: boolean }) {
+export default function Footer(props: {
+  id: number;
+  mainPost: Post;
+  visible: boolean;
+  disabled: boolean;
+}) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [favorite, setFavorite] = useAtom<UserFavorite[], UserFavorite[], void>(favoriteAtom);
   const setShowPageModal = useSetAtom(showPageModalAtom);
@@ -41,6 +46,48 @@ export default function Footer(props: { id: number; mainPost: Post; visible: boo
     }
     setFavorite(newFavorite);
   };
+
+  const items = [
+    {
+      label: "收藏",
+      icon: isFavorite ? "heart" : "heart-o",
+      handler: toggleFavorite,
+    },
+    {
+      label: "分享",
+      icon: "share",
+      handler: onShare.bind(null, props.id, props.mainPost?.content),
+    },
+    {
+      label: "回复",
+      icon: "edit",
+      handler: () => {
+        navigation.navigate("ReplyModal", {
+          postId: props.id,
+          forumId: props.mainPost.forum,
+        });
+      },
+    },
+    {
+      label: "跳页",
+      icon: "bookmark",
+      handler: () => {
+        setShowPageModal(true);
+      },
+    },
+  ];
+
+  const FooterItems = useMemo(() => {
+    return items.map((item) => (
+      <FooterItem
+        key={item.label}
+        label={item.label}
+        icon={item.icon as React.ComponentProps<typeof FontAwesome>["name"]}
+        handler={item.handler}
+        disabled={props.disabled}
+      />
+    ));
+  }, [items, props.disabled]);
 
   useEffect(() => {
     if (props.mainPost?.id && isFavorite) {
@@ -76,42 +123,7 @@ export default function Footer(props: { id: number; mainPost: Post; visible: boo
           ...styles.footer,
           borderTopColor: tintColor,
         }}>
-        {[
-          {
-            label: "收藏",
-            icon: isFavorite ? "heart" : "heart-o",
-            handler: toggleFavorite,
-          },
-          {
-            label: "分享",
-            icon: "share",
-            handler: onShare.bind(null, props.id, props.mainPost?.content),
-          },
-          {
-            label: "回复",
-            icon: "edit",
-            handler: () => {
-              navigation.navigate("ReplyModal", {
-                postId: props.id,
-                forumId: props.mainPost.forum,
-              });
-            },
-          },
-          {
-            label: "跳页",
-            icon: "bookmark",
-            handler: () => {
-              setShowPageModal(true);
-            },
-          },
-        ].map((item) => (
-          <FooterItem
-            key={item.label}
-            label={item.label}
-            icon={item.icon as React.ComponentProps<typeof FontAwesome>["name"]}
-            handler={item.handler}
-          />
-        ))}
+        {FooterItems}
       </View>
     </Animated.View>
   );
@@ -121,11 +133,18 @@ function FooterItem(props: {
   label: string;
   icon: React.ComponentProps<typeof FontAwesome>["name"];
   handler: () => void;
+  disabled: boolean;
 }) {
   const tintColor = useThemeColor({}, "tint");
 
   return (
-    <TouchableOpacity onPress={props.handler}>
+    <TouchableOpacity
+      onPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        props.handler();
+      }}
+      disabled={props.disabled}
+      hitSlop={{ left: 20, right: 20, top: 20, bottom: 20 }}>
       <View style={styles.footerItem}>
         <Icon name={props.icon} color={tintColor} />
         <Text lightColor={tintColor} darkColor={tintColor} style={styles.footerItemText}>

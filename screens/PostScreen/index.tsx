@@ -71,7 +71,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   }, [posts]);
 
   const onViewRef = useRef<FlatListProps<ReplyWithPage>["onViewableItemsChanged"]>(
-    ({ viewableItems, changed }) => {
+    ({ viewableItems }) => {
       if (viewableItems.length) {
         const last = viewableItems[viewableItems.length - 1];
         const { key, item } = last;
@@ -89,6 +89,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
     minimumViewTime: 200,
     waitForInteraction: true,
   });
+  const scrollUpConfigRef = useRef<any>(null);
 
   const loadData = async (
     nextPage: number,
@@ -127,6 +128,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
         setCurrentPage(nextPage);
         setHasNoMore(reply?.length !== 20);
         setLastPageFinished(reply?.length === 20);
+        scrollUpConfigRef.current = { minIndexForVisible: 0 };
       } else {
         if (nextPage < firstPage) {
           setPosts([...nextPosts, ...posts]);
@@ -147,13 +149,13 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   };
 
   const refreshPosts = useCallback(async () => {
-    setIsRefreshing(true);
     if (firstPage === 1) {
+      setIsRefreshing(true);
       await loadData(1);
+      setIsRefreshing(false);
     } else {
       await loadData(firstPage - 1);
     }
-    setIsRefreshing(false);
   }, [firstPage, order]);
 
   const loadMoreData = async (force = false) => {
@@ -227,6 +229,8 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   );
 
   const renderItemMemoized = useMemo(() => renderItem, [filteredPosts]);
+
+  const keyExtractor = (item: any) => item.id.toString();
 
   useEffect(() => {
     if (history) {
@@ -322,6 +326,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
           data={filteredPosts}
           refreshing={isRefreshing}
           onRefresh={refreshPosts}
+          maintainVisibleContentPosition={scrollUpConfigRef.current}
           onScroll={(e) => {
             const isScrollUp =
               Platform.OS === "ios"
@@ -362,7 +367,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
               setTimeout(scrollToLastPosition, 300);
             }
           }}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={keyExtractor}
           onLayout={(e) => {
             const { height } = e.nativeEvent.layout;
             if (ScreenHeight - headerHeight - height > 1 && firstPage > 1) {
@@ -371,7 +376,12 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
           }}
         />
 
-        <Footer id={route.params.id} mainPost={mainPost} visible={isShowFooter} />
+        <Footer
+          id={route.params.id}
+          mainPost={mainPost}
+          visible={isShowFooter}
+          disabled={isLoading || isRefreshing}
+        />
 
         <PageModal index={currentPage} total={mainPost?.reply_count} loadData={loadData} />
         <ActionModal item={focusItem} postId={mainPost.id} forumId={mainPost.forum} />

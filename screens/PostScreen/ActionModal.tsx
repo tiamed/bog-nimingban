@@ -69,6 +69,8 @@ export default function ActionModal(props: { item: Reply; postId: number; forumI
       onBackdropPress={close}
       backdropOpacity={0.3}
       backdropTransitionOutTiming={0}
+      animationInTiming={1}
+      animationOutTiming={1}
       style={styles.modalWrapper}>
       <View style={styles.modal}>
         <TouchableOpacity onPress={onReply}>
