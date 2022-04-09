@@ -19,6 +19,7 @@ const rangeAtom = atom({
 export interface UserHistory extends Post {
   createTime: number;
   currentPage: number;
+  position: number;
 }
 
 export default function BrowseHistoryScreen() {

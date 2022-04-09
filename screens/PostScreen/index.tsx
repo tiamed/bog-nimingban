@@ -1,7 +1,7 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
-import { useState, useEffect, useCallback, useMemo, createContext } from "react";
-import { StyleSheet, FlatList, Platform } from "react-native";
+import { useState, useEffect, useCallback, useMemo, createContext, useRef } from "react";
+import { StyleSheet, FlatList, Platform, FlatListProps, Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import ActionModal from "./ActionModal";
@@ -28,10 +28,16 @@ import { RootStackScreenProps } from "@/types";
 
 export const MainPostContext = createContext({} as Post);
 
+const DeviceHeight = Dimensions.get("window").height;
+
+interface ReplyWithPage extends Reply {
+  currentPage?: number;
+}
+
 export default function PostScreen({ route, navigation }: RootStackScreenProps<"Post">) {
   const insets = useSafeAreaInsets();
-  const [posts, setPosts] = useState<Reply[]>([]);
-  const [filteredPosts, setFilteredPosts] = useState<Reply[]>([]);
+  const [posts, setPosts] = useState<ReplyWithPage[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<ReplyWithPage[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [firstPage, setFirstPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
@@ -43,6 +49,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   const [isShowFooter, setIsShowFooter] = useState(true);
   const [lastContentOffset, setLastContentOffset] = useState(0);
   const [mainPost, setMainPost] = useState<Post>({} as Post);
+  const [lastPosition, setLastPosition] = useState(0);
 
   const [postIdRefreshing, setPostIdRefreshing] = useAtom(postIdRefreshingAtom);
   const setPreviews = useSetAtom(previewsAtom);
@@ -53,9 +60,30 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   const setShowActionModal = useSetAtom(showActionModalAtom);
   const setDraft = useSetAtom(draftAtom);
   const forumsIdMap = useForumsIdMap();
+
+  const listRef = useRef<FlatList>(null);
+
   const images = useMemo(() => {
     return posts.map((x) => x.images || []).flat();
   }, [posts]);
+
+  const onViewRef = useRef<FlatListProps<ReplyWithPage>["onViewableItemsChanged"]>(
+    ({ viewableItems, changed }) => {
+      if (viewableItems.length) {
+        const last = viewableItems[viewableItems.length - 1];
+        const { key, item } = last;
+        if (lastPosition !== Number(key) && key) {
+          setLastPosition(Number(key) || 0);
+          setCurrentPage((item as ReplyWithPage).currentPage as number);
+        }
+      }
+    }
+  );
+  const viewConfigRef = useRef({
+    viewAreaCoveragePercentThreshold: 50,
+    minimumViewTime: 200,
+    waitForInteraction: true,
+  });
 
   const loadData = async (nextPage: number, jump: boolean = false) => {
     try {
@@ -76,7 +104,9 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
         return;
       }
 
-      let nextPosts = nextPage === 1 ? [rest, ...reply] : [...reply];
+      const replyWithPage: ReplyWithPage[] = reply.map((x) => ({ ...x, currentPage: nextPage }));
+
+      let nextPosts = nextPage === 1 ? [rest, ...replyWithPage] : [...replyWithPage];
       if (!jump) {
         nextPosts = nextPosts.filter((post) => !posts.find((x) => x.id === post.id));
       }
@@ -143,8 +173,19 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
       ...mainPost,
       createTime: Date.now(),
       currentPage,
+      position: lastPosition,
     });
     setHistory(newHistory);
+  };
+
+  const scrollToLastPosition = () => {
+    const current = history?.find((x) => x.id === route.params.id);
+    if (listRef.current && current?.position && posts.length && !lastPosition) {
+      const index = posts.findIndex((post) => post.id === current.position);
+      if (index !== -1) {
+        listRef.current.scrollToIndex({ animated: false, index });
+      }
+    }
   };
 
   useEffect(() => {
@@ -166,25 +207,20 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
     updatePreviews();
   });
 
-  // 更新历史记录
   useEffect(() => {
-    if (mainPost.id === route.params.id && currentPage !== 0) {
-      addToHistory();
+    if (mainPost.id) {
       navigation.setOptions({
         title: `${forumsIdMap.get(mainPost.forum)} Po.${mainPost.id}`,
       });
     }
-  }, [mainPost, currentPage]);
+  }, [mainPost]);
 
-  // 更新当前查看页
+  // 更新历史记录
   useEffect(() => {
-    setCurrentPage(firstPage);
-  }, [firstPage]);
-
-  // 更新当前查看页
-  useEffect(() => {
-    setCurrentPage(lastPage);
-  }, [lastPage]);
+    if (lastPosition && mainPost.id === route.params.id) {
+      addToHistory();
+    }
+  }, [lastPosition, mainPost]);
 
   // 更新标题及草稿
   useEffect(() => {
@@ -216,6 +252,12 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   }, [posts]);
 
   useEffect(() => {
+    if (!(isLoading || isRefreshing) && posts.length) {
+      scrollToLastPosition();
+    }
+  }, [filteredPosts, isLoading, isRefreshing]);
+
+  useEffect(() => {
     if (!isLoading) {
       setPosts([]);
       loadData(1, true);
@@ -226,6 +268,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
     <MainPostContext.Provider value={mainPost}>
       <View style={{ ...styles.container, paddingBottom: insets.bottom }}>
         <FlatList
+          ref={listRef}
           data={postFiltered ? filteredPosts : posts}
           refreshing={isRefreshing}
           onRefresh={refreshPosts}
@@ -269,6 +312,19 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
           ListFooterComponent={() =>
             renderFooter(isLoading, hasNoMore, loadMoreData.bind(null, true))
           }
+          viewabilityConfig={viewConfigRef.current}
+          onViewableItemsChanged={onViewRef.current}
+          onScrollToIndexFailed={({ highestMeasuredFrameIndex }) => {
+            listRef.current?.scrollToIndex({ animated: false, index: highestMeasuredFrameIndex });
+            setTimeout(scrollToLastPosition, 1000);
+          }}
+          keyExtractor={(item) => item.id.toString()}
+          onLayout={(e) => {
+            const { height } = e.nativeEvent.layout;
+            if (height < DeviceHeight && firstPage > 1) {
+              loadData(firstPage - 1);
+            }
+          }}
         />
 
         <Footer id={route.params.id} mainPost={mainPost} visible={isShowFooter} />
