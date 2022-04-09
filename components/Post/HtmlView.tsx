@@ -3,7 +3,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { decode } from "html-entities";
 import { useAtom } from "jotai";
 import React, { useContext, useEffect, useState } from "react";
-import { Dimensions, Linking, PixelRatio, Pressable } from "react-native";
+import { Dimensions, Linking, PixelRatio, Pressable, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { useCollapsible, AnimatedSection } from "reanimated-collapsible-helpers";
 
@@ -11,7 +11,7 @@ import ReplyPostWithoutData from "./ReplyPostWithoutData";
 
 import { lineHeightAtom } from "@/atoms";
 import { SizeContext } from "@/components/ThemeContextProvider";
-import { View, Text, useThemeColor } from "@/components/Themed";
+import { Text, useThemeColor } from "@/components/Themed";
 import Urls from "@/constants/Urls";
 
 const width = Dimensions.get("window").width;

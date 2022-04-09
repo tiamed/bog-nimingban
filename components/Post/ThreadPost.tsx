@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 import { useAtom, useSetAtom } from "jotai";
 import { Fragment, useContext, useMemo } from "react";
-import { PixelRatio, Pressable } from "react-native";
+import { PixelRatio, Pressable, View } from "react-native";
 import { TapGestureHandler } from "react-native-gesture-handler";
 
 import Header from "./Header";
@@ -13,7 +13,6 @@ import Wrapper from "./Wrapper";
 import { Post, Image } from "@/api";
 import { lineHeightAtom, previewIndexAtom, previewsAtom, threadDirectionAtom } from "@/atoms";
 import { SizeContext } from "@/components/ThemeContextProvider";
-import { View } from "@/components/Themed";
 import { useForumsIdMap } from "@/hooks/useForums";
 
 export default function ThreadPost(props: {

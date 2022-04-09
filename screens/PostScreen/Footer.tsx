@@ -1,11 +1,12 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import * as Haptics from "expo-haptics";
 import { useAtom, useSetAtom } from "jotai";
 import React, { useState, useEffect, useMemo } from "react";
 import { StyleSheet, TouchableOpacity, Share } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import * as Haptics from "expo-haptics";
+
 import { Post } from "@/api";
 import { favoriteAtom, showPageModalAtom } from "@/atoms/index";
 import Icon from "@/components/Icon";

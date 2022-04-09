@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
-import { Pressable } from "react-native";
+import { Pressable, View } from "react-native";
 
 import Header from "./Header";
 import HtmlView from "./HtmlView";
@@ -9,7 +9,7 @@ import Wrapper from "./Wrapper";
 
 import { Image, Post } from "@/api";
 import { imageWidthAtom, previewIndexAtom, previewsAtom } from "@/atoms";
-import { View, useThemeColor } from "@/components/Themed";
+import { useThemeColor } from "@/components/Themed";
 
 export default function ReplyPost(props: {
   data: Partial<Post>;
@@ -41,9 +41,7 @@ export default function ReplyPost(props: {
             overflow: "hidden",
             flexWrap: "wrap",
           }}>
-          <View>
-            <HtmlView content={props.data.content as string} level={props.level || 1} />
-          </View>
+          <HtmlView content={props.data.content as string} level={props.level || 1} />
           <View
             style={{
               flexDirection: "row",

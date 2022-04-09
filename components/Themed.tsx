@@ -91,10 +91,15 @@ export const TextInput = forwardRef(function (props: TextInputProps, ref) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, "border");
   const textColor = useThemeColor({}, "text");
+  const tintColor = useThemeColor({}, "tint");
+  const placeholderTextColor = useThemeColor({}, "inactive");
+
   return (
     <DefaultTextInput
       ref={ref as unknown as any}
       style={[{ backgroundColor, color: textColor }, style]}
+      selectionColor={tintColor}
+      placeholderTextColor={placeholderTextColor}
       {...otherProps}
     />
   );

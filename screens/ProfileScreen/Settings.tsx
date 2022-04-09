@@ -2,13 +2,13 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useSetAtom } from "jotai";
 import { useContext } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import BackupModal from "./BackupModal";
 import { showBackupModalAtom } from "./common";
 
 import { SizeContext } from "@/components/ThemeContextProvider";
-import { View, Text, useThemeColor } from "@/components/Themed";
+import { Text, useThemeColor } from "@/components/Themed";
 import { RootStackParamList } from "@/types";
 
 export default function Settings() {

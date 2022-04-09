@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { ActivityIndicator, Pressable, TouchableOpacity } from "react-native";
+import { ActivityIndicator, TouchableOpacity, View } from "react-native";
 
-import { Text, View, useThemeColor } from "@/components/Themed";
+import { Text, useThemeColor } from "@/components/Themed";
 import Loadings from "@/constants/Loadings";
 
 export default function renderFooter(

@@ -1,10 +1,10 @@
 import { useAtom } from "jotai";
 import { useContext } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import Picker from "./Picker";
 import { SizeContext } from "./ThemeContextProvider";
-import { View, Text } from "./Themed";
+import { Text } from "./Themed";
 
 interface Option {
   label: string;

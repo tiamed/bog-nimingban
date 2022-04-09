@@ -1,10 +1,11 @@
 import { formatRelative, formatDistance } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import { useContext } from "react";
+import { View } from "react-native";
 
 import { Post } from "@/api";
 import { SizeContext } from "@/components/ThemeContextProvider";
-import { View, Text, useThemeColor } from "@/components/Themed";
+import { Text, useThemeColor } from "@/components/Themed";
 import { useForumsIdMap } from "@/hooks/useForums";
 
 export default function Header(props: {

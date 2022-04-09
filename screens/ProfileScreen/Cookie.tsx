@@ -3,7 +3,7 @@ import { zhCN } from "date-fns/locale";
 import * as Clipboard from "expo-clipboard";
 import { useAtom, useSetAtom } from "jotai";
 import { useContext, useState } from "react";
-import { Alert, StyleSheet, TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import AddCookieModal from "./AddCookieModal";
@@ -13,7 +13,7 @@ import { SignInfo, signIn, createCookie, deleteSlaveCookie } from "@/api";
 import { cookiesAtom, signDictAtom } from "@/atoms/index";
 import Icon from "@/components/Icon";
 import { SizeContext } from "@/components/ThemeContextProvider";
-import { Button, Text, useThemeColor, View } from "@/components/Themed";
+import { Button, Text, useThemeColor } from "@/components/Themed";
 import Errors from "@/constants/Errors";
 
 interface SignDict {
