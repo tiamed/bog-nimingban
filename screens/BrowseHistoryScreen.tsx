@@ -37,6 +37,8 @@ export default function BrowseHistoryScreen() {
   const renderItem: FlatListProps<UserHistory>["renderItem"] = ({ item }) =>
     item && <ThreadPost key={item.id} data={item} maxLine={maxLine} />;
 
+  const keyExtractor = (item: UserHistory) => item.id.toString();
+
   useEffect(() => {
     updateHistory();
   }, [range, history]);
@@ -46,6 +48,7 @@ export default function BrowseHistoryScreen() {
       <FlatList
         data={filteredHistory}
         renderItem={renderItem}
+        keyExtractor={keyExtractor}
         onEndReachedThreshold={0.1}
         ListFooterComponent={() => renderFooter(false, true)}
       />

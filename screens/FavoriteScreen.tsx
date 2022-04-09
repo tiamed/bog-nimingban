@@ -24,11 +24,14 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
       />
     );
 
+  const keyExtractor = (item: Post) => item.id.toString();
+
   return (
     <View style={styles.container}>
       <FlatList
         data={favorite}
         renderItem={renderItem}
+        keyExtractor={keyExtractor}
         onEndReachedThreshold={0.1}
         ListFooterComponent={() => renderFooter(false, true)}
       />

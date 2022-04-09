@@ -86,6 +86,8 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
     />
   );
 
+  const keyExtractor = (item: Post) => item.id.toString();
+
   useEffect(() => {
     setHasNoMore(false);
     if (thread !== null) {
@@ -122,6 +124,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
         refreshing={isRefreshing}
         onRefresh={refreshPosts}
         renderItem={renderItem}
+        keyExtractor={keyExtractor}
         onEndReached={loadMoreData}
         onEndReachedThreshold={0.1}
         ListFooterComponent={() => renderFooter(isLoading, hasNoMore)}

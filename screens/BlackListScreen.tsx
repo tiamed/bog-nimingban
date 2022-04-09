@@ -8,13 +8,15 @@ import { RootTabScreenProps } from "@/types";
 
 export default function FavoriteScreen({ route, navigation }: RootTabScreenProps<"Favorite">) {
   const [blackListPosts] = useAtom<number[]>(blackListPostsAtom);
+  const renderItem = ({ item }: { item: number }) => <Item key={item} id={item} />;
+  const keyExtractor = (item: number) => item.toString();
 
   return (
     <View style={styles.container}>
       <FlatList
         data={blackListPosts}
-        renderItem={({ item }) => <Item key={item} id={item} />}
-        keyExtractor={(item) => item.toString()}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
         onEndReachedThreshold={0.1}
         ListEmptyComponent={() => (
           <View style={styles.empty}>

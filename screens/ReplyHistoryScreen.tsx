@@ -63,6 +63,8 @@ export default function ReplyHistoryScreen() {
       />
     );
 
+  const keyExtractor = (item: ReplyHistory) => item.id.toString();
+
   useEffect(() => {
     updateHistory();
   }, [range, history]);
@@ -72,6 +74,7 @@ export default function ReplyHistoryScreen() {
       <FlatList
         data={filteredHistory}
         renderItem={renderItem}
+        keyExtractor={keyExtractor}
         onEndReachedThreshold={0.1}
         ListFooterComponent={() => renderFooter(false, true)}
       />
