@@ -10,7 +10,7 @@ import { Text, View, useThemeColor, Button, TextInput } from "@/components/Theme
 export default function PageModal(props: {
   index: number;
   total: number;
-  loadData: (page: number, jump: boolean) => void;
+  loadData: (page: number, jump: boolean, updatePosition: boolean) => void;
 }) {
   const { index, total } = props;
   const [visible, setVisible] = useAtom(showPageModalAtom);
@@ -27,7 +27,7 @@ export default function PageModal(props: {
     if (input) {
       const page = parseInt(input, 10);
       if (Number.isInteger(page) && page > 0 && page <= total) {
-        props.loadData(page, true);
+        props.loadData(page, true, true);
       }
     }
     close();

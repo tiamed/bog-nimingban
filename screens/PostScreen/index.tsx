@@ -1,3 +1,4 @@
+import { useHeaderHeight } from "@react-navigation/elements";
 import { useFocusEffect } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
 import { useState, useEffect, useCallback, useMemo, createContext, useRef } from "react";
@@ -28,7 +29,7 @@ import { RootStackScreenProps } from "@/types";
 
 export const MainPostContext = createContext({} as Post);
 
-const DeviceHeight = Dimensions.get("window").height;
+const ScreenHeight = Dimensions.get("screen").height;
 
 interface ReplyWithPage extends Reply {
   currentPage?: number;
@@ -50,6 +51,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   const [lastContentOffset, setLastContentOffset] = useState(0);
   const [mainPost, setMainPost] = useState<Post>({} as Post);
   const [lastPosition, setLastPosition] = useState(0);
+  const [currentHistory, setCurrentHistory] = useState({} as UserHistory);
 
   const [postIdRefreshing, setPostIdRefreshing] = useAtom(postIdRefreshingAtom);
   const setPreviews = useSetAtom(previewsAtom);
@@ -60,6 +62,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   const setShowActionModal = useSetAtom(showActionModalAtom);
   const setDraft = useSetAtom(draftAtom);
   const forumsIdMap = useForumsIdMap();
+  const headerHeight = useHeaderHeight();
 
   const listRef = useRef<FlatList>(null);
 
@@ -72,20 +75,26 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
       if (viewableItems.length) {
         const last = viewableItems[viewableItems.length - 1];
         const { key, item } = last;
-        if (lastPosition !== Number(key) && key) {
-          setLastPosition(Number(key) || 0);
-          setCurrentPage((item as ReplyWithPage).currentPage as number);
+        const position = Number(key);
+        if (lastPosition !== position && position) {
+          const page = (item as ReplyWithPage)?.currentPage as number;
+          setLastPosition(position || 0);
+          setCurrentPage(page);
         }
       }
     }
   );
   const viewConfigRef = useRef({
-    viewAreaCoveragePercentThreshold: 50,
+    viewAreaCoveragePercentThreshold: 0,
     minimumViewTime: 200,
     waitForInteraction: true,
   });
 
-  const loadData = async (nextPage: number, jump: boolean = false) => {
+  const loadData = async (
+    nextPage: number,
+    jump: boolean = false,
+    updatePosition: boolean = false
+  ) => {
     try {
       setIsLoading(true);
       const {
@@ -115,6 +124,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
         setPosts(nextPosts);
         setFirstPage(nextPage);
         setLastPage(nextPage);
+        setCurrentPage(nextPage);
         setHasNoMore(reply?.length !== 20);
         setLastPageFinished(reply?.length === 20);
       } else {
@@ -127,6 +137,9 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
           setHasNoMore(reply?.length !== 20);
           setLastPageFinished(reply?.length === 20);
         }
+      }
+      if (updatePosition) {
+        setLastPosition(nextPosts[0].id);
       }
     } finally {
       setIsLoading(false);
@@ -164,33 +177,63 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   };
 
   // 添加历史记录
-  const addToHistory = () => {
+  const addToHistory = (noPositionChange: boolean = false) => {
     let newHistory = history.filter((x) => x.id) || [];
-    if (history?.find((record: { id: number }) => record.id === route.params.id)) {
+    const oldHistory = currentHistory;
+    if (oldHistory) {
       newHistory = history.filter((record) => record.id !== route.params.id);
     }
-    newHistory.unshift({
-      ...mainPost,
-      createTime: Date.now(),
-      currentPage,
-      position: lastPosition,
-    });
+    if (noPositionChange) {
+      newHistory.unshift({
+        ...mainPost,
+        createTime: Date.now(),
+        currentPage: oldHistory?.currentPage || currentPage,
+        position: oldHistory?.position || lastPosition,
+      });
+    } else {
+      newHistory.unshift({
+        ...mainPost,
+        createTime: Date.now(),
+        currentPage,
+        position: lastPosition,
+      });
+    }
     setHistory(newHistory);
   };
 
   const scrollToLastPosition = () => {
-    const current = history?.find((x) => x.id === route.params.id);
-    if (listRef.current && current?.position && posts.length && !lastPosition) {
-      const index = posts.findIndex((post) => post.id === current.position);
-      if (index !== -1) {
-        listRef.current.scrollToIndex({ animated: false, index });
+    if (listRef.current && currentHistory?.position && posts.length && !lastPosition) {
+      const index = posts.findIndex((post) => post.id === currentHistory.position);
+      if (index !== -1 && filteredPosts.length) {
+        try {
+          listRef.current.scrollToIndex({ animated: false, index });
+        } catch (error) {
+          console.warn(error);
+        }
       }
     }
   };
 
+  const renderItem = ({ item }: { item: ReplyWithPage }) => (
+    <ReplyPost
+      key={item.id}
+      data={item}
+      po={mainPost.cookie}
+      onPress={() => {
+        setFocusItem(item);
+        setShowActionModal(true);
+      }}
+    />
+  );
+
+  const renderItemMemoized = useMemo(() => renderItem, [filteredPosts]);
+
   useEffect(() => {
     if (history) {
       const current = history?.find((x) => x.id === route.params.id);
+      if (current) {
+        setCurrentHistory(current);
+      }
       setCurrentPage(current?.currentPage || 1);
       if (posts.length === 0) {
         loadData(current?.currentPage || 1, true);
@@ -212,15 +255,18 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
       navigation.setOptions({
         title: `${forumsIdMap.get(mainPost.forum)} Po.${mainPost.id}`,
       });
+      addToHistory(true);
     }
   }, [mainPost]);
 
   // 更新历史记录
   useEffect(() => {
-    if (lastPosition && mainPost.id === route.params.id) {
+    const shouldUpate =
+      currentHistory.currentPage !== currentPage && currentHistory.position !== lastPosition;
+    if (lastPosition && mainPost.id === route.params.id && shouldUpate) {
       addToHistory();
     }
-  }, [lastPosition, mainPost]);
+  }, [currentPage, lastPosition, mainPost]);
 
   // 更新标题及草稿
   useEffect(() => {
@@ -248,11 +294,15 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   }, [postIdRefreshing]);
 
   useEffect(() => {
-    setFilteredPosts(posts.filter((post) => post.cookie === mainPost.cookie));
-  }, [posts]);
+    if (postFiltered) {
+      setFilteredPosts(posts.filter((post) => post.cookie === mainPost.cookie));
+    } else {
+      setFilteredPosts(posts);
+    }
+  }, [posts, postFiltered]);
 
   useEffect(() => {
-    if (!(isLoading || isRefreshing) && posts.length) {
+    if (!(isLoading || isRefreshing) && filteredPosts.length) {
       scrollToLastPosition();
     }
   }, [filteredPosts, isLoading, isRefreshing]);
@@ -269,7 +319,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
       <View style={{ ...styles.container, paddingBottom: insets.bottom }}>
         <FlatList
           ref={listRef}
-          data={postFiltered ? filteredPosts : posts}
+          data={filteredPosts}
           refreshing={isRefreshing}
           onRefresh={refreshPosts}
           onScroll={(e) => {
@@ -294,19 +344,11 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
                 setIsShowFooter(true);
               }
             }
-            setLastContentOffset(e.nativeEvent.contentOffset.y);
+            if (Platform.OS === "ios") {
+              setLastContentOffset(e.nativeEvent.contentOffset.y);
+            }
           }}
-          renderItem={({ item }) => (
-            <ReplyPost
-              key={item.id}
-              data={item}
-              po={mainPost.cookie}
-              onPress={() => {
-                setFocusItem(item);
-                setShowActionModal(true);
-              }}
-            />
-          )}
+          renderItem={renderItemMemoized}
           onEndReached={() => loadMoreData(false)}
           onEndReachedThreshold={0.1}
           ListFooterComponent={() =>
@@ -316,12 +358,14 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
           onViewableItemsChanged={onViewRef.current}
           onScrollToIndexFailed={({ highestMeasuredFrameIndex }) => {
             listRef.current?.scrollToIndex({ animated: false, index: highestMeasuredFrameIndex });
-            setTimeout(scrollToLastPosition, 1000);
+            if (filteredPosts.length) {
+              setTimeout(scrollToLastPosition, 300);
+            }
           }}
           keyExtractor={(item) => item.id.toString()}
           onLayout={(e) => {
             const { height } = e.nativeEvent.layout;
-            if (height < DeviceHeight && firstPage > 1) {
+            if (ScreenHeight - headerHeight - height > 1 && firstPage > 1) {
               loadData(firstPage - 1);
             }
           }}
