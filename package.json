@@ -1,6 +1,6 @@
 {
   "name": "bog-nimingban",
-  "version": "1.0.0-alpha.18",
+  "version": "1.0.0-alpha.19",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",

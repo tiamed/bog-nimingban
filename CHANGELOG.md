@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.19](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.18...v1.0.0-alpha.19) (2022-04-10)
+
+
+### Features
+
+* **post:** check current viewing post update ([e45832b](https://github.com/tiamed/bog-nimingban/commit/e45832b362c7332a2191caad8f6c86710ac19032))
+
+
+### Bug Fixes
+
+* position change when reply open ([bd8d840](https://github.com/tiamed/bog-nimingban/commit/bd8d840932dde3f8e70b00ca799c373c230f99dc))
+
 ## [1.0.0-alpha.18](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.17...v1.0.0-alpha.18) (2022-04-10)
 
 
