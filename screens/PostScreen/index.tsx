@@ -327,6 +327,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
           refreshing={isRefreshing}
           onRefresh={refreshPosts}
           maintainVisibleContentPosition={scrollUpConfigRef.current}
+          scrollEventThrottle={16}
           onScroll={(e) => {
             const isScrollUp =
               Platform.OS === "ios"
