@@ -210,7 +210,7 @@ export default function ReplyModalScreen({
     <View style={styles.modal}>
       <Overlay />
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{
           ...styles.container,
           backgroundColor,
