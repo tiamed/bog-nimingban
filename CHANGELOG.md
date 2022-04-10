@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.20](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.19...v1.0.0-alpha.20) (2022-04-10)
+
+
+### Features
+
+* **settings:** support accurate time format ([74d7b21](https://github.com/tiamed/bog-nimingban/commit/74d7b217240741393db309f357c97097d2e48985))
+
+
+### Bug Fixes
+
+* android keyboard not avoiding ([531db2f](https://github.com/tiamed/bog-nimingban/commit/531db2fadc732e2c557440609ed1c4ef0de9fd2e)), closes [#14](https://github.com/tiamed/bog-nimingban/issues/14)
+* check update count, deleted post ([67e3bc1](https://github.com/tiamed/bog-nimingban/commit/67e3bc1228fbca41b3f171056c4a47a50ad436db))
+* copy text anchor href ([0cfa95b](https://github.com/tiamed/bog-nimingban/commit/0cfa95ba07b2aca46d291b50a46e733c6c8e598f))
+
 ## [1.0.0-alpha.19](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.18...v1.0.0-alpha.19) (2022-04-10)
 
 

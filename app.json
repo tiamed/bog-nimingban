@@ -2,7 +2,7 @@
   "expo": {
     "name": "bog-nimingban",
     "slug": "bog-nimingban",
-    "version": "1.0.0-alpha.19",
+    "version": "1.0.0-alpha.20",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "bog",
@@ -15,7 +15,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "fun.tiamed"
@@ -51,7 +53,9 @@
     ],
     "githubUrl": "https://github.com/tiamed/bog-nimingban",
     "packagerOpts": {
-      "sourceExts": ["cjs"]
+      "sourceExts": [
+        "cjs"
+      ]
     }
   }
 }
