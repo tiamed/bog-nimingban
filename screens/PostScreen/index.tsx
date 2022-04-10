@@ -1,8 +1,8 @@
 import { useHeaderHeight } from "@react-navigation/elements";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
 import { useState, useEffect, useCallback, useMemo, createContext, useRef } from "react";
-import { StyleSheet, FlatList, Platform, FlatListProps, Dimensions } from "react-native";
+import { StyleSheet, FlatList, Platform, FlatListProps } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import ActionModal from "./ActionModal";
@@ -28,8 +28,6 @@ import renderFooter from "@/screens/HomeScreen/renderFooter";
 import { RootStackScreenProps } from "@/types";
 
 export const MainPostContext = createContext({} as Post);
-
-const ScreenHeight = Dimensions.get("screen").height;
 
 interface ReplyWithPage extends Reply {
   currentPage?: number;
@@ -62,7 +60,6 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   const setShowActionModal = useSetAtom(showActionModalAtom);
   const setDraft = useSetAtom(draftAtom);
   const forumsIdMap = useForumsIdMap();
-  const headerHeight = useHeaderHeight();
 
   const listRef = useRef<FlatList>(null);
 
@@ -369,12 +366,6 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
             }
           }}
           keyExtractor={keyExtractor}
-          onLayout={(e) => {
-            const { height } = e.nativeEvent.layout;
-            if (ScreenHeight - headerHeight - height > 1 && firstPage > 1) {
-              loadData(firstPage - 1);
-            }
-          }}
         />
 
         <Footer
