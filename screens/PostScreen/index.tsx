@@ -26,6 +26,8 @@ import { useForumsIdMap } from "@/hooks/useForums";
 import { UserHistory } from "@/screens//BrowseHistoryScreen";
 import renderFooter from "@/screens/HomeScreen/renderFooter";
 import { RootStackScreenProps } from "@/types";
+import Errors from "@/constants/Errors";
+import Toast from "react-native-toast-message";
 
 export const MainPostContext = createContext({} as Post);
 
@@ -98,6 +100,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
       const {
         data: {
           type,
+          code,
           info: { reply, ...rest },
         },
       } = await getPostById(route.params.id as number, nextPage, 20, order);
@@ -108,6 +111,10 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
 
       if (type === "error") {
         setHasNoMore(true);
+        Toast.show({
+          type: "error",
+          text1: Errors[code],
+        });
         return;
       }
 
@@ -179,10 +186,11 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
 
   // 添加历史记录
   const addToHistory = (noPositionChange: boolean = false) => {
+    if (!mainPost?.id) return;
     let newHistory = history.filter((x) => x.id) || [];
     const oldHistory = currentHistory;
     if (oldHistory) {
-      newHistory = history.filter((record) => record.id !== route.params.id);
+      newHistory = history.filter((record) => record.id && record.id !== route.params.id);
     }
     if (noPositionChange) {
       newHistory.unshift({

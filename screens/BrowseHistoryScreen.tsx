@@ -29,7 +29,7 @@ export default function BrowseHistoryScreen() {
 
   const updateHistory = () => {
     setFilteredHistory(
-      history?.filter(({ createTime }) => {
+      history?.filter(({ createTime, id }) => {
         return createTime >= range.start && createTime < range.end;
       })
     );
@@ -38,7 +38,7 @@ export default function BrowseHistoryScreen() {
   const renderItem: FlatListProps<UserHistory>["renderItem"] = ({ item }) =>
     item && <ThreadPost key={item.id} data={item} maxLine={maxLine} />;
 
-  const keyExtractor = (item: UserHistory) => item.id.toString();
+  const keyExtractor = (item: UserHistory) => item?.id.toString();
 
   useEffect(() => {
     updateHistory();

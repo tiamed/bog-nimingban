@@ -61,6 +61,10 @@ export default function CheckUpdate(props: { id: number; count: number; onUpdate
     }
   }, [shouldUpdate]);
 
+  useEffect(() => {
+    setCount(count);
+  }, [props.count]);
+
   return (
     <Snackbar
       visible={visible}
