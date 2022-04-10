@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { endOfDay, startOfDay, sub, add } from "date-fns";
 import { atom, useAtom, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { StyleSheet, FlatList, FlatListProps, View } from "react-native";
+import { StyleSheet, FlatList, FlatListProps } from "react-native";
 
 import renderFooter from "./HomeScreen/renderFooter";
 
@@ -11,6 +11,7 @@ import { previewIndexAtom, previewsAtom, replyHistoryAtom } from "@/atoms";
 import HistoryFloatingAction from "@/components/HistoryFloatingAction";
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
+import { View } from "@/components/Themed";
 
 const rangeAtom = atom({
   start: startOfDay(sub(new Date(), { days: 7 })).getTime(),
