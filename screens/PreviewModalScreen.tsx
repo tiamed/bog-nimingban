@@ -20,6 +20,7 @@ export default function PreviewModalScreen() {
   const [previewIndex] = useAtom(previewIndexAtom);
   const [status, requestPermission] = MediaLibrary.usePermissions();
   const [isLoading, setIsLoading] = useState(false);
+  const [index, setIndex] = useState(previewIndex);
   const activeColor = useThemeColor({}, "active");
   const inactiveColor = useThemeColor({}, "inactive");
 
@@ -33,7 +34,7 @@ export default function PreviewModalScreen() {
       try {
         setIsLoading(true);
         const { uri } = await FileSystem.downloadAsync(
-          previews[previewIndex].url,
+          previews[index].url,
           FileSystem.documentDirectory +
             previews[previewIndex].url.replace(`${Urls.baseURL}image/large/`, "")
         );
@@ -68,6 +69,7 @@ export default function PreviewModalScreen() {
         enableSwipeDown
         onSwipeDown={() => navigation.goBack()}
         saveToLocalByLongPress={false}
+        onChange={(index) => setIndex(index!)}
       />
       <FloatingAction
         color={isLoading ? inactiveColor : activeColor}
