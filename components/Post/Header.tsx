@@ -1,10 +1,10 @@
-import { formatRelative, formatDistance } from "date-fns";
+import { formatRelative, formatDistance, format } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import { useContext } from "react";
 import { View } from "react-native";
 
 import { Post } from "@/api";
-import { SizeContext } from "@/components/ThemeContextProvider";
+import { AccurateTimeFormatContext, SizeContext } from "@/components/ThemeContextProvider";
 import { Text, useThemeColor } from "@/components/Themed";
 import { useForumsIdMap } from "@/hooks/useForums";
 
@@ -17,6 +17,7 @@ export default function Header(props: {
   const BASE_SIZE = useContext(SizeContext);
   const tintColor = useThemeColor({}, "tint");
   const highlightColor = useThemeColor({}, "highlight");
+  const accurate = useContext(AccurateTimeFormatContext);
 
   return (
     <>
@@ -51,8 +52,13 @@ export default function Header(props: {
         <Text
           lightColor="#666666"
           darkColor="#999999"
-          style={{ fontSize: BASE_SIZE * 0.8, flex: 2, textAlign: "right" }}>
-          {renderTime(props.data.root, props.data.time)}
+          style={{
+            fontSize: BASE_SIZE * 0.8,
+            flex: 2,
+            textAlign: "right",
+            fontVariant: ["tabular-nums"],
+          }}>
+          {renderTime(props.data.root, props.data.time, accurate)}
         </Text>
       </View>
       <View
@@ -112,10 +118,17 @@ export default function Header(props: {
   );
 }
 
-export function renderTime(root: string | undefined, time: number | undefined) {
+export function renderTime(
+  root: string | undefined,
+  time: number | undefined,
+  accurate: boolean = false
+) {
   const now = Date.now();
   const timestamp = Date.parse(`${root} GMT+0000`) || time || now;
   const diff = now - timestamp;
+  if (accurate) {
+    return format(timestamp, "yyyy-MM-dd HH:mm:ss");
+  }
   if (diff < 1000 * 60 * 60 * 24) {
     return formatDistance(now, timestamp, {
       locale: zhCN,

@@ -104,3 +104,5 @@ export const blackListPostsAtom = atomWithAsyncStorage("blackListPosts", []);
 export const tintColorAtom = atomWithAsyncStorage("tintColor", "#FC88B3");
 
 export const highlightColorAtom = atomWithAsyncStorage("highlightColor", "#FD4C5D");
+
+export const accurateTimeFormatAtom = atomWithAsyncStorage("accurateTimeFormat", false);

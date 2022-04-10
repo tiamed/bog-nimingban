@@ -15,6 +15,7 @@ import {
   thumbnailResizeAtom,
   tintColorAtom,
   highlightColorAtom,
+  accurateTimeFormatAtom,
 } from "@/atoms";
 import Icon from "@/components/Icon";
 import SettingPicker from "@/components/SettingPicker";
@@ -97,6 +98,14 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
               label: `${i + 1}`,
               value: `${100 / (i + 1) - 1}%`,
             })),
+          ]}
+        />
+        <SettingPicker
+          title="时间格式"
+          atom={accurateTimeFormatAtom}
+          options={[
+            { label: "普通", value: false },
+            { label: "精确", value: true },
           ]}
         />
         <TouchableOpacity

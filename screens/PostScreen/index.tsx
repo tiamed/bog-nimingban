@@ -3,6 +3,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { useState, useEffect, useCallback, useMemo, createContext, useRef } from "react";
 import { StyleSheet, FlatList, Platform, FlatListProps } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
 import ActionModal from "./ActionModal";
 import CheckUpdate from "./CheckUpdate";
@@ -22,12 +23,11 @@ import {
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
 import { View } from "@/components/Themed";
+import Errors from "@/constants/Errors";
 import { useForumsIdMap } from "@/hooks/useForums";
 import { UserHistory } from "@/screens//BrowseHistoryScreen";
 import renderFooter from "@/screens/HomeScreen/renderFooter";
 import { RootStackScreenProps } from "@/types";
-import Errors from "@/constants/Errors";
-import Toast from "react-native-toast-message";
 
 export const MainPostContext = createContext({} as Post);
 
@@ -111,10 +111,12 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
 
       if (type === "error") {
         setHasNoMore(true);
-        Toast.show({
-          type: "error",
-          text1: Errors[code],
-        });
+        if (code !== 6202) {
+          Toast.show({
+            type: "error",
+            text1: Errors[code],
+          });
+        }
         return;
       }
 
