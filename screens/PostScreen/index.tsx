@@ -19,6 +19,7 @@ import {
   postIdRefreshingAtom,
   postFilteredAtom,
   orderAtom,
+  selectionAtom,
 } from "@/atoms/index";
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
@@ -61,6 +62,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
 
   const setShowActionModal = useSetAtom(showActionModalAtom);
   const setDraft = useSetAtom(draftAtom);
+  const setSelection = useSetAtom(selectionAtom);
   const forumsIdMap = useForumsIdMap();
 
   const listRef = useRef<FlatList>(null);
@@ -308,6 +310,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
       title: route.params.title,
     });
     setDraft("");
+    setSelection({ start: 0, end: 0 });
     return () => {
       setMainPost({} as Post);
     };

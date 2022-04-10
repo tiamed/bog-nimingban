@@ -63,6 +63,8 @@ export const tabRefreshingAtom = atom(false);
 
 export const draftAtom = atom("");
 
+export const selectionAtom = atom({ start: 0, end: 0 });
+
 export const signDictAtom = atomWithAsyncStorage("signDict", {}, true);
 
 export const showPageModalAtom = atom(false);

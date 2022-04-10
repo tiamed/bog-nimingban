@@ -22,6 +22,7 @@ import {
   postIdRefreshingAtom,
   replyHistoryAtom,
   selectedCookieAtom,
+  selectionAtom,
 } from "@/atoms";
 import Icon from "@/components/Icon";
 import Overlay from "@/components/Overlay";
@@ -43,13 +44,13 @@ export default function ReplyModalScreen({
   const [forumId, setForumId] = useState<number | null | undefined>(null);
   const [replyId, setReplyId] = useState<number | null | undefined>(null);
   const [images, setImages] = useState<Image[]>([]);
-  const [selection, setSelection] = useState({ start: 0, end: 0 });
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [showKeyboard, setShowKeyboard] = useState(true);
   const [showEmoticonPicker, setShowEmoticonPicker] = useState(false);
   const [showPrefixInput, setShowPrefixInput] = useState(false);
 
+  const [selection, setSelection] = useAtom(selectionAtom);
   const [cookies] = useAtom(cookiesAtom);
   const [draft, setDraft] = useAtom(draftAtom);
   const [cookieCode, setCookieCode] = useAtom(selectedCookieAtom);
@@ -174,6 +175,7 @@ export default function ReplyModalScreen({
         setPostIdRefreshing(replyId!);
       }
       setDraft("");
+      setSelection({ start: 0, end: 0 });
       close();
     } else {
       Toast.show({
@@ -184,10 +186,16 @@ export default function ReplyModalScreen({
   };
 
   useEffect(() => {
+    if (route.params.content) {
+      if (draft.endsWith("\n") || draft.length === 0) {
+        insertDraft(route.params.content);
+      } else {
+        insertDraft("\n" + route.params.content);
+      }
+    }
     const timeout = setTimeout(() => {
       setForumId(route.params.forumId);
       setReplyId(route.params.postId);
-      insertDraft(route.params.content || "");
     }, 100);
     return () => {
       clearTimeout(timeout);
