@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.18](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.17...v1.0.0-alpha.18) (2022-04-10)
+
+
+### Bug Fixes
+
+* container color ([bff027d](https://github.com/tiamed/bog-nimingban/commit/bff027d4d81e7801892dc5668da69b11cf215fe9))
+* image index ([5e19b1d](https://github.com/tiamed/bog-nimingban/commit/5e19b1d9786d2a5d4989cdb0b2cf99dfcf7d424d))
+* scrollToIndex ([7c320a5](https://github.com/tiamed/bog-nimingban/commit/7c320a549430f961f2ea51f81fef1b5fed513194))
+* signle quote item width ([49d03c5](https://github.com/tiamed/bog-nimingban/commit/49d03c502cc166c70fad582352e2e03cc36b1427))
+
 ## [1.0.0-alpha.17](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.16...v1.0.0-alpha.17) (2022-04-09)
 
 ## [1.0.0-alpha.16](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.15...v1.0.0-alpha.16) (2022-04-08)
