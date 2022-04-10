@@ -1,6 +1,6 @@
 import { useAtom, useSetAtom } from "jotai";
 import React, { useState, useEffect, useCallback } from "react";
-import { StyleSheet, FlatList, FlatListProps } from "react-native";
+import { StyleSheet, FlatList, FlatListProps, Platform } from "react-native";
 
 import ActionModal from "./ActionModal";
 import HomeFloatingAction from "./HomeFloatingAction";
@@ -82,7 +82,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
         setFocusItem(item as Post);
         setShowHomeActionModal(true);
       }}
-      gestureEnabled
+      gestureEnabled={Platform.OS === "ios"}
     />
   );
 
@@ -126,7 +126,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         onEndReached={loadMoreData}
-        onEndReachedThreshold={0.1}
+        onEndReachedThreshold={0.5}
         ListFooterComponent={() => renderFooter(isLoading, hasNoMore)}
       />
       <HomeFloatingAction />

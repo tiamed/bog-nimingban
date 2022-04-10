@@ -76,7 +76,7 @@ export default function ReplyHistoryScreen() {
         data={filteredHistory}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        onEndReachedThreshold={0.1}
+        onEndReachedThreshold={0.5}
         ListFooterComponent={() => renderFooter(false, true)}
       />
       <HistoryFloatingAction

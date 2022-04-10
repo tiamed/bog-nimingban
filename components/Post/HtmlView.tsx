@@ -94,7 +94,12 @@ function Quote(props: { data: string; level: number }) {
           minWidth: "100%",
         }}>
         <Pressable
-          hitSlop={50}
+          hitSlop={{
+            right: width,
+            top: 2,
+            bottom: 2,
+            left: 2,
+          }}
           onPress={() => {
             if (state === "collapsed") {
               setLoadingText("加载中");

@@ -19,7 +19,11 @@ export default function Footer(props: { items: FooterItem[] }) {
         }}
       />
       {props.items?.map(({ icon, onPress }) => (
-        <TouchableOpacity key={icon} onPress={onPress} style={styles.icon}>
+        <TouchableOpacity
+          key={icon}
+          onPress={onPress}
+          style={styles.icon}
+          hitSlop={{ left: 0, right: 0, top: 10, bottom: 10 }}>
           <Icon color={tintColor} name={icon} />
         </TouchableOpacity>
       ))}

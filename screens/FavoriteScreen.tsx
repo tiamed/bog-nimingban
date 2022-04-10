@@ -32,7 +32,7 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
         data={favorite}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        onEndReachedThreshold={0.1}
+        onEndReachedThreshold={0.5}
         ListFooterComponent={() => renderFooter(false, true)}
       />
     </View>

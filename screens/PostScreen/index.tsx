@@ -1,11 +1,11 @@
-import { useHeaderHeight } from "@react-navigation/elements";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
 import { useState, useEffect, useCallback, useMemo, createContext, useRef } from "react";
 import { StyleSheet, FlatList, Platform, FlatListProps } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import ActionModal from "./ActionModal";
+import CheckUpdate from "./CheckUpdate";
 import Footer from "./Footer";
 import PageModal from "./PageModal";
 
@@ -153,15 +153,17 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
     } else {
       await loadData(firstPage - 1);
     }
+    addToHistory(true);
   }, [firstPage, order]);
 
   const loadMoreData = async (force = false) => {
     if (isLoading || (hasNoMore && !force)) return;
     if (hasNoMore && !lastPageFinished) {
-      loadData(lastPage);
+      await loadData(lastPage);
     } else {
-      loadData(lastPage + 1);
+      await loadData(lastPage + 1);
     }
+    addToHistory(true);
   };
 
   const updatePreviews = () => {
@@ -209,6 +211,27 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
         } catch (error) {
           console.warn(error);
         }
+      }
+    }
+  };
+
+  const onUpdate = async () => {
+    if (order) {
+      if (firstPage === 1) {
+        await refreshPosts();
+        listRef.current?.scrollToOffset({ offset: 0, animated: false });
+      } else {
+        await loadData(1, true, true);
+      }
+    } else {
+      const total = Math.ceil(mainPost.reply_count / 20);
+      if (lastPage < total) {
+        await loadData(total, true, true);
+      } else {
+        await loadMoreData(true);
+        setTimeout(() => {
+          listRef.current?.scrollToEnd({ animated: false });
+        }, 200);
       }
     }
   };
@@ -282,15 +305,9 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
 
   useEffect(() => {
     if (postIdRefreshing === route.params.id) {
-      if (order) {
-        refreshPosts().then(() => {
-          setPostIdRefreshing(-1);
-        });
-      } else {
-        loadMoreData(true).then(() => {
-          setPostIdRefreshing(-1);
-        });
-      }
+      onUpdate().then(() => {
+        setPostIdRefreshing(-1);
+      });
     }
   }, [postIdRefreshing]);
 
@@ -353,7 +370,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
           }}
           renderItem={renderItemMemoized}
           onEndReached={() => loadMoreData(false)}
-          onEndReachedThreshold={0.1}
+          onEndReachedThreshold={0.5}
           ListFooterComponent={() =>
             renderFooter(isLoading, hasNoMore, loadMoreData.bind(null, true))
           }
@@ -377,6 +394,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
 
         <PageModal index={currentPage} total={mainPost?.reply_count} loadData={loadData} />
         <ActionModal item={focusItem} postId={mainPost.id} forumId={mainPost.forum} />
+        <CheckUpdate id={mainPost.id} count={mainPost.reply_count} onUpdate={onUpdate} />
       </View>
     </MainPostContext.Provider>
   );

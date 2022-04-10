@@ -17,7 +17,7 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
         data={blackListPosts}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        onEndReachedThreshold={0.1}
+        onEndReachedThreshold={0.5}
         ListEmptyComponent={() => (
           <View style={styles.empty}>
             <Text style={styles.emptyText}>暂无屏蔽的串，板块列表中长按可屏蔽串</Text>

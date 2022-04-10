@@ -109,7 +109,7 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
           <Icon name="tint" color={tintColor} />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.item, { height: BASE_SIZE * 2 }]}
+          style={[styles.item, { height: BASE_SIZE * 5 }]}
           onPress={() => {
             setCurrentAtom(highlightColorAtom);
             setColorPickerModalVisible(true);

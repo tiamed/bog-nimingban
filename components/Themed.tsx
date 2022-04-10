@@ -79,7 +79,7 @@ export function Button(props: ButtonProps) {
   const BASE_SIZE = useContext(SizeContext);
 
   return (
-    <TouchableOpacity {...otherProps}>
+    <TouchableOpacity hitSlop={{ left: 5, right: 5, top: 5, bottom: 5 }} {...otherProps}>
       <DefaultText style={[{ color, fontSize: BASE_SIZE }]} allowFontScaling={false}>
         {otherProps.title}
       </DefaultText>

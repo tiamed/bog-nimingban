@@ -162,13 +162,16 @@ export default function ReplyModalScreen({
           ]);
         }
       }
-      if (!replyId) {
-        navigation.push("Post", {
-          id: newPostId,
-          title: `${forumsIdMap.get(params.forum)} Po.${newPostId}`,
-        });
+      if (!replyId && newPostId) {
+        close();
+        setTimeout(() => {
+          navigation.push("Post", {
+            id: newPostId,
+            title: `${forumsIdMap.get(params.forum)} Po.${newPostId}`,
+          });
+        }, 500);
       } else {
-        setPostIdRefreshing(replyId);
+        setPostIdRefreshing(replyId!);
       }
       setDraft("");
       close();
@@ -181,11 +184,14 @@ export default function ReplyModalScreen({
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       setForumId(route.params.forumId);
       setReplyId(route.params.postId);
       insertDraft(route.params.content || "");
     }, 100);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [route.params]);
 
   useEffect(() => {
@@ -216,6 +222,7 @@ export default function ReplyModalScreen({
               alignItems: "center",
             }}>
             <TouchableOpacity
+              hitSlop={{ left: 5, right: 100, top: 5, bottom: 5 }}
               onPress={() => setShowPrefixInput(!showPrefixInput)}
               style={{ paddingRight: BASE_SIZE * 0.2 }}>
               <Icon name="hashtag" color={tintColor} size={BASE_SIZE} />
@@ -231,14 +238,14 @@ export default function ReplyModalScreen({
               selectionColor={tintColor}
               onChangeText={(val) => setName(val)}
               placeholder="昵称"
-              style={styles.inputPrefix}
+              style={[styles.inputPrefix, { height: BASE_SIZE * 1.8 }]}
             />
             <TextInput
               value={title}
               selectionColor={tintColor}
               onChangeText={(val) => setTitle(val)}
               placeholder="标题"
-              style={styles.inputPrefix}
+              style={[styles.inputPrefix, { height: BASE_SIZE * 1.8 }]}
             />
           </>
         )}

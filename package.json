@@ -58,6 +58,7 @@
     "react-native-modal": "^13.0.1",
     "react-native-modal-datetime-picker": "^13.1.2",
     "react-native-pager-view": "5.4.9",
+    "react-native-paper": "^4.12.0",
     "react-native-reanimated": "~2.3.1",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
@@ -65,8 +66,7 @@
     "react-native-toast-message": "^2.1.5",
     "react-native-web": "0.17.1",
     "react-native-wheel-color-picker": "^1.2.0",
-    "reanimated-collapsible-helpers": "^1.0.0",
-    "xss": "^1.0.11"
+    "reanimated-collapsible-helpers": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
