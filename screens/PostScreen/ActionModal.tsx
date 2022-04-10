@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import { decode } from "html-entities";
+import { convert } from "html-to-text";
 import { useAtom } from "jotai";
 import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import Modal from "react-native-modal";
@@ -30,7 +31,7 @@ export default function ActionModal(props: { item: Reply; postId: number; forumI
     }, 300);
   };
   const onCopy = () => {
-    Clipboard.setString(decode(props.item.content)?.replace(/<[^>]*>/g, ""));
+    Clipboard.setString(convert(decode(props.item.content)?.replace(/网页链接<\/a>/g, "</a>")));
     close();
     Toast.show({ type: "success", text1: "已复制到剪贴板" });
   };

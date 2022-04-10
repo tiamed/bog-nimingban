@@ -15,9 +15,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "fun.tiamed"
@@ -51,6 +49,9 @@
         }
       ]
     ],
-    "githubUrl": "https://github.com/tiamed/bog-nimingban"
+    "githubUrl": "https://github.com/tiamed/bog-nimingban",
+    "packagerOpts": {
+      "sourceExts": ["cjs"]
+    }
   }
 }

@@ -45,6 +45,7 @@
     "expo-updates": "~0.11.6",
     "expo-web-browser": "~10.1.0",
     "html-entities": "^2.3.3",
+    "html-to-text": "^8.2.0",
     "jotai": "^1.6.2",
     "qs": "^6.10.3",
     "react": "17.0.1",
@@ -70,6 +71,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
+    "@types/html-to-text": "^8.1.0",
     "@types/qs": "^6.9.7",
     "@types/react": "^17.0.44",
     "@types/react-native": "~0.64.12",
