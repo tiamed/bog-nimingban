@@ -34,6 +34,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   itemLabel: {
-    minWidth: "30%",
+    minWidth: "40%",
   },
 });
