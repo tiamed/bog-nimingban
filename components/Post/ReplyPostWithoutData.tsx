@@ -66,25 +66,26 @@ export default function ReplyPostWithoutData(props: {
             alignItems: "flex-end",
             alignContent: "stretch",
           }}>
-          <View style={styles.actionWrapper}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.push("Post", {
-                  id: data.res || data.id,
-                  title: "",
-                });
-              }}
-              disabled={mainPost.id === data.res || mainPost.id === data.id}>
-              <Text
-                style={{
-                  fontSize: BASE_SIZE * 0.8,
-                }}
-                lightColor={tintColor}
-                darkColor={tintColor}>
-                {mainPost.id === data.res || mainPost.id === data.id ? "当前串" : "查看原串"}
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {mainPost.id !== data.res && mainPost.id !== data.id && (
+            <View style={styles.actionWrapper}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.push("Post", {
+                    id: data.res || data.id,
+                    title: "",
+                  });
+                }}>
+                <Text
+                  style={{
+                    fontSize: BASE_SIZE * 0.8,
+                  }}
+                  lightColor={tintColor}
+                  darkColor={tintColor}>
+                  查看原串
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
           <ReplyPost
             data={data}
             po={mainPost.cookie}
