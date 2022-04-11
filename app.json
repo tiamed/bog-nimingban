@@ -13,11 +13,10 @@
       "backgroundColor": "#FC88B3"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 60000,
+      "checkAutomatically": "ON_ERROR_RECOVERY"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "fun.tiamed"
@@ -53,9 +52,7 @@
     ],
     "githubUrl": "https://github.com/tiamed/bog-nimingban",
     "packagerOpts": {
-      "sourceExts": [
-        "cjs"
-      ]
+      "sourceExts": ["cjs"]
     }
   }
 }
