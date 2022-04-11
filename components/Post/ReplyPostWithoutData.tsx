@@ -74,14 +74,14 @@ export default function ReplyPostWithoutData(props: {
                   title: "",
                 });
               }}
-              disabled={mainPost.id === data.res}>
+              disabled={mainPost.id === data.res || mainPost.id === data.id}>
               <Text
                 style={{
                   fontSize: BASE_SIZE * 0.8,
                 }}
                 lightColor={tintColor}
                 darkColor={tintColor}>
-                {mainPost.id === data.res ? "当前串" : "查看原串"}
+                {mainPost.id === data.res || mainPost.id === data.id ? "当前串" : "查看原串"}
               </Text>
             </TouchableOpacity>
           </View>

@@ -193,13 +193,8 @@ export default function ReplyModalScreen({
         insertDraft("\n" + route.params.content);
       }
     }
-    const timeout = setTimeout(() => {
-      setForumId(route.params.forumId);
-      setReplyId(route.params.postId);
-    }, 100);
-    return () => {
-      clearTimeout(timeout);
-    };
+    setForumId(route.params.forumId);
+    setReplyId(route.params.postId);
   }, [route.params]);
 
   useEffect(() => {

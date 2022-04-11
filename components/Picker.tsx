@@ -10,13 +10,19 @@ export default function Picker(props: {
   options: any[];
   onValueChange: ((itemValue: any, itemIndex: number) => void) | undefined;
 }) {
-  const { selectedValue, options, onValueChange } = props;
+  const { selectedValue, options } = props;
   const tintColor = useThemeColor({}, "tint");
   const backgroundColor = useThemeColor({}, "background");
   const [visible, setVisible] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState(options[0]?.label || "");
   const close = () => {
     setVisible(false);
+  };
+  const onValueChange = (value: any, index: number) => {
+    if (loaded) {
+      props.onValueChange && props.onValueChange(value, index);
+    }
   };
   useEffect(() => {
     if (options?.length) {
@@ -24,6 +30,17 @@ export default function Picker(props: {
       setSelectedLabel(currentOption?.label || "");
     }
   }, [selectedValue, options]);
+  useEffect(() => {
+    const index = options.findIndex((option) => option?.value === selectedValue);
+    onValueChange(selectedValue, index);
+  }, [selectedValue]);
+  useEffect(() => {
+    const timeout = setTimeout(() => setLoaded(true), 100);
+    return () => {
+      clearTimeout(timeout);
+    };
+  });
+
   if (Platform.OS === "ios") {
     return (
       <>
