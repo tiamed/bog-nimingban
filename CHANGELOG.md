@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.21](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.20...v1.0.0-alpha.21) (2022-04-11)
+
+
+### Bug Fixes
+
+* picker initial value ([123348e](https://github.com/tiamed/bog-nimingban/commit/123348e42d1fb8b580ca11af52e1b4f8e9ea28f1))
+* selection index on inserting replyId ([475746e](https://github.com/tiamed/bog-nimingban/commit/475746e916c2b25d30ce42b45374db4cc5cdffbb))
+
 ## [1.0.0-alpha.20](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.19...v1.0.0-alpha.20) (2022-04-10)
 
 
