@@ -9,15 +9,17 @@ import { Button, TextInput, View } from "@/components/Themed";
 
 const PALETTE = [
   "#FC4C5D",
+  "#ff4d6d",
+  "#ff7096",
   "#FC88B3",
-  "#46CCFF",
   "#ef9a9a",
-  "#ce93d8",
-  "#b39ddb",
-  "#9fa8da",
-  "#80cbc4",
-  "#ffcc80",
   "#ffab91",
+  "#ffcc80",
+  "#80cbc4",
+  "#80deea",
+  "#9fa8da",
+  "#b39ddb",
+  "#ce93d8",
 ];
 
 export default function ColorPickerModal(props: { atom: any }) {
