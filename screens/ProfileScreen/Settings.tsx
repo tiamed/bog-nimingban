@@ -20,6 +20,7 @@ export default function Settings() {
       <JumpToSettings title="显示设置" navigateTo="LayoutSettings" />
       <JumpToSettings title="屏蔽串设置" navigateTo="BlackList" />
       <SettingItem title="备份设置" onPress={() => setShowBackupModal(true)} />
+      <JumpToSettings title="关于" navigateTo="About" />
       <BackupModal />
     </View>
   );
@@ -57,6 +58,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     marginTop: 15,
+    marginBottom: 50,
   },
   title: {
     fontWeight: "bold",

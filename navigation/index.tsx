@@ -30,6 +30,7 @@ import { historyTabAtom, tabRefreshingAtom } from "@/atoms";
 import DrawerContent from "@/components/DrawerContent";
 import Icon from "@/components/Icon";
 import { useThemeColor } from "@/components/Themed";
+import AboutScreen from "@/screens/AboutScreen";
 import BlackListScreen from "@/screens/BlackListScreen";
 import BrowseHistoryScreen, { UserHistory } from "@/screens/BrowseHistoryScreen";
 import FavoriteScreen from "@/screens/FavoriteScreen";
@@ -135,6 +136,7 @@ function RootNavigator() {
         component={BlackListScreen}
         options={{ title: "屏蔽串设置" }}
       />
+      <Stack.Screen name="About" component={AboutScreen} options={{ title: "关于" }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: "Oops!" }} />
       <Stack.Group
         screenOptions={{
