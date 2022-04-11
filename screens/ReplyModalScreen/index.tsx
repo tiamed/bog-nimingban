@@ -203,12 +203,6 @@ export default function ReplyModalScreen({
     });
   }, []);
 
-  useEffect(() => {
-    if (!cookieCode && cookies?.filter((cookie: any) => cookie.id)?.length) {
-      setCookieCode(cookies[0]?.code);
-    }
-  }, [cookieCode]);
-
   return (
     <View style={styles.modal}>
       <Overlay />
