@@ -160,7 +160,7 @@ function onShare(id: number, content: string) {
   Share.share({
     message: `${content.replace(/<[^>]+>/g, "").slice(0, 100)} ${Urls.baseURL}t/${id}/
 
-来自B岛匿名版 https://expo.dev/@creasus/bog-nimingban`,
+来自B岛匿名版 https://github.com/tiamed/bog-nimingban`,
   });
 }
 
