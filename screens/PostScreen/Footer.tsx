@@ -68,7 +68,7 @@ export default function Footer(props: {
       newFavorite.unshift({
         ...props.mainPost,
         createTime: Date.now(),
-        tags: [],
+        tags,
       });
       setFavorite(newFavorite);
     }
