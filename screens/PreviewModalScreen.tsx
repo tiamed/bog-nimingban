@@ -35,7 +35,7 @@ export default function PreviewModalScreen() {
         setIsLoading(true);
         const { uri } = await FileSystem.downloadAsync(
           previews[index].url,
-          FileSystem.documentDirectory +
+          FileSystem.cacheDirectory +
             previews[previewIndex].url.replace(`${Urls.baseURL}image/large/`, "")
         );
 

@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
+import { useMemo } from "react";
 import { Pressable, View } from "react-native";
 
 import Header from "./Header";
@@ -30,44 +31,52 @@ export default function ReplyPost(props: {
     navigation.navigate("PreviewModal");
   };
 
+  const memoizedHtmlView = useMemo(() => {
+    return <HtmlView content={props.data.content as string} level={props.level || 1} />;
+  }, [props.data.content, props.level]);
+  const memoizedImageView = useMemo(() => {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          justifyContent: "flex-start",
+        }}>
+        {props.data?.images?.map((image) => (
+          <ImageView
+            key={image.url}
+            onPress={props.onImagePress?.bind(null, image) || onImagePress.bind(null, image)}
+            style={{
+              flexBasis: imageWidth,
+              aspectRatio: 1,
+              borderColor,
+              borderWidth: 1,
+              marginTop: 10,
+              marginRight: "1%",
+            }}
+            imageStyle={{
+              width: "100%",
+              height: "100%",
+            }}
+            data={image}
+          />
+        ))}
+      </View>
+    );
+  }, [props.data?.images]);
+
   return (
     <Pressable onPress={props.onPress}>
       <Wrapper width={props.width}>
         <Header data={props.data} isPo={isPo} />
-
         <View
           style={{
             flexDirection: "column",
             overflow: "hidden",
             flexWrap: "wrap",
           }}>
-          <HtmlView content={props.data.content as string} level={props.level || 1} />
-          <View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "flex-start",
-            }}>
-            {props.data?.images?.map((image) => (
-              <ImageView
-                key={image.url}
-                onPress={props.onImagePress?.bind(null, image) || onImagePress.bind(null, image)}
-                style={{
-                  flexBasis: imageWidth,
-                  aspectRatio: 1,
-                  borderColor,
-                  borderWidth: 1,
-                  marginTop: 10,
-                  marginRight: "1%",
-                }}
-                imageStyle={{
-                  width: "100%",
-                  height: "100%",
-                }}
-                data={image}
-              />
-            ))}
-          </View>
+          {memoizedHtmlView}
+          {memoizedImageView}
         </View>
       </Wrapper>
     </Pressable>

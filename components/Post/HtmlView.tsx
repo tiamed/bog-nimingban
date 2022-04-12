@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { decode } from "html-entities";
 import { useAtom } from "jotai";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Dimensions, Linking, PixelRatio, Pressable, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { useCollapsible, AnimatedSection } from "reanimated-collapsible-helpers";
@@ -71,6 +71,21 @@ function Quote(props: { data: string; level: number }) {
   const [loadingText, setLoadingText] = useState("");
   const quoteId = Number(data.replace(/>>Po\./g, ""));
   const { animatedHeight, onPress, onLayout, state } = useCollapsible({ duration: 200 });
+  const memoizedReplyPost = useMemo(
+    () => (
+      <ReplyPostWithoutData
+        id={quoteId}
+        width={width - 20 * props.level}
+        level={props.level + 1}
+        onLoaded={() => {
+          setTimeout(() => {
+            setLoadingText("");
+          }, 200);
+        }}
+      />
+    ),
+    [quoteId, props.level]
+  );
   useEffect(() => {
     if (state === "expanded") {
       setTimeout(() => {
@@ -141,18 +156,7 @@ function Quote(props: { data: string; level: number }) {
           flexWrap: "wrap",
           justifyContent: "center",
         }}>
-        {state === "expanded" && (
-          <ReplyPostWithoutData
-            id={quoteId}
-            width={width - 20 * props.level}
-            level={props.level + 1}
-            onLoaded={() => {
-              setTimeout(() => {
-                setLoadingText("");
-              }, 300);
-            }}
-          />
-        )}
+        {state === "expanded" && memoizedReplyPost}
       </AnimatedSection>
     </View>
   );

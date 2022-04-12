@@ -1,13 +1,17 @@
-import { Linking, StyleSheet, TouchableOpacity } from "react-native";
+import { Linking, StyleSheet, TouchableHighlight } from "react-native";
+import Toast from "react-native-toast-message";
 
 import { View, Text, useThemeColor } from "@/components/Themed";
+import { checkUpdate } from "@/tasks/checkAppUpdate";
 import { RootStackScreenProps } from "@/types";
 
 export default function AboutScreen({ route, navigation }: RootStackScreenProps<"About">) {
   const tintColor = useThemeColor({}, "tint");
+  const underlayColor = useThemeColor({}, "inactive");
   return (
     <View style={styles.container}>
-      <TouchableOpacity
+      <TouchableHighlight
+        underlayColor={underlayColor}
         style={styles.item}
         onPress={() => {
           navigation.navigate("Post", {
@@ -16,14 +20,29 @@ export default function AboutScreen({ route, navigation }: RootStackScreenProps<
           });
         }}>
         <Text style={{ color: tintColor }}>反馈串</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
+      </TouchableHighlight>
+      <TouchableHighlight
+        underlayColor={underlayColor}
         style={styles.item}
         onPress={() => {
           Linking.openURL("https://github.com/tiamed/bog-nimingban");
         }}>
         <Text style={{ color: tintColor }}>Github</Text>
-      </TouchableOpacity>
+      </TouchableHighlight>
+      <TouchableHighlight
+        underlayColor={underlayColor}
+        style={styles.item}
+        onPress={async () => {
+          const result = await checkUpdate();
+          if (!result) {
+            Toast.show({
+              type: "info",
+              text1: "暂无更新",
+            });
+          }
+        }}>
+        <Text style={{ color: tintColor }}>检查更新</Text>
+      </TouchableHighlight>
     </View>
   );
 }

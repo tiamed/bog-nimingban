@@ -201,6 +201,7 @@ export default function ReplyModalScreen({
     Keyboard.addListener("keyboardDidShow", () => {
       setShowEmoticonPicker(false);
     });
+    return Keyboard.removeAllListeners("keyboardDidShow");
   }, []);
 
   return (

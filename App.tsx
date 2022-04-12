@@ -1,5 +1,4 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
@@ -8,15 +7,10 @@ import { getToastConfig } from "./components/Themed";
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
-import { checkUpdate } from "./tasks/checkAppUpdate";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
-
-  useEffect(() => {
-    checkUpdate();
-  }, []);
 
   if (!isLoadingComplete) {
     return null;

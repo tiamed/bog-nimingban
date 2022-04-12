@@ -87,8 +87,6 @@ export const postFilteredAtom = atom(false);
 
 export const orderAtom = atomWithAsyncStorage("order", 0);
 
-export const shouldPollPostAtom = atomWithAsyncStorage("shouldPollPost", true);
-
 export const colorSchemeAtom = atomWithAsyncStorage("colorScheme", null);
 
 export const threadDirectionAtom = atomWithAsyncStorage("threadDirection", "row");

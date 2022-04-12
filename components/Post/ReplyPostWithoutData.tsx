@@ -3,6 +3,7 @@ import type { StackNavigationProp } from "@react-navigation/stack";
 import { useSetAtom } from "jotai";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
+import { useIsMounted } from "usehooks-ts";
 
 import { getImageUrl, getThumbnailUrl } from "./ImageView";
 import ReplyPost from "./ReplyPost";
@@ -27,8 +28,10 @@ export default function ReplyPostWithoutData(props: {
   const navigation = useNavigation<StackNavigationProp<any>>();
   const BASE_SIZE = useContext(SizeContext);
   const mainPost = useContext<Post>(MainPostContext);
+  const isMounted = useIsMounted();
 
   const loadData = async () => {
+    if (!isMounted) return;
     try {
       const {
         data: { info },
