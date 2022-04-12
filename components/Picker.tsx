@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   button: {
-    padding: 5,
+    paddingHorizontal: 5,
   },
   modalWrapper: {
     justifyContent: "flex-end",
@@ -129,9 +129,11 @@ const styles = StyleSheet.create({
   modal: {
     flexDirection: "column",
     justifyContent: "center",
-    borderRadius: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
     overflow: "hidden",
-    padding: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 10,
     minHeight: 300,
   },
   header: {

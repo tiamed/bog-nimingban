@@ -1,7 +1,7 @@
 import * as Haptics from "expo-haptics";
 import { atom, useAtom, useSetAtom } from "jotai";
-import { useContext, useEffect, useRef, useState } from "react";
-import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { FlatList, InteractionManager, StyleSheet, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 import Toast from "react-native-toast-message";
 
@@ -75,6 +75,17 @@ export default function TagModal(props: {
     }
   };
 
+  const renderLabel = useCallback(
+    (item: Tag) => {
+      if (item.id) {
+        const count = favorite?.filter((record) => record.tags?.includes(item.id))?.length;
+        return `${item.name}(${count || 0})`;
+      }
+      return item.name;
+    },
+    [favorite]
+  );
+
   useEffect(() => {
     setSelectedValue(props.initialValue);
   }, [props.initialValue]);
@@ -100,7 +111,7 @@ export default function TagModal(props: {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <TagItem
-                name={item.name}
+                name={renderLabel(item)}
                 time={item.createTime}
                 onPress={() => toggleItem(item.id)}
                 onEdit={() => {
@@ -146,14 +157,26 @@ function AddTagModal(props: {
   };
 
   useEffect(() => {
+    let timeout: NodeJS.Timeout;
     if (props.visible) {
-      inputRef.current?.focus();
+      InteractionManager.runAfterInteractions(() => {
+        inputRef.current?.focus();
+      });
     }
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [props.visible]);
 
   useEffect(() => {
-    if (current) {
+    if (current?.name?.length) {
       setInput(current.name);
+      InteractionManager.runAfterInteractions(() => {
+        inputRef.current?.setNativeProps({
+          selection: { start: current.name.length, end: current.name.length },
+        });
+        global.requestAnimationFrame(() => inputRef.current?.setNativeProps({ selection: null }));
+      });
     }
   }, [current]);
 
@@ -165,7 +188,7 @@ function AddTagModal(props: {
       backdropTransitionOutTiming={0}
       style={styles.modalWrapper}
       avoidKeyboard>
-      <View style={[styles.modal, { minHeight: 200 }]}>
+      <View style={[styles.modal, { height: 200 }]}>
         <View style={styles.header}>
           <Button title="取消" onPress={props.onDismiss} />
           <Text>{current?.id ? "编辑" : "新建"}收藏标签</Text>
@@ -249,11 +272,12 @@ const styles = StyleSheet.create({
   modal: {
     flexDirection: "column",
     justifyContent: "flex-start",
-    borderRadius: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
     overflow: "hidden",
     paddingVertical: 20,
     paddingHorizontal: 10,
-    minHeight: 300,
+    height: "46%",
   },
   header: {
     flexDirection: "row",
