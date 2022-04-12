@@ -45,7 +45,6 @@ import QuoteModalScreen from "@/screens/QuoteModalScreen";
 import ReplyHistoryScreen from "@/screens/ReplyHistoryScreen";
 import ReplyModalScreen from "@/screens/ReplyModalScreen";
 import SearchModalScreen from "@/screens/SearchModalScreen";
-import { checkUpdate } from "@/tasks/checkAppUpdate";
 import {
   HistoryTabParamList,
   RootStackParamList,
@@ -109,7 +108,6 @@ function RootNavigator() {
           const historyList = JSON.parse(history || "[]");
           onClipboardChange(threadId, historyList);
         });
-        checkUpdate();
       }
     });
   }, [appState.current]);

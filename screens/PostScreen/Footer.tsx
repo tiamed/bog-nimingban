@@ -10,6 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Post } from "@/api";
 import { favoriteAtom, showPageModalAtom } from "@/atoms/index";
 import Icon from "@/components/Icon";
+import TagModal from "@/components/TagModal";
 import { Text, View, useThemeColor } from "@/components/Themed";
 import Urls from "@/constants/Urls";
 import { UserFavorite } from "@/screens/FavoriteScreen";
@@ -21,7 +22,9 @@ export default function Footer(props: {
   disabled: boolean;
 }) {
   const [isFavorite, setIsFavorite] = useState(false);
+  const [showTagModal, setShowTagModal] = useState(false);
   const [favorite, setFavorite] = useAtom<UserFavorite[], UserFavorite[], void>(favoriteAtom);
+  const [currentFavorite, setCurrentFavorite] = useState<UserFavorite>();
   const setShowPageModal = useSetAtom(showPageModalAtom);
   const navigation = useNavigation();
   const tintColor = useThemeColor({}, "tint");
@@ -35,24 +38,49 @@ export default function Footer(props: {
 
   // 添加/取消收藏
   const toggleFavorite = () => {
-    let newFavorite = favorite.filter((x) => x.id) || [];
-    if (favorite?.find((record: { id: number }) => record.id === props.id)) {
-      newFavorite = favorite.filter((record) => record.id !== props.id);
-    }
+    const newFavorite = favorite?.filter((record) => record?.id && record?.id !== props.id) || [];
     if (!isFavorite) {
       newFavorite.unshift({
         ...props.mainPost,
         createTime: Date.now(),
+        tags: [],
       });
     }
     setFavorite(newFavorite);
+    return newFavorite;
   };
 
+  const onTagsChange = (tags: string[]) => {
+    if (currentFavorite) {
+      setFavorite(
+        favorite.map((record) => {
+          if (record.id === currentFavorite.id) {
+            return {
+              ...record,
+              tags,
+            };
+          }
+          return record;
+        })
+      );
+    } else {
+      const newFavorite = favorite?.filter((record) => record?.id && record?.id !== props.id) || [];
+      newFavorite.unshift({
+        ...props.mainPost,
+        createTime: Date.now(),
+        tags: [],
+      });
+      setFavorite(newFavorite);
+    }
+  };
   const items = [
     {
       label: "收藏",
       icon: isFavorite ? "heart" : "heart-o",
       handler: toggleFavorite,
+      longPressHandler: () => {
+        setShowTagModal(true);
+      },
     },
     {
       label: "分享",
@@ -85,6 +113,7 @@ export default function Footer(props: {
         label={item.label}
         icon={item.icon as React.ComponentProps<typeof FontAwesome>["name"]}
         handler={item.handler}
+        longPressHandler={item.longPressHandler}
         disabled={props.disabled}
       />
     ));
@@ -106,7 +135,9 @@ export default function Footer(props: {
   }, [props.mainPost]);
 
   useEffect(() => {
-    setIsFavorite(Boolean(favorite.find((x) => x.id === props.mainPost?.id)));
+    const currentFavorite = favorite.find((x) => x.id === props.mainPost?.id);
+    setIsFavorite(Boolean(currentFavorite));
+    setCurrentFavorite(currentFavorite);
   }, [favorite, props.mainPost]);
 
   useEffect(() => {
@@ -118,15 +149,26 @@ export default function Footer(props: {
   }, [props.visible]);
 
   return (
-    <Animated.View style={[styles.footerWrapper, animatedStyle, { bottom: insets.bottom }]}>
-      <View
-        style={{
-          ...styles.footer,
-          borderTopColor: tintColor,
-        }}>
-        {FooterItems}
-      </View>
-    </Animated.View>
+    <>
+      <TagModal
+        visible={showTagModal}
+        initialValue={currentFavorite?.tags || []}
+        onValueChange={onTagsChange}
+        onOpen={() => {
+          setShowTagModal(true);
+        }}
+        onDismiss={() => setShowTagModal(false)}
+      />
+      <Animated.View style={[styles.footerWrapper, animatedStyle, { bottom: insets.bottom }]}>
+        <View
+          style={{
+            ...styles.footer,
+            borderTopColor: tintColor,
+          }}>
+          {FooterItems}
+        </View>
+      </Animated.View>
+    </>
   );
 }
 
@@ -134,6 +176,7 @@ function FooterItem(props: {
   label: string;
   icon: React.ComponentProps<typeof FontAwesome>["name"];
   handler: () => void;
+  longPressHandler?: () => void;
   disabled: boolean;
 }) {
   const tintColor = useThemeColor({}, "tint");
@@ -143,6 +186,10 @@ function FooterItem(props: {
       onPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         props.handler();
+      }}
+      onLongPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        props.longPressHandler?.();
       }}
       disabled={props.disabled}
       hitSlop={{ left: 20, right: 20, top: 20, bottom: 20 }}>
