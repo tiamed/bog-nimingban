@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo, createContext, useRef } from
 import { StyleSheet, FlatList, Platform, FlatListProps } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import { useIsMounted } from "usehooks-ts";
 
 import ActionModal from "./ActionModal";
 import CheckUpdate from "./CheckUpdate";
@@ -64,6 +65,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   const setDraft = useSetAtom(draftAtom);
   const setSelection = useSetAtom(selectionAtom);
   const forumsIdMap = useForumsIdMap();
+  const isMounted = useIsMounted();
 
   const listRef = useRef<FlatList>(null);
 
@@ -97,6 +99,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
     jump: boolean = false,
     updatePosition: boolean = false
   ) => {
+    if (!isMounted) return;
     try {
       setIsLoading(true);
       const {
