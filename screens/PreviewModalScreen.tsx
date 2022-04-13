@@ -5,6 +5,7 @@ import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
 import { useAtom } from "jotai";
 import React, { useState } from "react";
+import { ActivityIndicator } from "react-native";
 import { FloatingAction } from "react-native-floating-action";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { IImageInfo } from "react-native-image-zoom-viewer/built/image-viewer.type";
@@ -23,6 +24,7 @@ export default function PreviewModalScreen() {
   const [index, setIndex] = useState(previewIndex);
   const activeColor = useThemeColor({}, "active");
   const inactiveColor = useThemeColor({}, "inactive");
+  const tintColor = useThemeColor({}, "tint");
 
   const getImage = async (callback: (uri: string) => any) => {
     if (isLoading) {
@@ -70,6 +72,9 @@ export default function PreviewModalScreen() {
         onSwipeDown={() => navigation.goBack()}
         saveToLocalByLongPress={false}
         onChange={(index) => setIndex(index!)}
+        loadingRender={() => (
+          <ActivityIndicator size="large" color={tintColor} style={{ marginLeft: 10 }} />
+        )}
       />
       <FloatingAction
         color={isLoading ? inactiveColor : activeColor}

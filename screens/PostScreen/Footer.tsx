@@ -7,6 +7,8 @@ import { StyleSheet, TouchableOpacity, Share } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { footerLayoutAtom } from "../../atoms/index";
+
 import { Post } from "@/api";
 import { favoriteAtom, showPageModalAtom } from "@/atoms/index";
 import Icon from "@/components/Icon";
@@ -14,6 +16,13 @@ import TagModal from "@/components/TagModal";
 import { Text, View, useThemeColor } from "@/components/Themed";
 import Urls from "@/constants/Urls";
 import { UserFavorite } from "@/screens/FavoriteScreen";
+
+interface FooterItemOption {
+  label: string;
+  icon: string;
+  handler?: () => any;
+  longPressHandler?: () => any;
+}
 
 export default function Footer(props: {
   id: number;
@@ -23,8 +32,10 @@ export default function Footer(props: {
 }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showTagModal, setShowTagModal] = useState(false);
-  const [favorite, setFavorite] = useAtom<UserFavorite[], UserFavorite[], void>(favoriteAtom);
   const [currentFavorite, setCurrentFavorite] = useState<UserFavorite>();
+  const [items, setItems] = useState<FooterItemOption[]>([]);
+  const [favorite, setFavorite] = useAtom<UserFavorite[], UserFavorite[], void>(favoriteAtom);
+  const [footerLayout] = useAtom<string[]>(footerLayoutAtom);
   const setShowPageModal = useSetAtom(showPageModalAtom);
   const navigation = useNavigation();
   const tintColor = useThemeColor({}, "tint");
@@ -73,7 +84,7 @@ export default function Footer(props: {
       setFavorite(newFavorite);
     }
   };
-  const items = [
+  const defaultItems = [
     {
       label: "收藏",
       icon: isFavorite ? "heart" : "heart-o",
@@ -105,6 +116,18 @@ export default function Footer(props: {
       },
     },
   ];
+
+  useEffect(() => {
+    if (footerLayout?.length) {
+      setItems(
+        footerLayout.map(
+          (label) => defaultItems.find((item) => item.label === label) as FooterItemOption
+        )
+      );
+    } else {
+      setItems(defaultItems);
+    }
+  }, [footerLayout]);
 
   const FooterItems = useMemo(() => {
     return items.map((item) => (
@@ -175,7 +198,7 @@ export default function Footer(props: {
 function FooterItem(props: {
   label: string;
   icon: React.ComponentProps<typeof FontAwesome>["name"];
-  handler: () => void;
+  handler?: () => void;
   longPressHandler?: () => void;
   disabled: boolean;
 }) {
@@ -185,7 +208,7 @@ function FooterItem(props: {
     <TouchableOpacity
       onPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        props.handler();
+        props.handler?.();
       }}
       onLongPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);

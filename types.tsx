@@ -33,6 +33,7 @@ export type RootStackParamList = {
   LayoutSettings: undefined;
   BlackList: undefined;
   About: undefined;
+  FooterLayout: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

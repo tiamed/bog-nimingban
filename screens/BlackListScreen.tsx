@@ -4,9 +4,9 @@ import { StyleSheet, FlatList, Alert } from "react-native";
 
 import { blackListPostsAtom } from "@/atoms";
 import { View, Text, Button } from "@/components/Themed";
-import { RootTabScreenProps } from "@/types";
+import { RootStackScreenProps } from "@/types";
 
-export default function FavoriteScreen({ route, navigation }: RootTabScreenProps<"Favorite">) {
+export default function BlackListScreen({ route, navigation }: RootStackScreenProps<"BlackList">) {
   const [blackListPosts] = useAtom<number[]>(blackListPostsAtom);
   const renderItem = ({ item }: { item: number }) => <Item key={item} id={item} />;
   const keyExtractor = (item: number) => item.toString();

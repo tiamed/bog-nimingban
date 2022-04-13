@@ -2,6 +2,7 @@ import { useSetAtom } from "jotai";
 import { useContext, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
+import { JumpToSettings } from "../ProfileScreen/Settings";
 import ColorPickerModal from "./ColorPickerModal";
 
 import {
@@ -32,6 +33,7 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
   return (
     <ScrollView style={{ flex: 1, flexDirection: "column" }}>
       <View style={styles.container}>
+        <JumpToSettings title="底栏按钮调整" navigateTo="FooterLayout" />
         <SettingPicker
           title="字体大小"
           atom={sizeAtom}

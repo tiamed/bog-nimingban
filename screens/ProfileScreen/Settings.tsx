@@ -39,7 +39,7 @@ function SettingItem(props: { title: string; onPress: () => void }) {
   );
 }
 
-function JumpToSettings(props: { title: string; navigateTo: keyof RootStackParamList }) {
+export function JumpToSettings(props: { title: string; navigateTo: keyof RootStackParamList }) {
   const navigation = useNavigation();
   return (
     <SettingItem
