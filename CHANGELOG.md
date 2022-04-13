@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.24](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.22...v1.0.0-alpha.24) (2022-04-13)
+
+
+### Features
+
+* adjustable footer item order ([5a22b8d](https://github.com/tiamed/bog-nimingban/commit/5a22b8d2cec51de30ce41c050fa07c568532645e))
+* favorite tag ([0e4b1d5](https://github.com/tiamed/bog-nimingban/commit/0e4b1d513e4215fa6fe00ea934137e2228950a2a))
+
+
+### Bug Fixes
+
+* disable deleting selected tag ([d78e212](https://github.com/tiamed/bog-nimingban/commit/d78e212069203e368a77206d5a4a606a4f3a4f54))
+* footer add tag ([45cbc0a](https://github.com/tiamed/bog-nimingban/commit/45cbc0a3cc9632c07ad3b08f2b555a3708258ec1))
+* keyboard not hiding when showing emoticons ([fff3666](https://github.com/tiamed/bog-nimingban/commit/fff3666d2721f2cd2187910dd7409a45de542337))
+* memory leak in post screen ([0546a6d](https://github.com/tiamed/bog-nimingban/commit/0546a6d26344ce45aa951562016f106f00929b9c))
+* navigation from clipboard ([b115567](https://github.com/tiamed/bog-nimingban/commit/b115567182a49a328bfb567acca5ba7f3fd2f92e))
+* **post:** desc order onview ([0ee193d](https://github.com/tiamed/bog-nimingban/commit/0ee193d5062a50b08ed3488717a7467af35f541c))
+
 ## [1.0.0-alpha.23](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.21...v1.0.0-alpha.23) (2022-04-12)
 
 
