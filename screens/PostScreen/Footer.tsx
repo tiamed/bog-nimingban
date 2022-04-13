@@ -3,9 +3,11 @@ import { useNavigation } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 import { useAtom, useSetAtom } from "jotai";
 import React, { useState, useEffect, useMemo } from "react";
-import { StyleSheet, TouchableOpacity, Share } from "react-native";
+import { StyleSheet, TouchableOpacity, Share, Alert } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { footerLayoutAtom } from "../../atoms/index";
 
 import { Post } from "@/api";
 import { favoriteAtom, showPageModalAtom } from "@/atoms/index";
@@ -23,8 +25,9 @@ export default function Footer(props: {
 }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showTagModal, setShowTagModal] = useState(false);
-  const [favorite, setFavorite] = useAtom<UserFavorite[], UserFavorite[], void>(favoriteAtom);
   const [currentFavorite, setCurrentFavorite] = useState<UserFavorite>();
+  const [favorite, setFavorite] = useAtom<UserFavorite[], UserFavorite[], void>(favoriteAtom);
+  const [footerLayout] = useAtom<string[]>(footerLayoutAtom);
   const setShowPageModal = useSetAtom(showPageModalAtom);
   const navigation = useNavigation();
   const tintColor = useThemeColor({}, "tint");
@@ -48,6 +51,25 @@ export default function Footer(props: {
     }
     setFavorite(newFavorite);
     return newFavorite;
+  };
+
+  const confirmToggleFavorite = () => {
+    if (isFavorite) {
+      Haptics.selectionAsync();
+      Alert.alert("提示", "确定要取消收藏吗？", [
+        {
+          text: "取消",
+        },
+        {
+          text: "确定",
+          onPress: () => {
+            toggleFavorite();
+          },
+        },
+      ]);
+    } else {
+      toggleFavorite();
+    }
   };
 
   const onTagsChange = (tags: string[]) => {
@@ -77,7 +99,7 @@ export default function Footer(props: {
     {
       label: "收藏",
       icon: isFavorite ? "heart" : "heart-o",
-      handler: toggleFavorite,
+      handler: confirmToggleFavorite,
       longPressHandler: () => {
         setShowTagModal(true);
       },
@@ -107,16 +129,20 @@ export default function Footer(props: {
   ];
 
   const FooterItems = useMemo(() => {
-    return items.map((item) => (
-      <FooterItem
-        key={item.label}
-        label={item.label}
-        icon={item.icon as React.ComponentProps<typeof FontAwesome>["name"]}
-        handler={item.handler}
-        longPressHandler={item.longPressHandler}
-        disabled={props.disabled}
-      />
-    ));
+    return items
+      .sort((a, b) => {
+        return footerLayout.indexOf(a.label) - footerLayout.indexOf(b.label);
+      })
+      .map((item) => (
+        <FooterItem
+          key={item.label}
+          label={item.label}
+          icon={item.icon as React.ComponentProps<typeof FontAwesome>["name"]}
+          handler={item.handler}
+          longPressHandler={item.longPressHandler}
+          disabled={props.disabled}
+        />
+      ));
   }, [items, props.disabled]);
 
   useEffect(() => {
@@ -175,7 +201,7 @@ export default function Footer(props: {
 function FooterItem(props: {
   label: string;
   icon: React.ComponentProps<typeof FontAwesome>["name"];
-  handler: () => void;
+  handler?: () => void;
   longPressHandler?: () => void;
   disabled: boolean;
 }) {
@@ -185,7 +211,7 @@ function FooterItem(props: {
     <TouchableOpacity
       onPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        props.handler();
+        props.handler?.();
       }}
       onLongPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);

@@ -110,3 +110,10 @@ export const tintColorAtom = atomWithAsyncStorage("tintColor", "#FC88B3");
 export const highlightColorAtom = atomWithAsyncStorage("highlightColor", "#FD4C5D");
 
 export const accurateTimeFormatAtom = atomWithAsyncStorage("accurateTimeFormat", false);
+
+export const footerLayoutAtom = atomWithAsyncStorage("footerLayout", [
+  "收藏",
+  "分享",
+  "回复",
+  "跳页",
+]);

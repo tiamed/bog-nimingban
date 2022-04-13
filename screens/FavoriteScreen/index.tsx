@@ -36,7 +36,7 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
       />
     );
 
-  const keyExtractor = (item: Post) => item.id.toString();
+  const keyExtractor = (item: Post) => item.id?.toString();
 
   const onTagsChange = (tags: string[]) => {
     if (currentFavorite) {
