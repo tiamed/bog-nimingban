@@ -70,6 +70,12 @@ export default function TagModal(props: {
         text1: "该标签有关联的收藏，不能删除",
         position: "top",
       });
+    } else if (selectedValue.includes(item.id)) {
+      Toast.show({
+        type: "error",
+        text1: "不能删除选中的标签",
+        position: "top",
+      });
     } else {
       setTags(tags.filter((tag) => tag.id !== item.id));
     }
