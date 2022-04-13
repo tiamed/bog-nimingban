@@ -76,7 +76,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   const onViewRef = useRef<FlatListProps<ReplyWithPage>["onViewableItemsChanged"]>(
     ({ viewableItems }) => {
       if (viewableItems.length) {
-        const last = viewableItems[viewableItems.length - 1];
+        const last = viewableItems[order ? 0 : viewableItems.length - 1];
         const { key, item } = last;
         const position = Number(key);
         if (lastPosition !== position && position) {
