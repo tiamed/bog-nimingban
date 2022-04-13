@@ -16,6 +16,7 @@ import {
   useNavigationState,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { StackNavigationProp } from "@react-navigation/stack";
 import * as Clipboard from "expo-clipboard";
 import { useAtom, useSetAtom } from "jotai";
 import * as React from "react";
@@ -72,7 +73,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const appState = useRef(AppState.currentState);
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
 
   const onClipboardChange = (threadId: string | undefined, history: UserHistory[]): void => {
     const shouldShowConfirm =
@@ -89,7 +90,7 @@ function RootNavigator() {
       {
         text: "确认",
         onPress: () => {
-          navigation.navigate("Post", {
+          navigation.push("Post", {
             id: Number(threadId),
             title: `Po.${threadId}`,
           });
