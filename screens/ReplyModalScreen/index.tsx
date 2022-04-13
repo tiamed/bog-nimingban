@@ -1,6 +1,6 @@
 import * as ImagePicker from "expo-image-picker";
 import { useAtom, useSetAtom } from "jotai";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   Platform,
   StyleSheet,
@@ -64,7 +64,7 @@ export default function ReplyModalScreen({
   const forums = useForums();
   const forumsIdMap = useForumsIdMap();
   const BASE_SIZE = useContext(SizeContext);
-  const inputRef = React.useRef<any>(null);
+  const inputRef = useRef<any>(null);
   const close = () => {
     navigation.goBack();
   };
@@ -201,7 +201,7 @@ export default function ReplyModalScreen({
     Keyboard.addListener("keyboardDidShow", () => {
       setShowEmoticonPicker(false);
     });
-    return Keyboard.removeAllListeners("keyboardDidShow");
+    return () => Keyboard.removeAllListeners("keyboardDidShow");
   }, []);
 
   return (
