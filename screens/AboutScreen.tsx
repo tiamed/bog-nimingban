@@ -1,8 +1,7 @@
 import { Linking, StyleSheet, TouchableHighlight } from "react-native";
-import Toast from "react-native-toast-message";
 
 import { View, Text, useThemeColor } from "@/components/Themed";
-import { checkUpdate } from "@/tasks/checkAppUpdate";
+import { manualUpdate } from "@/tasks/checkAppUpdate";
 import { RootStackScreenProps } from "@/types";
 
 export default function AboutScreen({ route, navigation }: RootStackScreenProps<"About">) {
@@ -29,18 +28,7 @@ export default function AboutScreen({ route, navigation }: RootStackScreenProps<
         }}>
         <Text style={{ color: tintColor }}>Github</Text>
       </TouchableHighlight>
-      <TouchableHighlight
-        underlayColor={underlayColor}
-        style={styles.item}
-        onPress={async () => {
-          const result = await checkUpdate();
-          if (!result) {
-            Toast.show({
-              type: "info",
-              text1: "暂无更新",
-            });
-          }
-        }}>
+      <TouchableHighlight underlayColor={underlayColor} style={styles.item} onPress={manualUpdate}>
         <Text style={{ color: tintColor }}>检查更新</Text>
       </TouchableHighlight>
     </View>
