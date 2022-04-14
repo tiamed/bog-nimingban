@@ -1,13 +1,13 @@
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-import Modal from "react-native-modal";
 import Toast from "react-native-toast-message";
 
 import { showAddModalAtom, Cookie } from "./common";
 
 import { importCookie } from "@/api";
 import { cookiesAtom } from "@/atoms/index";
+import Modal from "@/components/Modal";
 import Picker from "@/components/Picker";
 import { Button, Text, useThemeColor, View, TextInput } from "@/components/Themed";
 import Errors from "@/constants/Errors";
@@ -102,12 +102,7 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
   }, [props.cookie]);
 
   return (
-    <Modal
-      isVisible={visible}
-      onBackdropPress={close}
-      backdropOpacity={0.3}
-      backdropTransitionOutTiming={0}
-      avoidKeyboard>
+    <Modal isVisible={visible} onBackdropPress={close} avoidKeyboard>
       <View style={styles.modal}>
         <Text style={styles.title}>{props.cookie ? "修改饼干" : "添加饼干"}</Text>
         <TextInput

@@ -1,9 +1,10 @@
 import { Picker as DefaultPicker } from "@react-native-picker/picker";
 import { useEffect, useState } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
-import Modal from "react-native-modal";
 
 import { useThemeColor, Text, Button, View } from "./Themed";
+
+import Modal from "@/components/Modal";
 
 export default function Picker(props: {
   selectedValue: any;
@@ -49,12 +50,7 @@ export default function Picker(props: {
           onPress={() => setVisible(true)}>
           <Text style={{ color: tintColor }}>{selectedLabel}</Text>
         </TouchableOpacity>
-        <Modal
-          isVisible={visible}
-          onBackdropPress={close}
-          backdropOpacity={0.3}
-          backdropTransitionOutTiming={0}
-          style={styles.modalWrapper}>
+        <Modal isVisible={visible} onBackdropPress={close} style={styles.modalWrapper}>
           <View style={styles.modal}>
             <View style={styles.header}>
               <Button title="确认" onPress={close} style={styles.button} />

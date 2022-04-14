@@ -6,11 +6,11 @@ import * as Sharing from "expo-sharing";
 import { useAtom } from "jotai";
 import { useState } from "react";
 import { Alert, StyleSheet } from "react-native";
-import Modal from "react-native-modal";
 import Toast from "react-native-toast-message";
 
 import { showBackupModalAtom, Cookie } from "./common";
 
+import Modal from "@/components/Modal";
 import { Button, Text, View, TextInput } from "@/components/Themed";
 
 const BACKUP_KEYS = ["cookies", "favorite", "history", "replyHistory", "blackListPosts"];
@@ -102,12 +102,7 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
   };
 
   return (
-    <Modal
-      isVisible={visible}
-      onBackdropPress={close}
-      backdropOpacity={0.3}
-      backdropTransitionOutTiming={0}
-      avoidKeyboard>
+    <Modal isVisible={visible} onBackdropPress={close} avoidKeyboard>
       <View style={styles.modal}>
         <Text style={styles.title}>备份</Text>
         <TextInput

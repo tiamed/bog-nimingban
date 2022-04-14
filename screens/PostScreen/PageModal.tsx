@@ -2,9 +2,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import Modal from "react-native-modal";
 
 import { showPageModalAtom } from "@/atoms/index";
+import Modal from "@/components/Modal";
 import { Text, View, useThemeColor, Button, TextInput } from "@/components/Themed";
 
 export default function PageModal(props: {
@@ -36,8 +36,6 @@ export default function PageModal(props: {
     <Modal
       isVisible={visible}
       onBackdropPress={close}
-      backdropOpacity={0.3}
-      backdropTransitionOutTiming={0}
       animationInTiming={1}
       animationOutTiming={1}
       avoidKeyboard>

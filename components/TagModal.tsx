@@ -2,7 +2,6 @@ import * as Haptics from "expo-haptics";
 import { atom, useAtom, useSetAtom } from "jotai";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FlatList, InteractionManager, StyleSheet, TouchableOpacity } from "react-native";
-import Modal from "react-native-modal";
 import Toast from "react-native-toast-message";
 
 import { UserFavorite } from "../screens/FavoriteScreen/index";
@@ -10,6 +9,7 @@ import Icon from "./Icon";
 import { SizeContext } from "./ThemeContextProvider";
 
 import { accurateTimeFormatAtom, favoriteAtom, favoriteTagsAtom } from "@/atoms";
+import Modal from "@/components/Modal";
 import { View, Button, Text, useThemeColor, TextInput } from "@/components/Themed";
 import { formatTime } from "@/utils/format";
 
@@ -98,12 +98,7 @@ export default function TagModal(props: {
 
   return (
     <>
-      <Modal
-        isVisible={props.visible}
-        onBackdropPress={close}
-        backdropOpacity={0.3}
-        backdropTransitionOutTiming={0}
-        style={styles.modalWrapper}>
+      <Modal isVisible={props.visible} onBackdropPress={close} style={styles.modalWrapper}>
         <View style={styles.modal}>
           <View style={styles.header}>
             <Button title="取消" onPress={close} />
@@ -190,8 +185,6 @@ function AddTagModal(props: {
     <Modal
       isVisible={props.visible}
       onBackdropPress={props.onDismiss}
-      backdropOpacity={0.3}
-      backdropTransitionOutTiming={0}
       style={styles.modalWrapper}
       avoidKeyboard>
       <View style={[styles.modal, { height: 200 }]}>

@@ -4,11 +4,11 @@ import { decode } from "html-entities";
 import { convert } from "html-to-text";
 import { useAtom } from "jotai";
 import { StyleSheet, TouchableOpacity, Alert } from "react-native";
-import Modal from "react-native-modal";
 import Toast from "react-native-toast-message";
 
 import { Reply, deleteReply } from "@/api";
 import { cookiesAtom, showActionModalAtom } from "@/atoms/index";
+import Modal from "@/components/Modal";
 import { Text, View } from "@/components/Themed";
 import Errors from "@/constants/Errors";
 import { Cookie } from "@/screens/ProfileScreen/Cookie";
@@ -68,8 +68,6 @@ export default function ActionModal(props: { item: Reply; postId: number; forumI
     <Modal
       isVisible={visible}
       onBackdropPress={close}
-      backdropOpacity={0.3}
-      backdropTransitionOutTiming={0}
       animationInTiming={1}
       animationOutTiming={1}
       style={styles.modalWrapper}>

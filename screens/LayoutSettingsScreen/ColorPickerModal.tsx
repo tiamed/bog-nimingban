@@ -1,10 +1,10 @@
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-import Modal from "react-native-modal";
 import ColorPicker from "react-native-wheel-color-picker";
 
 import { showColorPickerModalAtom } from "@/atoms";
+import Modal from "@/components/Modal";
 import { Button, TextInput, View } from "@/components/Themed";
 
 const PALETTE = [
@@ -39,12 +39,7 @@ export default function ColorPickerModal(props: { atom: any }) {
     }
   }, [selectedColor]);
   return (
-    <Modal
-      isVisible={visible}
-      onBackdropPress={close}
-      backdropOpacity={0.3}
-      backdropTransitionOutTiming={0}
-      avoidKeyboard>
+    <Modal isVisible={visible} onBackdropPress={close} avoidKeyboard>
       <View style={styles.modal}>
         <ColorPicker
           color={selectedColor as string}
