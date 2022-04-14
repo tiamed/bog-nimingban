@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.25](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.24...v1.0.0-alpha.25) (2022-04-14)
+
+
+### Features
+
+* add switch for listening post updates ([25e38de](https://github.com/tiamed/bog-nimingban/commit/25e38de851e20db3c6d3d936fe2657bad0384e42))
+
+
+### Bug Fixes
+
+* android modal uncovered space ([6ec1e7f](https://github.com/tiamed/bog-nimingban/commit/6ec1e7f57996b25941ce851c12b83100fd03a148))
+* manual update ([462cbdb](https://github.com/tiamed/bog-nimingban/commit/462cbdb0b7669bf6165a521ecf073b0e7a287f13))
+* style issue ([4f83123](https://github.com/tiamed/bog-nimingban/commit/4f83123aaca7e7dcb9725540fb37c84d1cc991d5))
+
 ## [1.0.0-alpha.24](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.22...v1.0.0-alpha.24) (2022-04-13)
 
 
