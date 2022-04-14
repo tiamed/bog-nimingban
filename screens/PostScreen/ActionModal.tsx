@@ -7,18 +7,23 @@ import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import Toast from "react-native-toast-message";
 
 import { Reply, deleteReply } from "@/api";
-import { cookiesAtom, showActionModalAtom } from "@/atoms/index";
+import { cookiesAtom } from "@/atoms/index";
 import Modal from "@/components/Modal";
 import { Text, View } from "@/components/Themed";
 import Errors from "@/constants/Errors";
 import { Cookie } from "@/screens/ProfileScreen/Cookie";
 
-export default function ActionModal(props: { item: Reply; postId: number; forumId: number }) {
-  const [visible, setVisible] = useAtom(showActionModalAtom);
+export default function ActionModal(props: {
+  item: Reply;
+  postId: number;
+  forumId: number;
+  visible: boolean;
+  onClose: () => void;
+}) {
   const [cookies] = useAtom<Cookie[]>(cookiesAtom);
   const navigation = useNavigation();
   const close = () => {
-    setVisible(false);
+    props.onClose();
   };
   const onReply = () => {
     close();
@@ -66,7 +71,7 @@ export default function ActionModal(props: { item: Reply; postId: number; forumI
 
   return (
     <Modal
-      isVisible={visible}
+      isVisible={props.visible}
       onBackdropPress={close}
       animationInTiming={1}
       animationOutTiming={1}

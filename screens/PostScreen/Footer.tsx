@@ -1,7 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import React, { useState, useEffect, useMemo } from "react";
 import { StyleSheet, TouchableOpacity, Share, Alert } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { footerLayoutAtom } from "../../atoms/index";
 
 import { Post } from "@/api";
-import { favoriteAtom, showPageModalAtom } from "@/atoms/index";
+import { favoriteAtom } from "@/atoms/index";
 import Icon from "@/components/Icon";
 import TagModal from "@/components/TagModal";
 import { Text, View, useThemeColor } from "@/components/Themed";
@@ -22,13 +22,13 @@ export default function Footer(props: {
   mainPost: Post;
   visible: boolean;
   disabled: boolean;
+  openPageModal: () => void;
 }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showTagModal, setShowTagModal] = useState(false);
   const [currentFavorite, setCurrentFavorite] = useState<UserFavorite>();
   const [favorite, setFavorite] = useAtom<UserFavorite[], UserFavorite[], void>(favoriteAtom);
   const [footerLayout] = useAtom<string[]>(footerLayoutAtom);
-  const setShowPageModal = useSetAtom(showPageModalAtom);
   const navigation = useNavigation();
   const tintColor = useThemeColor({}, "tint");
   const height = useSharedValue(50);
@@ -123,7 +123,7 @@ export default function Footer(props: {
       label: "跳页",
       icon: "bookmark",
       handler: () => {
-        setShowPageModal(true);
+        props.openPageModal();
       },
     },
   ];

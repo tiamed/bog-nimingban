@@ -16,7 +16,6 @@ import {
   historyAtom,
   previewsAtom,
   draftAtom,
-  showActionModalAtom,
   postIdRefreshingAtom,
   postFilteredAtom,
   orderAtom,
@@ -54,6 +53,8 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   const [mainPost, setMainPost] = useState<Post>({} as Post);
   const [lastPosition, setLastPosition] = useState(0);
   const [currentHistory, setCurrentHistory] = useState({} as UserHistory);
+  const [showActionModal, setShowActionModal] = useState(false);
+  const [showPageModal, setShowPageModal] = useState(false);
 
   const [postIdRefreshing, setPostIdRefreshing] = useAtom(postIdRefreshingAtom);
   const setPreviews = useSetAtom(previewsAtom);
@@ -61,7 +62,6 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   const [postFiltered] = useAtom(postFilteredAtom);
   const [order] = useAtom(orderAtom);
 
-  const setShowActionModal = useSetAtom(showActionModalAtom);
   const setDraft = useSetAtom(draftAtom);
   const setSelection = useSetAtom(selectionAtom);
   const forumsIdMap = useForumsIdMap();
@@ -406,10 +406,23 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
           mainPost={mainPost}
           visible={isShowFooter}
           disabled={isLoading || isRefreshing}
+          openPageModal={() => setShowPageModal(true)}
         />
 
-        <PageModal index={currentPage} total={mainPost?.reply_count} loadData={loadData} />
-        <ActionModal item={focusItem} postId={mainPost.id} forumId={mainPost.forum} />
+        <PageModal
+          index={currentPage}
+          total={mainPost?.reply_count}
+          loadData={loadData}
+          visible={showPageModal}
+          onClose={() => setShowPageModal(false)}
+        />
+        <ActionModal
+          visible={showActionModal}
+          onClose={() => setShowActionModal(false)}
+          item={focusItem}
+          postId={mainPost.id}
+          forumId={mainPost.forum}
+        />
         <CheckUpdate id={mainPost.id} count={mainPost.reply_count} onUpdate={onUpdate} />
       </View>
     </MainPostContext.Provider>

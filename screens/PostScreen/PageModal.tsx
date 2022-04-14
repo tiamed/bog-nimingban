@@ -1,9 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useAtom } from "jotai";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
-import { showPageModalAtom } from "@/atoms/index";
 import Modal from "@/components/Modal";
 import { Text, View, useThemeColor, Button, TextInput } from "@/components/Themed";
 
@@ -11,9 +9,10 @@ export default function PageModal(props: {
   index: number;
   total: number;
   loadData: (page: number, jump: boolean, updatePosition: boolean) => void;
+  visible: boolean;
+  onClose: () => void;
 }) {
   const { index, total } = props;
-  const [visible, setVisible] = useAtom(showPageModalAtom);
   const [input, setInput] = useState("1");
 
   useEffect(() => {
@@ -21,7 +20,7 @@ export default function PageModal(props: {
   }, [index]);
 
   const close = () => {
-    setVisible(false);
+    props.onClose();
   };
   const confirm = () => {
     if (input) {
@@ -34,7 +33,7 @@ export default function PageModal(props: {
   };
   return (
     <Modal
-      isVisible={visible}
+      isVisible={props.visible}
       onBackdropPress={close}
       animationInTiming={1}
       animationOutTiming={1}

@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { useSetAtom } from "jotai";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { useIsMounted } from "usehooks-ts";
 
@@ -20,7 +20,6 @@ export default function ReplyPostWithoutData(props: {
   level: number;
   onLoaded?: () => void;
 }) {
-  const mounted = useRef(false);
   const [data, setData] = useState<Reply>({ content: "加载中..." } as Reply);
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
@@ -46,19 +45,11 @@ export default function ReplyPostWithoutData(props: {
     }
   };
   useEffect(() => {
-    mounted.current = true;
-
-    if (mounted.current) {
-      loadData().then(() => {
-        if (props.onLoaded) {
-          props.onLoaded();
-        }
-      });
-    }
-
-    return () => {
-      mounted.current = false;
-    };
+    loadData().then(() => {
+      if (props.onLoaded) {
+        props.onLoaded();
+      }
+    });
   }, [props.id]);
   return (
     <View style={{ flexDirection: "row", width: "100%" }}>
