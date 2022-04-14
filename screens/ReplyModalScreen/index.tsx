@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import { useDebouncedCallback } from "use-debounce/lib";
 
 import EmoticonPicker from "./EmoticonPicker";
 import Footer from "./Footer";
@@ -339,8 +340,14 @@ export default function ReplyModalScreen({
               },
               { icon: "smile-o", onPress: addEmoji },
               { icon: "image", onPress: addImage },
-              { icon: "dot-circle-o", onPress: addDice },
-              { icon: "send", onPress: submit },
+              {
+                icon: "dot-circle-o",
+                onPress: useDebouncedCallback(addDice, 500, { leading: true, trailing: false }),
+              },
+              {
+                icon: "send",
+                onPress: useDebouncedCallback(submit, 1000, { leading: true, trailing: false }),
+              },
             ]}
           />
         </View>
