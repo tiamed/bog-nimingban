@@ -165,9 +165,11 @@ function AddTagModal(props: {
 
   useEffect(() => {
     if (props.visible) {
-      inputRef.current?.focus();
+      InteractionManager.runAfterInteractions(() => {
+        inputRef.current?.focus();
+      });
     }
-  }, [props.visible, inputRef.current]);
+  }, [props.visible]);
 
   useEffect(() => {
     if (current?.name?.length) {
@@ -186,9 +188,7 @@ function AddTagModal(props: {
       isVisible={props.visible}
       onBackdropPress={onCancel}
       style={styles.modalWrapper}
-      animationInTiming={1}
-      animationOutTiming={1}
-      backdropTransitionInTiming={1000}
+      backdropTransitionInTiming={0}
       avoidKeyboard>
       <View style={[styles.modal, { height: 200 }]}>
         <View style={styles.header}>
