@@ -157,17 +157,17 @@ function AddTagModal(props: {
     setInput("");
   };
 
+  const onCancel = () => {
+    inputRef.current?.blur();
+    props.onDismiss();
+    setInput("");
+  };
+
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
     if (props.visible) {
-      InteractionManager.runAfterInteractions(() => {
-        inputRef.current?.focus();
-      });
+      inputRef.current?.focus();
     }
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [props.visible]);
+  }, [props.visible, inputRef.current]);
 
   useEffect(() => {
     if (current?.name?.length) {
@@ -184,12 +184,15 @@ function AddTagModal(props: {
   return (
     <Modal
       isVisible={props.visible}
-      onBackdropPress={props.onDismiss}
+      onBackdropPress={onCancel}
       style={styles.modalWrapper}
+      animationInTiming={1}
+      animationOutTiming={1}
+      backdropTransitionInTiming={1000}
       avoidKeyboard>
       <View style={[styles.modal, { height: 200 }]}>
         <View style={styles.header}>
-          <Button title="取消" onPress={props.onDismiss} />
+          <Button title="取消" onPress={onCancel} />
           <Text>{current?.id ? "编辑" : "新建"}收藏标签</Text>
           <Button title="确认" onPress={onConfirm} />
         </View>
