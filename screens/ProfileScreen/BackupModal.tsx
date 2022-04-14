@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    marginVertical: 10,
+    marginBottom: 10,
   },
   modal: {
     flexDirection: "column",

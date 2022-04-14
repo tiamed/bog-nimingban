@@ -162,8 +162,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     overflow: "hidden",
-    padding: 20,
-    paddingVertical: 40,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   input: {
     margin: 2,
@@ -185,12 +185,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   pickerWrapper: {
-    minHeight: 60,
-    maxHeight: 60,
     marginBottom: 10,
     flexDirection: "row",
     alignItems: "center",
-    flex: 1,
     overflow: "hidden",
   },
   pickerLabel: {

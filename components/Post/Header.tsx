@@ -66,7 +66,7 @@ export default function Header(props: {
           flexDirection: "row",
           justifyContent: "space-between",
         }}>
-        <View style={{ flexDirection: "column", flexWrap: "wrap" }}>
+        <View style={{ flexDirection: "column", flexWrap: "wrap", flexShrink: 1 }}>
           {Boolean(props.data.name) && (
             <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
               <Text

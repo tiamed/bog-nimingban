@@ -15,7 +15,7 @@ export default function Picker(props: {
   const backgroundColor = useThemeColor({}, "background");
   const [visible, setVisible] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [selectedLabel, setSelectedLabel] = useState(options[0]?.label || "");
+  const [selectedLabel, setSelectedLabel] = useState("");
   const close = () => {
     setVisible(false);
   };

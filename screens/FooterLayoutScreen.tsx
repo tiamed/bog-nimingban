@@ -20,17 +20,7 @@ export default function FooterLayoutScreen({
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={footerLayout}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        onEndReachedThreshold={0.5}
-        ListEmptyComponent={() => (
-          <View style={styles.empty}>
-            <Text style={styles.emptyText}>暂无屏蔽的串，板块列表中长按可屏蔽串</Text>
-          </View>
-        )}
-      />
+      <FlatList data={footerLayout} renderItem={renderItem} keyExtractor={keyExtractor} />
       <Footer visible id={0} mainPost={{} as Post} disabled />
     </View>
   );

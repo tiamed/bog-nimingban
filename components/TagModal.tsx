@@ -244,7 +244,7 @@ function TagItem(props: {
       }}
       style={[styles.item, { borderColor: props.highlight ? tintColor : borderColor }]}>
       <View style={styles.itemBody}>
-        <Text>{props.name}</Text>
+        <Text style={styles.itemLabel}>{props.name}</Text>
         <View style={[styles.itemContent]}>
           {props.time && (
             <>
@@ -312,6 +312,9 @@ const styles = StyleSheet.create({
   itemBody: {
     flexDirection: "column",
     alignItems: "center",
+  },
+  itemLabel: {
+    paddingHorizontal: 80,
   },
   itemContent: {
     flexDirection: "row",
