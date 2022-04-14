@@ -1,3 +1,4 @@
+import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 import { InteractionManager, TouchableOpacity } from "react-native";
 import { Snackbar, DefaultTheme } from "react-native-paper";
@@ -5,13 +6,15 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useInterval } from "usehooks-ts";
 
 import { getPostById } from "@/api";
+import { canCheckUpdateAtom } from "@/atoms";
 import { Text, useThemeColor } from "@/components/Themed";
 
 export default function CheckUpdate(props: { id: number; count: number; onUpdate: () => void }) {
   const [visible, setVisible] = useState(false);
   const [shouldUpdate, setShouldUpdate] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(true);
+  const [isRegistered, setIsRegistered] = useState(false);
   const [count, setCount] = useState(0);
+  const [canCheckUpdate] = useAtom(canCheckUpdateAtom);
   const tintColor = useThemeColor({}, "tint");
   const textColor = useThemeColor({}, "background");
   const insets = useSafeAreaInsets();
@@ -37,6 +40,10 @@ export default function CheckUpdate(props: { id: number; count: number; onUpdate
   useEffect(() => {
     setCount(count);
   }, [props.count]);
+
+  useEffect(() => {
+    setIsRegistered(canCheckUpdate);
+  }, [canCheckUpdate]);
 
   useInterval(
     () => {

@@ -117,3 +117,5 @@ export const footerLayoutAtom = atomWithAsyncStorage("footerLayout", [
   "回复",
   "跳页",
 ]);
+
+export const canCheckUpdateAtom = atomWithAsyncStorage("canCheckUpdate", false);

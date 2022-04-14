@@ -1,4 +1,4 @@
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useContext } from "react";
 
 import { SizeContext } from "./ThemeContextProvider";
@@ -13,4 +13,13 @@ export default function Icon(props: {
 }) {
   const BASE_SIZE = useContext(SizeContext);
   return <FontAwesome size={BASE_SIZE * 1.25} style={{ marginBottom: 0 }} {...props} />;
+}
+
+export function Ionicon(props: {
+  name: React.ComponentProps<typeof Ionicons>["name"];
+  color: string;
+  size?: number;
+}) {
+  const BASE_SIZE = useContext(SizeContext);
+  return <Ionicons size={BASE_SIZE * 1.25} style={{ marginBottom: 0 }} {...props} />;
 }

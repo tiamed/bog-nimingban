@@ -1,8 +1,9 @@
 import { useAtom } from "jotai";
 import { Pressable, StyleSheet } from "react-native";
+import Toast from "react-native-toast-message";
 
-import { orderAtom, postFilteredAtom } from "@/atoms";
-import Icon from "@/components/Icon";
+import { canCheckUpdateAtom, orderAtom, postFilteredAtom } from "@/atoms";
+import { Ionicon } from "@/components/Icon";
 import { useThemeColor } from "@/components/Themed";
 
 export default function HeaderRight() {
@@ -10,23 +11,34 @@ export default function HeaderRight() {
   const inactiveColor = useThemeColor({}, "inactive");
   const [postFiltered, setPostFiltered] = useAtom(postFilteredAtom);
   const [order, setOrder] = useAtom(orderAtom);
+  const [canCheckUpdate, setCanCheckUpdate] = useAtom(canCheckUpdateAtom);
 
   return (
     <>
       <Pressable
         style={styles.item}
         onPress={() => {
-          setOrder(Number(!order));
-          // navigation.
+          Toast.show({
+            type: "success",
+            text1: canCheckUpdate ? "已关闭新回复提醒" : "已开启新回复提醒",
+          });
+          setCanCheckUpdate(!canCheckUpdate);
         }}>
-        <Icon name={order ? "sort-desc" : "sort-asc"} color={activeColor} />
+        <Ionicon name="timer" color={canCheckUpdate ? activeColor : inactiveColor} />
+      </Pressable>
+      <Pressable
+        style={styles.item}
+        onPress={() => {
+          setOrder(Number(!order));
+        }}>
+        <Ionicon name={order ? "caret-down" : "caret-up"} color={activeColor} />
       </Pressable>
       <Pressable
         style={styles.item}
         onPress={() => {
           setPostFiltered(!postFiltered);
         }}>
-        <Icon name="filter" color={postFiltered ? activeColor : inactiveColor} />
+        <Ionicon name="filter" color={postFiltered ? activeColor : inactiveColor} />
       </Pressable>
     </>
   );
