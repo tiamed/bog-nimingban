@@ -31,8 +31,11 @@ export async function manualUpdate() {
   if (!isAvailable) {
     Toast.show({ type: "info", text1: "暂无更新" });
     return;
+  } else {
+    Toast.show({ type: "info", text1: "正在更新...", autoHide: false });
   }
   const { manifest, isNew } = await Updates.fetchUpdateAsync();
+  Toast.hide();
   if (manifest && isNew) {
     Alert.alert(
       "提示",
