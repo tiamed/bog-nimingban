@@ -22,7 +22,7 @@ export default function Footer(props: {
   mainPost: Post;
   visible: boolean;
   disabled: boolean;
-  openPageModal: () => void;
+  openPageModal?: () => void;
 }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showTagModal, setShowTagModal] = useState(false);
@@ -123,7 +123,7 @@ export default function Footer(props: {
       label: "跳页",
       icon: "bookmark",
       handler: () => {
-        props.openPageModal();
+        props.openPageModal?.();
       },
     },
   ];

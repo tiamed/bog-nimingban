@@ -300,9 +300,9 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
 
   // 更新历史记录
   useEffect(() => {
-    const shouldUpate =
+    const shouldUpdate =
       currentHistory.currentPage !== currentPage && currentHistory.position !== lastPosition;
-    if (lastPosition && mainPost.id === route.params.id && shouldUpate) {
+    if (lastPosition && mainPost.id === route.params.id && shouldUpdate) {
       addToHistory();
     }
   }, [currentPage, lastPosition, mainPost]);

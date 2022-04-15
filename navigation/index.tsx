@@ -4,7 +4,6 @@
  *
  */
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -20,20 +19,19 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import * as Clipboard from "expo-clipboard";
 import { useAtom, useSetAtom } from "jotai";
 import * as React from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Alert, AppState, ColorSchemeName, Dimensions, Platform } from "react-native";
 import { PageControlAji } from "react-native-chi-page-control";
 
 import LinkingConfiguration from "./LinkingConfiguration";
 
-import { Post } from "@/api";
 import { historyTabAtom, tabRefreshingAtom } from "@/atoms";
 import DrawerContent from "@/components/DrawerContent";
 import Icon from "@/components/Icon";
 import { useThemeColor } from "@/components/Themed";
 import AboutScreen from "@/screens/AboutScreen";
 import BlackListScreen from "@/screens/BlackListScreen";
-import BrowseHistoryScreen, { UserHistory } from "@/screens/BrowseHistoryScreen";
+import BrowseHistoryScreen from "@/screens/BrowseHistoryScreen";
 import FavoriteScreen from "@/screens/FavoriteScreen";
 import FooterLayoutScreen from "@/screens/FooterLayoutScreen";
 import HomeScreen from "@/screens/HomeScreen";
@@ -75,15 +73,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   const appState = useRef(AppState.currentState);
   const navigation = useNavigation<StackNavigationProp<any>>();
-
-  const onClipboardChange = (threadId: string | undefined, history: UserHistory[]): void => {
-    const shouldShowConfirm =
-      threadId &&
-      !history.slice(0, 5).some((item) => (item as unknown as Post)?.id === Number(threadId));
-    if (shouldShowConfirm) {
-      showNavigateConfirm(threadId);
-    }
-  };
+  const [clipboardText, setClipboardText] = useState("");
 
   const showNavigateConfirm = (threadId: string) => {
     Alert.alert("检测到串号，是否跳转Po." + threadId, "", [
@@ -91,7 +81,8 @@ function RootNavigator() {
       {
         text: "确认",
         onPress: () => {
-          navigation.push("Post", {
+          navigation.navigate("Root");
+          navigation.navigate("Post", {
             id: Number(threadId),
             title: `Po.${threadId}`,
           });
@@ -104,15 +95,23 @@ function RootNavigator() {
     AppState.addEventListener("change", (nextAppState) => {
       if (nextAppState === "active") {
         Clipboard.getStringAsync().then(async (text) => {
-          const thread = text.match(/http:\/\/bog\.ac\/t\/([0-9]{0,})/);
-          const threadId = thread?.[1];
-          const history = await AsyncStorage.getItem("history");
-          const historyList = JSON.parse(history || "[]");
-          onClipboardChange(threadId, historyList);
+          if (text && text !== clipboardText) {
+            setClipboardText(text);
+          }
         });
       }
     });
   }, [appState.current]);
+
+  useEffect(() => {
+    if (clipboardText) {
+      const thread = clipboardText.match(/http:\/\/bog\.ac\/t\/([0-9]{0,})/);
+      const threadId = thread?.[1];
+      if (threadId) {
+        showNavigateConfirm(threadId);
+      }
+    }
+  }, [clipboardText]);
 
   return (
     <Stack.Navigator
