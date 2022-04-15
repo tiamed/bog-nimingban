@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.26](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.25...v1.0.0-alpha.26) (2022-04-15)
+
+
+### Bug Fixes
+
+* clipboard navigation inside post ([1ef75c6](https://github.com/tiamed/bog-nimingban/commit/1ef75c65706d77a96f99b95329d5c661502ecb09))
+* opening multiple modals ([2fc3312](https://github.com/tiamed/bog-nimingban/commit/2fc3312a1befa99f61ee5646cd8588bfe1269f5c)), closes [#16](https://github.com/tiamed/bog-nimingban/issues/16)
+* **reply:** keyboard auto show ([0c4e327](https://github.com/tiamed/bog-nimingban/commit/0c4e327ab8bb73da7a7981e8d6e62a3ea83c2ba2))
+* tag modal ([749df5c](https://github.com/tiamed/bog-nimingban/commit/749df5c579a1f52811e803e4530ad8ea3fb67625))
+
 ## [1.0.0-alpha.25](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.24...v1.0.0-alpha.25) (2022-04-14)
 
 
