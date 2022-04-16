@@ -5,6 +5,7 @@ export default {
   light: {
     text: "#000",
     background: "#fff",
+    quoteBackground: "#f7f7f7",
     tabIconDefault: "#ccc",
     border: "#eee",
     inactive: "#ccc",
@@ -17,6 +18,7 @@ export default {
   dark: {
     text: "#fff",
     background: "#000",
+    quoteBackground: "#202124",
     tabIconDefault: "#ccc",
     border: "#333",
     inactive: "#444",

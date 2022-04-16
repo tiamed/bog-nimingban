@@ -1,6 +1,6 @@
-import { Dimensions } from "react-native";
+import { Dimensions, View } from "react-native";
 
-import { useThemeColor, View } from "@/components/Themed";
+import { useThemeColor } from "@/components/Themed";
 
 export default function Wrapper(props: {
   width?: number | string;

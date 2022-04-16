@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { useSetAtom } from "jotai";
 import { useContext, useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useIsMounted } from "usehooks-ts";
 
 import { getImageUrl, getThumbnailUrl } from "./ImageView";
@@ -11,7 +11,7 @@ import ReplyPost from "./ReplyPost";
 import { getReply, Post, Reply, Image } from "@/api";
 import { previewIndexAtom, previewsAtom } from "@/atoms";
 import { SizeContext } from "@/components/ThemeContextProvider";
-import { Text, useThemeColor, View } from "@/components/Themed";
+import { Text, useThemeColor } from "@/components/Themed";
 import { MainPostContext } from "@/screens/PostScreen";
 
 export default function ReplyPostWithoutData(props: {
@@ -24,6 +24,7 @@ export default function ReplyPostWithoutData(props: {
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const tintColor = useThemeColor({}, "tint");
+  const backgroundColor = useThemeColor({}, "quoteBackground");
   const navigation = useNavigation<StackNavigationProp<any>>();
   const BASE_SIZE = useContext(SizeContext);
   const mainPost = useContext<Post>(MainPostContext);
@@ -52,7 +53,7 @@ export default function ReplyPostWithoutData(props: {
     });
   }, [props.id]);
   return (
-    <View style={{ flexDirection: "row", width: "100%" }}>
+    <View style={{ flexDirection: "row", width: "100%", backgroundColor }}>
       {!!data.id && (
         <View
           style={{
