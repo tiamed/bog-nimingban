@@ -280,13 +280,16 @@ export default function ReplyModalScreen({
             <Picker
               selectedValue={cookieCode}
               onValueChange={(val: string) => setCookieCode(val)}
-              options={cookies
-                ?.filter((cookie: any) => cookie.id)
-                ?.map((cookie: any) => ({
-                  key: cookie.id,
-                  label: `${cookie.master ? "影" : "主"}·${cookie.name}`,
-                  value: cookie.code,
-                }))}
+              options={[
+                { key: "", label: "请选择", value: "" },
+                ...cookies
+                  ?.filter((cookie: any) => cookie.id)
+                  ?.map((cookie: any) => ({
+                    key: cookie.id,
+                    label: `${cookie.master ? "影" : "主"}·${cookie.name}`,
+                    value: cookie.code,
+                  })),
+              ]}
             />
           ) : (
             <Text style={{ ...styles.picker, padding: 10 }}>没有可用的饼干</Text>

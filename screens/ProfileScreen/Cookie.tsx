@@ -10,7 +10,7 @@ import AddCookieModal from "./AddCookieModal";
 import { Cookie, showAddModalAtom } from "./common";
 
 import { SignInfo, signIn, createCookie, deleteSlaveCookie } from "@/api";
-import { cookiesAtom, signDictAtom } from "@/atoms/index";
+import { cookiesAtom, selectedCookieAtom, signDictAtom } from "@/atoms/index";
 import Icon from "@/components/Icon";
 import { SizeContext } from "@/components/ThemeContextProvider";
 import { Button, Text, useThemeColor } from "@/components/Themed";
@@ -27,6 +27,7 @@ export default function Cookies() {
   const [cookies, setCookies] = useAtom<Cookie[], Cookie[], void>(cookiesAtom);
   const [slaveCookiesWithoutMaster, setSlaveCookiesWithoutMaster] = useState<Cookie[]>([]);
   const [signDict, setSignDict] = useAtom<SignDict, SignDict, void>(signDictAtom);
+  const [selectedCookie, setSelectedCookie] = useAtom(selectedCookieAtom);
   const setShowAddModal = useSetAtom(showAddModalAtom);
   const iconColor = useThemeColor({}, "tint");
   const BASE_SIZE = useContext(SizeContext);
@@ -126,6 +127,9 @@ export default function Cookies() {
       setCookies(cookies.filter((c) => c.code !== cookie.code));
     } else {
       setCookies(cookies.filter((c) => c.hash !== cookie.hash));
+    }
+    if (selectedCookie === cookie.code) {
+      setSelectedCookie("");
     }
   };
 
