@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.27](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.26...v1.0.0-alpha.27) (2022-04-16)
+
+
+### Bug Fixes
+
+* cannot select single cookie ([d69e6e2](https://github.com/tiamed/bog-nimingban/commit/d69e6e2586b129417395b5245f1a172b5b00f2aa))
+
 ## [1.0.0-alpha.26](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.25...v1.0.0-alpha.26) (2022-04-15)
 
 
