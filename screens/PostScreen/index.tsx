@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useMemo, createContext, useRef } from
 import { StyleSheet, FlatList, Platform, FlatListProps } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import { useDebouncedCallback } from "use-debounce";
 import { useIsMounted } from "usehooks-ts";
 
 import ActionModal from "./ActionModal";
@@ -92,7 +93,6 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
     minimumViewTime: 200,
     waitForInteraction: true,
   });
-  const scrollUpConfigRef = useRef<any>(null);
 
   const loadData = async (
     nextPage: number,
@@ -139,7 +139,6 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
         setCurrentPage(nextPage);
         setHasNoMore(reply?.length !== 20);
         setLastPageFinished(reply?.length === 20);
-        scrollUpConfigRef.current = { minIndexForVisible: 0 };
       } else {
         if (nextPage < firstPage) {
           setPosts([...nextPosts, ...posts]);
@@ -169,6 +168,11 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
     }
     addToHistory(true);
   }, [firstPage, order]);
+
+  const debouncedRefreshPosts = useDebouncedCallback(refreshPosts, 1000, {
+    leading: true,
+    trailing: false,
+  });
 
   const loadMoreData = async (force = false) => {
     if (isLoading || (hasNoMore && !force)) return;
@@ -355,8 +359,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
           ref={listRef}
           data={filteredPosts}
           refreshing={isRefreshing}
-          onRefresh={refreshPosts}
-          maintainVisibleContentPosition={scrollUpConfigRef.current}
+          onRefresh={debouncedRefreshPosts}
           scrollEventThrottle={16}
           onScroll={(e) => {
             const isScrollUp =
