@@ -7,6 +7,7 @@ import { getToastConfig } from "./components/Themed";
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
+import CheckFavoriteUpdate from "./tasks/CheckFavoriteUpdate";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -26,6 +27,7 @@ export default function App() {
             visibilityTime={2500}
             config={getToastConfig(colorScheme)}
           />
+          <CheckFavoriteUpdate />
         </SafeAreaProvider>
       </ColorSchemeProvider>
     );

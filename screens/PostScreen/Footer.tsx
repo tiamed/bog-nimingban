@@ -152,6 +152,7 @@ export default function Footer(props: {
           return {
             ...record,
             ...props.mainPost,
+            lastUpdate: Date.now(),
           };
         }
         return record;

@@ -14,6 +14,8 @@ import { RootTabScreenProps } from "@/types";
 export interface UserFavorite extends Post {
   createTime: number;
   tags: string[];
+  lastUpdate?: number;
+  newReplyCount?: number;
 }
 
 export default function FavoriteScreen({ route, navigation }: RootTabScreenProps<"Favorite">) {
@@ -28,6 +30,7 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
       <ThreadPost
         key={(item as unknown as Post).id}
         data={item as unknown as Post}
+        newCount={item.newReplyCount ? item.newReplyCount - item.reply_count : undefined}
         maxLine={maxLine}
         onLongPress={() => {
           setCurrentFavorite(item);

@@ -21,6 +21,7 @@ export default function ThreadPost(props: {
   onLongPress?: (item?: Partial<Post>) => void;
   gestureEnabled?: boolean;
   maxLine?: number;
+  newCount?: number;
 }) {
   const forumsIdMap = useForumsIdMap();
   const setPreviews = useSetAtom(previewsAtom);
@@ -64,7 +65,7 @@ export default function ThreadPost(props: {
         }}
         delayLongPress={800}>
         <Wrapper>
-          <Header data={props.data} isPo={false} showForum />
+          <Header data={props.data} isPo={false} newCount={props.newCount} showForum />
           <View
             style={{
               flexDirection: threadDirection,

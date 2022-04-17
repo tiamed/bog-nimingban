@@ -2,6 +2,7 @@ import { formatRelative, formatDistance, format } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import { useContext } from "react";
 import { View } from "react-native";
+import { Badge } from "react-native-paper";
 
 import { Post } from "@/api";
 import { AccurateTimeFormatContext, SizeContext } from "@/components/ThemeContextProvider";
@@ -12,11 +13,13 @@ export default function Header(props: {
   data: Partial<Post>;
   isPo?: boolean;
   showForum?: boolean;
+  newCount?: number;
 }) {
   const forumsIdMap = useForumsIdMap();
   const BASE_SIZE = useContext(SizeContext);
   const tintColor = useThemeColor({}, "tint");
   const highlightColor = useThemeColor({}, "highlight");
+  const badgeColor = useThemeColor({}, "badge");
   const accurate = useContext(AccurateTimeFormatContext);
 
   return (
@@ -95,16 +98,37 @@ export default function Header(props: {
           )}
         </View>
         {props.showForum && props.data.reply_count !== undefined && (
-          <View style={{ flexDirection: "row", alignSelf: "flex-start" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignSelf: "flex-start",
+              alignItems: "flex-start",
+            }}>
+            {Boolean(props.newCount) && (
+              <View
+                style={{
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  height: BASE_SIZE * 0.8 + 8,
+                }}>
+                <Badge
+                  size={BASE_SIZE}
+                  style={{
+                    backgroundColor: badgeColor,
+                    marginRight: BASE_SIZE * 0.25,
+                  }}>
+                  {props.newCount}
+                </Badge>
+              </View>
+            )}
             <Text
               lightColor="white"
               darkColor="white"
               style={{
                 fontSize: BASE_SIZE * 0.8,
                 backgroundColor: highlightColor,
-                padding: 2,
-                paddingLeft: 6,
-                paddingRight: 6,
+                paddingVertical: 2,
+                paddingHorizontal: 6,
                 borderRadius: 8,
                 overflow: "hidden",
               }}>

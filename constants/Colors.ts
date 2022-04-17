@@ -14,6 +14,7 @@ export default {
     active: tintColorLight,
     tabIconSelected: tintColorLight,
     tint: tintColorLight,
+    badge: "#ee240e",
   },
   dark: {
     text: "#fff",
@@ -27,5 +28,6 @@ export default {
     active: tintColorDark,
     tabIconSelected: tintColorDark,
     tint: tintColorDark,
+    badge: "#ee240e",
   },
 };
