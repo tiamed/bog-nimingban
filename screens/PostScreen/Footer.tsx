@@ -1,11 +1,13 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import * as Clipboard from "expo-clipboard";
 import * as Haptics from "expo-haptics";
 import { useAtom } from "jotai";
 import React, { useState, useEffect, useMemo } from "react";
 import { StyleSheet, TouchableOpacity, Share, Alert } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
 import { footerLayoutAtom } from "../../atoms/index";
 
@@ -108,6 +110,10 @@ export default function Footer(props: {
       label: "分享",
       icon: "share",
       handler: onShare.bind(null, props.id, props.mainPost?.content),
+      longPressHandler: () => {
+        Clipboard.setString(`${Urls.baseURL}t/${props.id}/`);
+        Toast.show({ type: "success", text1: "已复制链接" });
+      },
     },
     {
       label: "回复",
