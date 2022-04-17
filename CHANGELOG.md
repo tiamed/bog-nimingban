@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.28](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.27...v1.0.0-alpha.28) (2022-04-17)
+
+
+### Features
+
+* favorite update badge ([409a6e3](https://github.com/tiamed/bog-nimingban/commit/409a6e3b484eab60274c9b488f348713b9319e80))
+
+
+### Bug Fixes
+
+* ios scroll down jumpiness ([7bee668](https://github.com/tiamed/bog-nimingban/commit/7bee668f58ea9ad95165baf55ff2c863c587ed39))
+
 ## [1.0.0-alpha.27](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.26...v1.0.0-alpha.27) (2022-04-16)
 
 
