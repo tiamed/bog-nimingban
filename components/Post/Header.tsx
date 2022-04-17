@@ -104,7 +104,7 @@ export default function Header(props: {
               alignSelf: "flex-start",
               alignItems: "flex-start",
             }}>
-            {Boolean(props.newCount) && (
+            {Number(props.newCount) > 0 && (
               <View
                 style={{
                   flexDirection: "column",
