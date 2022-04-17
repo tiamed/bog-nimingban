@@ -77,7 +77,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   const onViewRef = useRef<FlatListProps<ReplyWithPage>["onViewableItemsChanged"]>(
     ({ viewableItems }) => {
       if (viewableItems.length) {
-        const last = viewableItems[order ? 0 : viewableItems.length - 1];
+        const last = viewableItems[0];
         const { key, item } = last;
         const position = Number(key);
         if (lastPosition !== position && position) {
@@ -89,7 +89,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
     }
   );
   const viewConfigRef = useRef({
-    viewAreaCoveragePercentThreshold: 0,
+    viewAreaCoveragePercentThreshold: 10,
     minimumViewTime: 200,
     waitForInteraction: true,
   });
@@ -226,7 +226,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
       const index = posts.findIndex((post) => post.id === currentHistory.position);
       if (index !== -1 && filteredPosts.length) {
         try {
-          listRef.current.scrollToIndex({ animated: false, index });
+          listRef.current.scrollToIndex({ animated: false, index, viewPosition: 0 });
         } catch (error) {
           console.warn(error);
         }
@@ -305,7 +305,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   // 更新历史记录
   useEffect(() => {
     const shouldUpdate =
-      currentHistory.currentPage !== currentPage && currentHistory.position !== lastPosition;
+      currentHistory.currentPage !== currentPage || currentHistory.position !== lastPosition;
     if (lastPosition && mainPost.id === route.params.id && shouldUpdate) {
       addToHistory();
     }
