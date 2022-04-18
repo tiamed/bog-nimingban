@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.29](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.28...v1.0.0-alpha.29) (2022-04-18)
+
+
+### Features
+
+* search ([71cab02](https://github.com/tiamed/bog-nimingban/commit/71cab0211cb214099c28a3a5737f03b945532492))
+
+
+### Bug Fixes
+
+* negative new count ([0ee68f2](https://github.com/tiamed/bog-nimingban/commit/0ee68f29fba871d9be5d56d42b6ef917a99a07a9))
+
 ## [1.0.0-alpha.28](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.27...v1.0.0-alpha.28) (2022-04-17)
 
 
