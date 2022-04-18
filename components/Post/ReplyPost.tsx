@@ -14,7 +14,7 @@ import { useThemeColor } from "@/components/Themed";
 
 export default function ReplyPost(props: {
   data: Partial<Post>;
-  po: string;
+  po?: string;
   onPress?: () => void;
   onImagePress?: (image: Image) => void;
   width?: number | string;

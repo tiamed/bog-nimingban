@@ -34,6 +34,9 @@ export type RootStackParamList = {
   BlackList: undefined;
   About: undefined;
   FooterLayout: undefined;
+  Search: {
+    query: string;
+  };
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

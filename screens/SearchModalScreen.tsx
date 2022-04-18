@@ -18,19 +18,20 @@ export default function SearchModalScreen({
     });
   };
 
+  const search = () => {
+    if (!query) return;
+    navigation.goBack();
+    navigation.navigate("Search", { query });
+  };
+
   return (
     <View style={styles.container}>
       <Overlay />
       <View style={styles.modal}>
         <TextInput value={query} onChangeText={(val) => setQuery(val)} style={styles.input} />
         <View style={styles.group}>
-          <Button
-            title="取消"
-            onPress={() => {
-              navigation.goBack();
-            }}
-          />
           <Button title="跳转串号" onPress={confirm} />
+          <Button title="搜索" onPress={search} />
         </View>
       </View>
     </View>

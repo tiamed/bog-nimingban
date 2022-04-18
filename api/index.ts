@@ -56,6 +56,13 @@ export interface Post extends Reply {
   reply: Reply[];
 }
 
+export interface SearchResult extends Reply {
+  forum: number; // 版块ID
+  title: string; // 标题，大多数情况下是不填的*回复是没有标题的
+  lock: boolean; // 是否锁定，锁定了的内容无法回复*默认为null
+  reply: Reply[];
+}
+
 export interface ReplyRequest {
   res: number; // 回复目标，0为主内容
   forum: number; // 版块ID
@@ -109,6 +116,14 @@ export const getPostById = (id = 0, page = 1, pageSize = 20, order = 0) =>
     page,
     page_def: pageSize,
     order,
+  });
+
+// 搜索
+export const getSearchResults = (keyword: string, page = 1, pageSize = 20) =>
+  axios.post<CommonResponse<SearchResult[]>>("/api/search", {
+    keyword,
+    page,
+    page_def: pageSize,
   });
 
 export const getReply = (id = 0) => axios.post<CommonResponse<Reply>>("/api/thread", { id });

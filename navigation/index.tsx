@@ -45,6 +45,7 @@ import QuoteModalScreen from "@/screens/QuoteModalScreen";
 import ReplyHistoryScreen from "@/screens/ReplyHistoryScreen";
 import ReplyModalScreen from "@/screens/ReplyModalScreen";
 import SearchModalScreen from "@/screens/SearchModalScreen";
+import SearchScreen from "@/screens/SearchScreen";
 import {
   HistoryTabParamList,
   RootStackParamList,
@@ -125,6 +126,13 @@ function RootNavigator() {
         options={{
           title: "",
           headerRight: PostScreenHeaderRight,
+        }}
+      />
+      <Stack.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          title: "搜索结果：",
         }}
       />
       <Stack.Screen
