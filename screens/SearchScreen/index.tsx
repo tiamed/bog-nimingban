@@ -1,26 +1,33 @@
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { StyleSheet, FlatList, FlatListProps } from "react-native";
+import { StyleSheet, FlatList, FlatListProps, InteractionManager } from "react-native";
+import { useIsMounted } from "usehooks-ts";
 
-import { getSearchResults, Reply, Image } from "@/api";
-import { previewIndexAtom, previewsAtom } from "@/atoms";
+import SearchFloatingAction from "./SearchFloatingAction";
+
+import { getSearchResults, Reply, Image, Post } from "@/api";
+import { previewIndexAtom, previewsAtom, searchForumFilterAtom } from "@/atoms";
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
 import { View } from "@/components/Themed";
 import renderFooter from "@/screens/HomeScreen/renderFooter";
 import { RootStackScreenProps } from "@/types";
 
-export default function HomeScreen({ route, navigation }: RootStackScreenProps<"Search">) {
+export default function SearchScreen({ route, navigation }: RootStackScreenProps<"Search">) {
   const [query, setQuery] = useState("");
   const [posts, setPosts] = useState<Reply[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Reply[]>([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [hasNoMore, setHasNoMore] = useState(false);
+  const [searchForumFilter] = useAtom(searchForumFilterAtom);
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const listRef = useRef<any>(null);
+  const isMounted = useIsMounted();
   const loadData = async (page: number) => {
+    if (!isMounted) return;
     setPage(page);
     try {
       setIsLoading(true);
@@ -33,7 +40,9 @@ export default function HomeScreen({ route, navigation }: RootStackScreenProps<"
       }
       const newResults = info
         ?.map(({ reply, ...rest }) => {
-          return rest.content?.includes(query) ? [rest as Reply, ...reply] : reply;
+          return rest.content?.includes(query)
+            ? [rest as Reply, ...reply.map((x) => ({ ...x, forum: rest.forum }))]
+            : reply.map((x) => ({ ...x, forum: rest.forum }));
         })
         ?.flat();
       if (page === 1) {
@@ -105,20 +114,38 @@ export default function HomeScreen({ route, navigation }: RootStackScreenProps<"
     }
   }, [query]);
 
+  useEffect(() => {
+    if (!isMounted) return;
+    if (searchForumFilter?.length && posts?.length) {
+      setIsRefreshing(true);
+      InteractionManager.runAfterInteractions(() => {
+        setFilteredPosts(
+          posts?.filter((post) => searchForumFilter.includes((post as unknown as Post).forum))
+        );
+        setIsRefreshing(false);
+      });
+    } else {
+      setFilteredPosts(posts);
+    }
+  }, [searchForumFilter, posts]);
+
   return (
-    <View style={styles.container}>
-      <FlatList
-        ref={listRef}
-        data={posts}
-        refreshing={isRefreshing}
-        onRefresh={refreshPosts}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        onEndReached={loadMoreData}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={() => renderFooter(isLoading, hasNoMore)}
-      />
-    </View>
+    <>
+      <View style={styles.container}>
+        <FlatList
+          ref={listRef}
+          data={filteredPosts}
+          refreshing={isRefreshing}
+          onRefresh={refreshPosts}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          onEndReached={loadMoreData}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={() => renderFooter(isLoading, hasNoMore)}
+        />
+      </View>
+      <SearchFloatingAction />
+    </>
   );
 }
 

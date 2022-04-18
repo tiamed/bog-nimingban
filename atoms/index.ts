@@ -57,6 +57,8 @@ export const favoriteTagsAtom = atomWithAsyncStorage("favoriteTags", []);
 
 export const favoriteFilterAtom = atomWithAsyncStorage("favoriteFilter", "");
 
+export const searchForumFilterAtom = atomWithAsyncStorage("searchForumFilter", []);
+
 export const historyAtom = atomWithAsyncStorage("history", [], true);
 
 export const replyHistoryAtom = atomWithAsyncStorage("replyHistory", []);
