@@ -47,6 +47,8 @@ export const forumsIdMapAtom = atom<Map<number, string>>(
 
 export const emoticonsAtom = atomWithAsyncStorage("emoticons", [], true, 1000 * 60 * 60 * 6);
 
+export const emoticonIndexAtom = atomWithAsyncStorage("emoticonIndex", 0);
+
 export const currentPostAtom = atom({} as Post);
 
 export const threadAtom = atomWithAsyncStorage("thread", 0, true);
