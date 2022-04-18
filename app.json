@@ -16,9 +16,7 @@
       "fallbackToCacheTimeout": 60000,
       "checkAutomatically": "ON_ERROR_RECOVERY"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "fun.tiamed"
@@ -26,7 +24,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#FC88B3"
       },
       "package": "fun.tiamed",
       "permissions": [
@@ -54,9 +52,7 @@
     ],
     "githubUrl": "https://github.com/tiamed/bog-nimingban",
     "packagerOpts": {
-      "sourceExts": [
-        "cjs"
-      ]
+      "sourceExts": ["cjs"]
     }
   }
 }
