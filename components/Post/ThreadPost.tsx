@@ -13,13 +13,7 @@ import ReplyPost from "./ReplyPost";
 import Wrapper from "./Wrapper";
 
 import { Post, Image } from "@/api";
-import {
-  lineHeightAtom,
-  previewIndexAtom,
-  previewsAtom,
-  showThreadReplyAtom,
-  threadDirectionAtom,
-} from "@/atoms";
+import { lineHeightAtom, previewIndexAtom, previewsAtom, threadDirectionAtom } from "@/atoms";
 import { SizeContext } from "@/components/ThemeContextProvider";
 import { useForumsIdMap } from "@/hooks/useForums";
 
@@ -39,7 +33,6 @@ export default function ThreadPost(props: {
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const [threadDirection] = useAtom(threadDirectionAtom);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
-  const [showThreadReply] = useAtom(showThreadReplyAtom);
   const navigation = useNavigation();
   const replyBackgroundColor = useThemeColor({}, "replyBackground");
   const borderColor = useThemeColor({}, "border");
@@ -119,7 +112,7 @@ export default function ThreadPost(props: {
               />
             )}
           </View>
-          {props.showReply && showThreadReply && props.data.reply && (
+          {props.showReply && props.data.reply && (
             <View
               style={{
                 backgroundColor: replyBackgroundColor,

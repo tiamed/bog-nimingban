@@ -6,21 +6,33 @@ import { useIsMounted } from "usehooks-ts";
 import SearchFloatingAction from "./SearchFloatingAction";
 
 import { getSearchResults, Reply, Image, Post } from "@/api";
-import { previewIndexAtom, previewsAtom, searchForumFilterAtom } from "@/atoms";
+import {
+  maxLineAtom,
+  previewIndexAtom,
+  previewsAtom,
+  searchForumFilterAtom,
+  groupSearchResultsAtom,
+} from "@/atoms";
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
+import ThreadPost from "@/components/Post/ThreadPost";
 import { View } from "@/components/Themed";
 import renderFooter from "@/screens/HomeScreen/renderFooter";
 import { RootStackScreenProps } from "@/types";
 
 export default function SearchScreen({ route, navigation }: RootStackScreenProps<"Search">) {
   const [query, setQuery] = useState("");
-  const [posts, setPosts] = useState<Reply[]>([]);
-  const [filteredPosts, setFilteredPosts] = useState<Reply[]>([]);
+  const [replies, setReplies] = useState<Reply[]>([]);
+  const [filteredReplies, setFilteredReplies] = useState<Reply[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [hasNoMore, setHasNoMore] = useState(false);
+
+  const [maxLine] = useAtom(maxLineAtom);
+  const [groupSearchResults] = useAtom(groupSearchResultsAtom);
   const [searchForumFilter] = useAtom(searchForumFilterAtom);
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
@@ -38,22 +50,39 @@ export default function SearchScreen({ route, navigation }: RootStackScreenProps
         setHasNoMore(true);
         return;
       }
-      const newResults = info
-        ?.map(({ reply, ...rest }) => {
-          return rest.content?.includes(query)
-            ? [rest as Reply, ...reply.map((x) => ({ ...x, forum: rest.forum }))]
-            : reply.map((x) => ({ ...x, forum: rest.forum }));
-        })
-        ?.flat();
-      if (page === 1) {
-        setPosts(newResults);
+
+      if (groupSearchResults) {
+        const newResults = info;
+        if (page === 1) {
+          setPosts(newResults as Post[]);
+        } else {
+          setPosts([
+            ...posts,
+            ...newResults.filter((post) => !posts.find((x) => x.id === post.id)),
+          ] as Post[]);
+        }
       } else {
-        setPosts([...posts, ...newResults.filter((post) => !posts.find((x) => x.id === post.id))]);
+        const newResults = info
+          ?.map(({ reply, ...rest }) => {
+            return rest.content?.includes(query)
+              ? [rest as Reply, ...reply.map((x) => ({ ...x, forum: rest.forum }))]
+              : reply.map((x) => ({ ...x, forum: rest.forum }));
+          })
+          ?.flat();
+        if (page === 1) {
+          setReplies(newResults);
+        } else {
+          setReplies([
+            ...replies,
+            ...newResults.filter((post) => !replies.find((x) => x.id === post.id)),
+          ]);
+        }
       }
     } finally {
       setIsLoading(false);
     }
   };
+
   const refreshPosts = useCallback(async () => {
     setIsRefreshing(true);
     await loadData(1);
@@ -94,6 +123,10 @@ export default function SearchScreen({ route, navigation }: RootStackScreenProps
     />
   );
 
+  const renderItemPosts: FlatListProps<Post>["renderItem"] = ({ item }) => (
+    <ThreadPost key={item.id} data={item} maxLine={maxLine} showReply />
+  );
+
   const keyExtractor = (item: Reply) => item.id.toString();
 
   useEffect(() => {
@@ -116,12 +149,25 @@ export default function SearchScreen({ route, navigation }: RootStackScreenProps
 
   useEffect(() => {
     if (!isMounted) return;
+    if (searchForumFilter?.length && replies?.length) {
+      setIsRefreshing(true);
+      InteractionManager.runAfterInteractions(() => {
+        setFilteredReplies(
+          replies?.filter((post) => searchForumFilter.includes((post as unknown as Post).forum))
+        );
+        setIsRefreshing(false);
+      });
+    } else {
+      setFilteredReplies(replies);
+    }
+  }, [searchForumFilter, replies]);
+
+  useEffect(() => {
+    if (!isMounted) return;
     if (searchForumFilter?.length && posts?.length) {
       setIsRefreshing(true);
       InteractionManager.runAfterInteractions(() => {
-        setFilteredPosts(
-          posts?.filter((post) => searchForumFilter.includes((post as unknown as Post).forum))
-        );
+        setFilteredPosts(posts?.filter((post) => searchForumFilter.includes(post.forum)));
         setIsRefreshing(false);
       });
     } else {
@@ -132,17 +178,31 @@ export default function SearchScreen({ route, navigation }: RootStackScreenProps
   return (
     <>
       <View style={styles.container}>
-        <FlatList
-          ref={listRef}
-          data={filteredPosts}
-          refreshing={isRefreshing}
-          onRefresh={refreshPosts}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          onEndReached={loadMoreData}
-          onEndReachedThreshold={0.1}
-          ListFooterComponent={() => renderFooter(isLoading, hasNoMore)}
-        />
+        {groupSearchResults ? (
+          <FlatList
+            ref={listRef}
+            data={filteredPosts}
+            refreshing={isRefreshing}
+            onRefresh={refreshPosts}
+            renderItem={renderItemPosts}
+            keyExtractor={keyExtractor}
+            onEndReached={loadMoreData}
+            onEndReachedThreshold={0.1}
+            ListFooterComponent={() => renderFooter(isLoading, hasNoMore)}
+          />
+        ) : (
+          <FlatList
+            ref={listRef}
+            data={filteredReplies}
+            refreshing={isRefreshing}
+            onRefresh={refreshPosts}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+            onEndReached={loadMoreData}
+            onEndReachedThreshold={0.1}
+            ListFooterComponent={() => renderFooter(isLoading, hasNoMore)}
+          />
+        )}
       </View>
       <SearchFloatingAction />
     </>

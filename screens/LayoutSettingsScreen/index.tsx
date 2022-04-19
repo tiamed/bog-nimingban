@@ -18,6 +18,7 @@ import {
   highlightColorAtom,
   accurateTimeFormatAtom,
   showThreadReplyAtom,
+  groupSearchResultsAtom,
 } from "@/atoms";
 import Icon from "@/components/Icon";
 import SettingPicker from "@/components/SettingPicker";
@@ -37,6 +38,7 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
       <View style={styles.container}>
         <JumpToSettings title="底栏按钮调整" navigateTo="FooterLayout" />
         <SettingSwitch title="首页展示回复" atom={showThreadReplyAtom} />
+        <SettingSwitch title="搜索结果按主题展示" atom={groupSearchResultsAtom} />
         <SettingPicker
           title="字体大小"
           atom={sizeAtom}

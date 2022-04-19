@@ -13,6 +13,7 @@ import {
   maxLineAtom,
   showHomeActionModalAtom,
   blackListPostsAtom,
+  showThreadReplyAtom,
 } from "@/atoms";
 import ThreadPost from "@/components/Post/ThreadPost";
 import { View } from "@/components/Themed";
@@ -26,6 +27,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
   const [maxLine] = useAtom(maxLineAtom);
   const setShowHomeActionModal = useSetAtom(showHomeActionModalAtom);
   const [blackListPosts] = useAtom(blackListPostsAtom);
+  const [showThreadReply] = useAtom(showThreadReplyAtom);
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
@@ -83,7 +85,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
         setShowHomeActionModal(true);
       }}
       gestureEnabled={Platform.OS === "ios"}
-      showReply
+      showReply={showThreadReply}
     />
   );
 

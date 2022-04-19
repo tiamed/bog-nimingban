@@ -122,4 +122,6 @@ export const canCheckUpdateAtom = atomWithAsyncStorage("canCheckUpdate", false);
 
 export const showThreadReplyAtom = atomWithAsyncStorage("showThreadReply", false);
 
+export const groupSearchResultsAtom = atomWithAsyncStorage("groupSearchResults", false);
+
 export const fullscreenInputAtom = atomWithAsyncStorage("fullscreenInput", false);
