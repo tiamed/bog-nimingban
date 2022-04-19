@@ -9,6 +9,7 @@ import { Text } from "./Themed";
 interface Option {
   label: string;
   value: any;
+  id?: string;
 }
 
 export default function SettingPicker(props: { title: string; atom: any; options: Option[] }) {

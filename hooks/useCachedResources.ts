@@ -16,6 +16,8 @@ export default function useCachedResources() {
         await Font.loadAsync({
           ...FontAwesome.font,
           "space-mono": require("@/assets/fonts/SpaceMono-Regular.ttf"),
+          "noto-sans": require("@/assets/fonts/NotoSans-Regular.ttf"),
+          "noto-serif": require("@/assets/fonts/NotoSerif-Regular.ttf"),
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service

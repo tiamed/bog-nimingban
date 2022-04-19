@@ -118,6 +118,8 @@ export const footerLayoutAtom = atomWithAsyncStorage("footerLayout", [
   "跳页",
 ]);
 
+export const fontFamilyAtom = atomWithAsyncStorage("fontFamily", undefined);
+
 export const canCheckUpdateAtom = atomWithAsyncStorage("canCheckUpdate", false);
 
 export const showThreadReplyAtom = atomWithAsyncStorage("showThreadReply", false);

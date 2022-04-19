@@ -19,6 +19,7 @@ import {
   accurateTimeFormatAtom,
   showThreadReplyAtom,
   groupSearchResultsAtom,
+  fontFamilyAtom,
 } from "@/atoms";
 import Icon from "@/components/Icon";
 import SettingPicker from "@/components/SettingPicker";
@@ -113,6 +114,16 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
           options={[
             { label: "普通", value: false },
             { label: "精确", value: true },
+          ]}
+        />
+        <SettingPicker
+          title="字体"
+          atom={fontFamilyAtom}
+          options={[
+            { label: "系统默认", value: undefined, id: "system" },
+            { label: "noto-sans", value: "noto-sans" },
+            { label: "noto-serif", value: "noto-serif" },
+            { label: "space-mono", value: "space-mono" },
           ]}
         />
         <TouchableOpacity

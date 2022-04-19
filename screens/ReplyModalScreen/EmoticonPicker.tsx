@@ -11,7 +11,7 @@ import useEmoticons from "@/hooks/useEmoticons";
 const EXTRA_SYMBOLS = [">>Po."];
 const ROUTE_CONFIG = [
   { key: "kaomoji", title: "[つд⊂]" },
-  { key: "bmoji", title: "ヽ(`Д´)ﾉ" },
+  { key: "bmoji", title: "(`Д´)" },
   { key: "emoji", title: "🐴" },
   { key: "extra", title: "特殊" },
 ];
