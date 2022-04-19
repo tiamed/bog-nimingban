@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.30](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.29...v1.0.0-alpha.30) (2022-04-19)
+
+
+### Features
+
+* **search:** filter search result by forums ([2a135a5](https://github.com/tiamed/bog-nimingban/commit/2a135a5de8abfd0386e0fd67f0eea16acc68e28b))
+* support displaying replies at homescreen ([b5825e9](https://github.com/tiamed/bog-nimingban/commit/b5825e920f3737a82540e879638569d68b4d243d))
+
 ## [1.0.0-alpha.29](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.28...v1.0.0-alpha.29) (2022-04-18)
 
 
