@@ -83,6 +83,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
         setShowHomeActionModal(true);
       }}
       gestureEnabled={Platform.OS === "ios"}
+      showReply
     />
   );
 

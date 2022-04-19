@@ -1,24 +1,27 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
-import { useMemo } from "react";
-import { Pressable, View } from "react-native";
+import { useContext, useMemo } from "react";
+import { PixelRatio, Pressable, View } from "react-native";
 
+import { SizeContext } from "../ThemeContextProvider";
 import Header from "./Header";
 import HtmlView from "./HtmlView";
 import ImageView, { getImageUrl } from "./ImageView";
 import Wrapper from "./Wrapper";
 
 import { Image, Post } from "@/api";
-import { imageWidthAtom, previewIndexAtom, previewsAtom } from "@/atoms";
+import { imageWidthAtom, lineHeightAtom, previewIndexAtom, previewsAtom } from "@/atoms";
 import { useThemeColor } from "@/components/Themed";
 
 export default function ReplyPost(props: {
   data: Partial<Post>;
   po?: string;
   onPress?: () => void;
+  onLongPress?: () => void;
   onImagePress?: (image: Image) => void;
   width?: number | string;
   level?: number;
+  maxHeight?: number;
 }) {
   const [previews] = useAtom(previewsAtom);
   const [imageWidth] = useAtom(imageWidthAtom);
@@ -66,7 +69,7 @@ export default function ReplyPost(props: {
   }, [props.data?.images]);
 
   return (
-    <Pressable onPress={props.onPress}>
+    <Pressable onPress={props.onPress} onLongPress={props.onLongPress}>
       <Wrapper width={props.width}>
         <Header data={props.data} isPo={isPo} />
         <View
@@ -75,7 +78,13 @@ export default function ReplyPost(props: {
             overflow: "hidden",
             flexWrap: "wrap",
           }}>
-          {memoizedHtmlView}
+          <View
+            style={{
+              maxHeight: props.maxHeight || 9999,
+              overflow: "hidden",
+            }}>
+            {memoizedHtmlView}
+          </View>
           {memoizedImageView}
         </View>
       </Wrapper>

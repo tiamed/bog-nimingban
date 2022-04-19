@@ -2,18 +2,28 @@ import { useNavigation } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 import { useAtom, useSetAtom } from "jotai";
 import { Fragment, useContext, useMemo } from "react";
-import { PixelRatio, Pressable, View } from "react-native";
+import { Dimensions, PixelRatio, Pressable, View } from "react-native";
 import { TapGestureHandler } from "react-native-gesture-handler";
 
+import { useThemeColor } from "../Themed";
 import Header from "./Header";
 import HtmlView from "./HtmlView";
 import ImageView, { getImageUrl, getThumbnailUrl } from "./ImageView";
+import ReplyPost from "./ReplyPost";
 import Wrapper from "./Wrapper";
 
 import { Post, Image } from "@/api";
-import { lineHeightAtom, previewIndexAtom, previewsAtom, threadDirectionAtom } from "@/atoms";
+import {
+  lineHeightAtom,
+  previewIndexAtom,
+  previewsAtom,
+  showThreadReplyAtom,
+  threadDirectionAtom,
+} from "@/atoms";
 import { SizeContext } from "@/components/ThemeContextProvider";
 import { useForumsIdMap } from "@/hooks/useForums";
+
+const width = Dimensions.get("window").width;
 
 export default function ThreadPost(props: {
   data: Partial<Post>;
@@ -22,13 +32,17 @@ export default function ThreadPost(props: {
   gestureEnabled?: boolean;
   maxLine?: number;
   newCount?: number;
+  showReply?: boolean;
 }) {
   const forumsIdMap = useForumsIdMap();
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const [threadDirection] = useAtom(threadDirectionAtom);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
+  const [showThreadReply] = useAtom(showThreadReplyAtom);
   const navigation = useNavigation();
+  const replyBackgroundColor = useThemeColor({}, "replyBackground");
+  const borderColor = useThemeColor({}, "border");
   const BASE_SIZE = useContext(SizeContext);
   const images = useMemo(() => {
     const { data } = props;
@@ -105,6 +119,47 @@ export default function ThreadPost(props: {
               />
             )}
           </View>
+          {props.showReply && showThreadReply && props.data.reply && (
+            <View
+              style={{
+                backgroundColor: replyBackgroundColor,
+                overflow: "hidden",
+                borderRadius: 4,
+                borderColor,
+                borderWidth: 1,
+              }}>
+              {props.data.reply?.map((item, index) => (
+                <ReplyPost
+                  key={item.id}
+                  data={item}
+                  width={width - 8}
+                  onPress={() => {
+                    navigation.navigate("Post", {
+                      id: item.res as number,
+                      title: `Po.${item.id}`,
+                    });
+                  }}
+                  onLongPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                    props.onLongPress?.(props.data);
+                  }}
+                  onImagePress={(image) => {
+                    setPreviewIndex(images.findIndex((item) => item.url === image.url));
+                    setPreviews(
+                      images.map((item) => ({
+                        url: getImageUrl(item),
+                        originalUrl: getThumbnailUrl(item),
+                      }))
+                    );
+                    navigation.navigate("PreviewModal");
+                  }}
+                  maxHeight={
+                    PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) * (props.maxLine || 999)
+                  }
+                />
+              ))}
+            </View>
+          )}
         </Wrapper>
       </Pressable>
     </PressableWrapper>

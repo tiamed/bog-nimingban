@@ -119,3 +119,5 @@ export const footerLayoutAtom = atomWithAsyncStorage("footerLayout", [
 ]);
 
 export const canCheckUpdateAtom = atomWithAsyncStorage("canCheckUpdate", false);
+
+export const showThreadReplyAtom = atomWithAsyncStorage("showThreadReply", false);

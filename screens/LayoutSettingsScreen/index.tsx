@@ -17,9 +17,11 @@ import {
   tintColorAtom,
   highlightColorAtom,
   accurateTimeFormatAtom,
+  showThreadReplyAtom,
 } from "@/atoms";
 import Icon from "@/components/Icon";
 import SettingPicker from "@/components/SettingPicker";
+import SettingSwitch from "@/components/SettingSwitch";
 import { SizeContext } from "@/components/ThemeContextProvider";
 import { ScrollView, View, Text, useThemeColor } from "@/components/Themed";
 import { RootStackScreenProps } from "@/types";
@@ -34,6 +36,7 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
     <ScrollView style={{ flex: 1, flexDirection: "column" }}>
       <View style={styles.container}>
         <JumpToSettings title="底栏按钮调整" navigateTo="FooterLayout" />
+        <SettingSwitch title="首页展示回复" atom={showThreadReplyAtom} />
         <SettingPicker
           title="字体大小"
           atom={sizeAtom}

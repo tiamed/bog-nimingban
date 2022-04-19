@@ -2,10 +2,7 @@ import { Dimensions, View } from "react-native";
 
 import { useThemeColor } from "@/components/Themed";
 
-export default function Wrapper(props: {
-  width?: number | string;
-  children: React.ReactElement | React.ReactElement[];
-}) {
+export default function Wrapper(props: { width?: number | string; children: React.ReactNode }) {
   const borderColor = useThemeColor({}, "border");
 
   return (

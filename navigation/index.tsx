@@ -25,7 +25,7 @@ import { PageControlAji } from "react-native-chi-page-control";
 
 import LinkingConfiguration from "./LinkingConfiguration";
 
-import { historyTabAtom, tabRefreshingAtom } from "@/atoms";
+import { historyTabAtom, tabRefreshingAtom, threadDirectionAtom } from "@/atoms";
 import DrawerContent from "@/components/DrawerContent";
 import Icon from "@/components/Icon";
 import { useThemeColor } from "@/components/Themed";
