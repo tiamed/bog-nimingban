@@ -21,7 +21,6 @@ export default function EmoticonPicker(props: {
   onInsert: (emoticon: string) => void;
 }) {
   const emoticons = useEmoticons();
-  const keyboard = useKeyboard();
   const backgroundColor = useThemeColor({}, "background");
   const tintColor = useThemeColor({}, "tint");
 
@@ -42,7 +41,7 @@ export default function EmoticonPicker(props: {
     <View
       style={{
         width: "100%",
-        height: props.visible ? keyboard.keyboardHeight || 300 : 0,
+        height: props.visible ? 200 : 0,
       }}>
       <TabView
         navigationState={{ index, routes }}
@@ -81,6 +80,8 @@ function EmoticonView(props: { data: string[]; onInsert: (emoticon: string) => v
       data={props.data}
       keyExtractor={(item) => item}
       maxToRenderPerBatch={100}
+      keyboardDismissMode="none"
+      keyboardShouldPersistTaps="always"
       renderItem={({ item }) => (
         <TouchableOpacity
           onPress={() => {

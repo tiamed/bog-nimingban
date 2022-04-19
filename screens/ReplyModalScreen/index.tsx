@@ -20,6 +20,7 @@ import { addReply, uploadImage, Image, getReply } from "@/api";
 import {
   cookiesAtom,
   draftAtom,
+  fullscreenInputAtom,
   postIdRefreshingAtom,
   replyHistoryAtom,
   selectedCookieAtom,
@@ -58,6 +59,7 @@ export default function ReplyModalScreen({
   const [replyHistory, setReplyHistory] = useAtom<ReplyHistory[], ReplyHistory[], void>(
     replyHistoryAtom
   );
+  const [fullscreenInput, setFullscreenInput] = useAtom(fullscreenInputAtom);
   const setPostIdRefreshing = useSetAtom(postIdRefreshingAtom);
 
   const tintColor = useThemeColor({}, "tint");
@@ -75,29 +77,30 @@ export default function ReplyModalScreen({
   };
 
   const addEmoji = () => {
-    Keyboard.dismiss();
+    if (!fullscreenInput) {
+      Keyboard.dismiss();
+    }
     setShowEmoticonPicker(!showEmoticonPicker);
   };
 
   const insertDraft = (str: string) => {
     setDraft([draft.slice(0, selection.start), str, draft.slice(selection.end)].join(""));
-    if (Platform.OS === "ios") {
-      inputRef.current.blur();
-    }
-    const targetPosition = selection.start + str.length;
-    setSelection({
-      start: targetPosition,
-      end: targetPosition,
-    });
-    InteractionManager.runAfterInteractions(() => {
-      inputRef.current?.setNativeProps({
-        selection: { start: targetPosition, end: targetPosition },
+    if (Platform.OS === "android") {
+      const targetPosition = selection.start + str.length;
+      setSelection({
+        start: targetPosition,
+        end: targetPosition,
       });
-      global.requestAnimationFrame(() => inputRef.current?.setNativeProps({ selection: null }));
-    });
+      InteractionManager.runAfterInteractions(() => {
+        inputRef.current?.setNativeProps({
+          selection: { start: targetPosition, end: targetPosition },
+        });
+        global.requestAnimationFrame(() => inputRef.current?.setNativeProps({ selection: null }));
+      });
 
-    if (inputRef.current?.setSelectionRange) {
-      inputRef.current.setSelectionRange(targetPosition, targetPosition);
+      if (inputRef.current?.setSelectionRange) {
+        inputRef.current.setSelectionRange(targetPosition, targetPosition);
+      }
     }
   };
 
@@ -205,6 +208,12 @@ export default function ReplyModalScreen({
     return () => Keyboard.removeAllListeners("keyboardDidShow");
   }, []);
 
+  useEffect(() => {
+    if (!fullscreenInput && showEmoticonPicker) {
+      Keyboard.dismiss();
+    }
+  }, [fullscreenInput]);
+
   return (
     <View style={styles.modal}>
       <Overlay />
@@ -213,6 +222,8 @@ export default function ReplyModalScreen({
         style={{
           ...styles.container,
           backgroundColor,
+          marginTop: insets.top,
+          flex: fullscreenInput ? 1 : undefined,
         }}>
         <View style={styles.header}>
           <View
@@ -228,7 +239,16 @@ export default function ReplyModalScreen({
             </TouchableOpacity>
             <Text>{replyId ? `回复 >${replyId}` : "发布新串 >"}</Text>
           </View>
-          <Button title="关闭" onPress={close} />
+          <View style={{ flexDirection: "row" }}>
+            <Button
+              title="全屏"
+              style={{ marginRight: 10 }}
+              onPress={() => {
+                setFullscreenInput(!fullscreenInput);
+              }}
+            />
+            <Button title="关闭" onPress={close} />
+          </View>
         </View>
         {showPrefixInput && (
           <>
@@ -254,13 +274,21 @@ export default function ReplyModalScreen({
           scrollEnabled
           textAlignVertical="top"
           selectionColor={tintColor}
-          style={styles.input}
+          style={[
+            styles.input,
+            {
+              flex: fullscreenInput ? 1 : undefined,
+              minHeight: fullscreenInput ? undefined : 120,
+              maxHeight: fullscreenInput ? undefined : 240,
+            },
+          ]}
           value={draft}
           onSelectionChange={(event) => {
             setSelection(event.nativeEvent.selection);
           }}
           showSoftInputOnFocus={showKeyboard}
           onChangeText={(val) => setDraft(val)}
+          autoCorrect={false}
         />
         <View style={styles.pickerWrapper}>
           {!replyId && (
@@ -317,49 +345,51 @@ export default function ReplyModalScreen({
             </View>
           ))}
         </View>
-        <View style={{ ...styles.footerWrapper, paddingBottom: insets.bottom }}>
-          <Footer
-            items={[
-              {
-                icon: showKeyboard ? "caret-down" : "caret-up",
-                onPress: () => {
-                  if (showKeyboard) {
-                    Keyboard.dismiss();
-                  } else {
-                    setTimeout(() => {
-                      inputRef.current?.blur();
-                      inputRef.current?.focus();
-                    }, 300);
-                  }
-                  setShowKeyboard(!showKeyboard);
+        <View style={{ paddingBottom: insets.bottom }}>
+          <View style={{ ...styles.footerWrapper }}>
+            <Footer
+              items={[
+                {
+                  icon: showKeyboard ? "caret-down" : "caret-up",
+                  onPress: () => {
+                    if (showKeyboard) {
+                      Keyboard.dismiss();
+                    } else {
+                      setTimeout(() => {
+                        inputRef.current?.blur();
+                        inputRef.current?.focus();
+                      }, 300);
+                    }
+                    setShowKeyboard(!showKeyboard);
+                  },
                 },
-              },
-              {
-                icon: "question-circle",
-                onPress: () => {
-                  const current = forums.find((x) => x.id === forumId);
-                  Toast.show({ type: "info", text1: current?.info });
+                {
+                  icon: "question-circle",
+                  onPress: () => {
+                    const current = forums.find((x) => x.id === forumId);
+                    Toast.show({ type: "info", text1: current?.info });
+                  },
                 },
-              },
-              { icon: "smile-o", onPress: addEmoji },
-              { icon: "image", onPress: addImage },
-              {
-                icon: "dot-circle-o",
-                onPress: useDebouncedCallback(addDice, 500, { leading: true, trailing: false }),
-              },
-              {
-                icon: "send",
-                onPress: useDebouncedCallback(submit, 1000, { leading: true, trailing: false }),
-              },
-            ]}
+                { icon: "smile-o", onPress: addEmoji },
+                { icon: "image", onPress: addImage },
+                {
+                  icon: "dot-circle-o",
+                  onPress: useDebouncedCallback(addDice, 500, { leading: true, trailing: false }),
+                },
+                {
+                  icon: "send",
+                  onPress: useDebouncedCallback(submit, 1000, { leading: true, trailing: false }),
+                },
+              ]}
+            />
+          </View>
+          <EmoticonPicker
+            visible={showEmoticonPicker}
+            onInsert={(emoji) => {
+              insertDraft(emoji);
+            }}
           />
         </View>
-        <EmoticonPicker
-          visible={showEmoticonPicker}
-          onInsert={(emoji) => {
-            insertDraft(emoji);
-          }}
-        />
       </KeyboardAvoidingView>
     </View>
   );
