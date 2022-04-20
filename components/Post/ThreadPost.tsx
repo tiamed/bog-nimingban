@@ -13,8 +13,14 @@ import ReplyPost from "./ReplyPost";
 import Wrapper from "./Wrapper";
 
 import { Post, Image } from "@/api";
-import { lineHeightAtom, previewIndexAtom, previewsAtom, threadDirectionAtom } from "@/atoms";
-import { SizeContext } from "@/components/ThemeContextProvider";
+import {
+  lineHeightAtom,
+  previewIndexAtom,
+  previewsAtom,
+  threadDirectionAtom,
+  threadReplyReverseAtom,
+} from "@/atoms";
+import { SizeContext, ThreadReplyReverseContext } from "@/components/ThemeContextProvider";
 import { useForumsIdMap } from "@/hooks/useForums";
 
 const width = Dimensions.get("window").width;
@@ -28,15 +34,18 @@ export default function ThreadPost(props: {
   newCount?: number;
   showReply?: boolean;
 }) {
-  const forumsIdMap = useForumsIdMap();
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const [threadDirection] = useAtom(threadDirectionAtom);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
+
+  const forumsIdMap = useForumsIdMap();
   const navigation = useNavigation();
   const replyBackgroundColor = useThemeColor({}, "replyBackground");
   const borderColor = useThemeColor({}, "border");
   const BASE_SIZE = useContext(SizeContext);
+  const threadReplyReverse = useContext(ThreadReplyReverseContext);
+
   const images = useMemo(() => {
     const { data } = props;
     const result: Image[] = data.images || [];
@@ -112,7 +121,7 @@ export default function ThreadPost(props: {
               />
             )}
           </View>
-          {props.showReply && props.data.reply && (
+          {props.showReply && Boolean(props.data?.reply?.length) && (
             <View
               style={{
                 backgroundColor: replyBackgroundColor,
@@ -121,36 +130,39 @@ export default function ThreadPost(props: {
                 borderColor,
                 borderWidth: 1,
               }}>
-              {props.data.reply?.map((item, index) => (
-                <ReplyPost
-                  key={item.id}
-                  data={item}
-                  width={width - 8}
-                  onPress={() => {
-                    navigation.navigate("Post", {
-                      id: item.res as number,
-                      title: `Po.${item.id}`,
-                    });
-                  }}
-                  onLongPress={() => {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-                    props.onLongPress?.(props.data);
-                  }}
-                  onImagePress={(image) => {
-                    setPreviewIndex(images.findIndex((item) => item.url === image.url));
-                    setPreviews(
-                      images.map((item) => ({
-                        url: getImageUrl(item),
-                        originalUrl: getThumbnailUrl(item),
-                      }))
-                    );
-                    navigation.navigate("PreviewModal");
-                  }}
-                  maxHeight={
-                    PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) * (props.maxLine || 999)
-                  }
-                />
-              ))}
+              {(threadReplyReverse ? props.data.reply?.slice()?.reverse() : props.data.reply)?.map(
+                (item, index) => (
+                  <ReplyPost
+                    key={item.id}
+                    data={item}
+                    width={width - 8}
+                    onPress={() => {
+                      navigation.navigate("Post", {
+                        id: item.res as number,
+                        title: `Po.${item.id}`,
+                      });
+                    }}
+                    onLongPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                      props.onLongPress?.(props.data);
+                    }}
+                    onImagePress={(image) => {
+                      setPreviewIndex(images.findIndex((item) => item.url === image.url));
+                      setPreviews(
+                        images.map((item) => ({
+                          url: getImageUrl(item),
+                          originalUrl: getThumbnailUrl(item),
+                        }))
+                      );
+                      navigation.navigate("PreviewModal");
+                    }}
+                    maxHeight={
+                      PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) *
+                      (props.maxLine || 999)
+                    }
+                  />
+                )
+              )}
             </View>
           )}
         </Wrapper>

@@ -20,6 +20,7 @@ import {
   showThreadReplyAtom,
   groupSearchResultsAtom,
   fontFamilyAtom,
+  threadReplyReverseAtom,
 } from "@/atoms";
 import Icon from "@/components/Icon";
 import SettingPicker from "@/components/SettingPicker";
@@ -40,6 +41,17 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
         <JumpToSettings title="底栏按钮调整" navigateTo="FooterLayout" />
         <SettingSwitch title="首页展示回复" atom={showThreadReplyAtom} />
         <SettingSwitch title="搜索结果按主题展示" atom={groupSearchResultsAtom} />
+        <SettingSwitch title="展示回复时逆序" atom={threadReplyReverseAtom} />
+        <SettingPicker
+          title="字体"
+          atom={fontFamilyAtom}
+          options={[
+            { label: "系统默认", value: null, id: "system" },
+            { label: "noto-sans", value: "noto-sans" },
+            { label: "noto-serif", value: "noto-serif" },
+            { label: "space-mono", value: "space-mono" },
+          ]}
+        />
         <SettingPicker
           title="字体大小"
           atom={sizeAtom}
@@ -116,16 +128,7 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
             { label: "精确", value: true },
           ]}
         />
-        <SettingPicker
-          title="字体"
-          atom={fontFamilyAtom}
-          options={[
-            { label: "系统默认", value: undefined, id: "system" },
-            { label: "noto-sans", value: "noto-sans" },
-            { label: "noto-serif", value: "noto-serif" },
-            { label: "space-mono", value: "space-mono" },
-          ]}
-        />
+
         <TouchableOpacity
           style={[styles.item, { height: BASE_SIZE * 4 }]}
           onPress={() => {
