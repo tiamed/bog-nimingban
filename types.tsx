@@ -29,7 +29,6 @@ export type RootStackParamList = {
     id: number;
     title: string;
   };
-  NotFound: undefined;
   LayoutSettings: undefined;
   BlackList: undefined;
   About: undefined;
@@ -37,6 +36,8 @@ export type RootStackParamList = {
   Search: {
     query: string;
   };
+  Sketch: undefined;
+  NotFound: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

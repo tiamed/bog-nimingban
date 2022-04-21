@@ -25,6 +25,7 @@ import {
   replyHistoryAtom,
   selectedCookieAtom,
   selectionAtom,
+  sketchUriAtom,
 } from "@/atoms";
 import Icon from "@/components/Icon";
 import Overlay from "@/components/Overlay";
@@ -60,6 +61,7 @@ export default function ReplyModalScreen({
     replyHistoryAtom
   );
   const [fullscreenInput, setFullscreenInput] = useAtom(fullscreenInputAtom);
+  const [sketchUri, setSketchUri] = useAtom(sketchUriAtom);
   const setPostIdRefreshing = useSetAtom(postIdRefreshingAtom);
 
   const tintColor = useThemeColor({}, "tint");
@@ -104,6 +106,39 @@ export default function ReplyModalScreen({
     }
   };
 
+  const upload = async (uri: string) => {
+    try {
+      Toast.show({
+        type: "info",
+        text1: "图片上传中",
+        position: "top",
+        autoHide: false,
+      });
+      const formData = new FormData();
+      const fileName = uri.split("/")[uri.split("/").length - 1];
+      const ext = uri.split(".")[uri.split(".").length - 1];
+      formData.append("image", {
+        uri,
+        name: fileName,
+        type: `image/${ext}`,
+      } as any);
+      const { code, pic, msg } = await uploadImage(formData);
+      if (code === 200) {
+        if (images.find((image) => image.url === pic)) {
+          Toast.show({ type: "success", text1: "请勿上传重复图片", position: "top" });
+        } else {
+          setImages([...images, { url: pic, ext: `.${ext}` }]);
+        }
+      } else {
+        Toast.show({ type: "error", text1: msg, position: "top" });
+      }
+    } catch (error) {
+      Toast.show({ type: "error", text1: (error as Error).message, position: "top" });
+    } finally {
+      Toast.hide();
+    }
+  };
+
   const addImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -111,29 +146,7 @@ export default function ReplyModalScreen({
     });
 
     if (!result.cancelled) {
-      try {
-        const { uri } = result;
-        const formData = new FormData();
-        const fileName = uri.split("/")[uri.split("/").length - 1];
-        const ext = uri.split(".")[uri.split(".").length - 1];
-        formData.append("image", {
-          uri,
-          name: fileName,
-          type: `image/${ext}`,
-        } as any);
-        const { code, pic, msg } = await uploadImage(formData);
-        if (code === 200) {
-          if (images.find((image) => image.url === pic)) {
-            Toast.show({ type: "success", text1: "请勿上传重复图片" });
-          } else {
-            setImages([...images, { url: pic, ext: `.${ext}` }]);
-          }
-        } else {
-          Toast.show({ type: "error", text1: msg });
-        }
-      } catch (error) {
-        Toast.show({ type: "error", text1: (error as Error).message });
-      }
+      await upload(result.uri);
     }
   };
 
@@ -214,6 +227,14 @@ export default function ReplyModalScreen({
     }
   }, [fullscreenInput]);
 
+  useEffect(() => {
+    if (sketchUri) {
+      upload(sketchUri).then(() => {
+        setSketchUri("");
+      });
+    }
+  }, [sketchUri]);
+
   return (
     <View style={styles.modal}>
       <Overlay />
@@ -240,6 +261,14 @@ export default function ReplyModalScreen({
             <Text>{replyId ? `回复 >${replyId}` : "发布新串 >"}</Text>
           </View>
           <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+              style={{ marginRight: 10 }}
+              onPress={() => {
+                const current = forums.find((x) => x.id === forumId);
+                Toast.show({ type: "info", text1: current?.info });
+              }}>
+              <Icon name="question-circle-o" color={tintColor} />
+            </TouchableOpacity>
             <Button
               title="全屏"
               style={{ marginRight: 10 }}
@@ -364,10 +393,9 @@ export default function ReplyModalScreen({
                   },
                 },
                 {
-                  icon: "question-circle",
+                  icon: "paint-brush",
                   onPress: () => {
-                    const current = forums.find((x) => x.id === forumId);
-                    Toast.show({ type: "info", text1: current?.info });
+                    navigation.navigate("Sketch");
                   },
                 },
                 { icon: "smile-o", onPress: addEmoji },

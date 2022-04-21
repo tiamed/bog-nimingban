@@ -129,3 +129,5 @@ export const threadReplyReverseAtom = atomWithAsyncStorage("threadReplyReverse",
 export const groupSearchResultsAtom = atomWithAsyncStorage("groupSearchResults", false);
 
 export const fullscreenInputAtom = atomWithAsyncStorage("fullscreenInput", false);
+
+export const sketchUriAtom = atomWithAsyncStorage("sketchUri", "");

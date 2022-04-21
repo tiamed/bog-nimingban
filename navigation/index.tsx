@@ -46,6 +46,7 @@ import ReplyHistoryScreen from "@/screens/ReplyHistoryScreen";
 import ReplyModalScreen from "@/screens/ReplyModalScreen";
 import SearchModalScreen from "@/screens/SearchModalScreen";
 import SearchScreen from "@/screens/SearchScreen";
+import SketchScreen from "@/screens/SketchScreen";
 import {
   HistoryTabParamList,
   RootStackParamList,
@@ -151,6 +152,7 @@ function RootNavigator() {
         options={{ title: "底栏按钮设置" }}
       />
       <Stack.Screen name="About" component={AboutScreen} options={{ title: "关于" }} />
+      <Stack.Screen name="Sketch" component={SketchScreen} options={{ title: "涂鸦" }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: "Oops!" }} />
       <Stack.Group
         screenOptions={{
