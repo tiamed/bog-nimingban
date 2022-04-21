@@ -100,6 +100,8 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
           options={[
             { label: "左", value: "row-reverse" },
             { label: "右", value: "row" },
+            { label: "上", value: "column-reverse" },
+            { label: "下", value: "column" },
           ]}
         />
         <SettingPicker
@@ -114,7 +116,7 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
           title="串内每行图片数"
           atom={imageWidthAtom}
           options={[
-            ...[...Array(5)].map((_, i) => ({
+            ...[...Array(8)].map((_, i) => ({
               label: `${i + 1}`,
               value: `${100 / (i + 1) - 1}%`,
             })),

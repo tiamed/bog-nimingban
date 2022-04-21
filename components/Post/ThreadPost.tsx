@@ -8,18 +8,13 @@ import { TapGestureHandler } from "react-native-gesture-handler";
 import { useThemeColor } from "../Themed";
 import Header from "./Header";
 import HtmlView from "./HtmlView";
+import ImageList from "./ImageList";
 import ImageView, { getImageUrl, getThumbnailUrl } from "./ImageView";
 import ReplyPost from "./ReplyPost";
 import Wrapper from "./Wrapper";
 
 import { Post, Image } from "@/api";
-import {
-  lineHeightAtom,
-  previewIndexAtom,
-  previewsAtom,
-  threadDirectionAtom,
-  threadReplyReverseAtom,
-} from "@/atoms";
+import { lineHeightAtom, previewIndexAtom, previewsAtom, threadDirectionAtom } from "@/atoms";
 import { SizeContext, ThreadReplyReverseContext } from "@/components/ThemeContextProvider";
 import { useForumsIdMap } from "@/hooks/useForums";
 
@@ -47,15 +42,27 @@ export default function ThreadPost(props: {
   const threadReplyReverse = useContext(ThreadReplyReverseContext);
 
   const images = useMemo(() => {
-    const { data } = props;
-    const result: Image[] = data.images || [];
-    data.reply?.forEach(({ images: replyImages }) => {
+    const result: Image[] = [];
+    props.data.reply?.forEach(({ images: replyImages }) => {
       if (replyImages?.length) {
-        result.push(...replyImages);
+        if (threadReplyReverse) {
+          result.unshift(...replyImages);
+        } else {
+          result.push(...replyImages);
+        }
       }
     });
+    result.unshift(...(props.data.images || []));
     return result;
-  }, [props.data]);
+  }, [props.data, threadReplyReverse]);
+
+  const previews = useMemo(() => {
+    return images.map((item) => ({
+      url: getImageUrl(item),
+      originalUrl: getThumbnailUrl(item),
+    }));
+  }, [images]);
+
   const imageSize = useMemo(() => {
     const calculated =
       PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) * (props.maxLine || 999) - 2;
@@ -94,32 +101,32 @@ export default function ThreadPost(props: {
                 flex: 2,
                 maxHeight:
                   PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) * (props.maxLine || 999),
+                overflow: "hidden",
               }}>
               <HtmlView content={props.data.content as string} />
             </View>
-            {props.data.images && props.data.images[0] && (
-              <ImageView
-                onPress={() => {
-                  setPreviewIndex(0);
-                  setPreviews(
-                    images.map((item) => ({
-                      url: getImageUrl(item),
-                      originalUrl: getThumbnailUrl(item),
-                    }))
-                  );
-                  navigation.navigate("PreviewModal");
-                }}
-                data={props.data.images[0]}
-                imageStyle={{
-                  flex: 1,
-                  width: imageSize,
-                  height: "100%",
-                  minHeight: imageSize,
-                  marginTop: 2,
-                }}
-                style={{}}
-              />
-            )}
+            {props.data.images &&
+              props.data.images[0] &&
+              (["row", "row-reverse"].includes(threadDirection) ? (
+                <ImageView
+                  onPress={() => {
+                    setPreviewIndex(0);
+                    setPreviews(previews);
+                    navigation.navigate("PreviewModal");
+                  }}
+                  data={props.data.images[0]}
+                  imageStyle={{
+                    flex: 1,
+                    width: imageSize,
+                    height: "100%",
+                    minHeight: imageSize,
+                    marginTop: 2,
+                  }}
+                  style={{}}
+                />
+              ) : (
+                <ImageList images={props.data.images} previews={images} />
+              ))}
           </View>
           {props.showReply && Boolean(props.data?.reply?.length) && (
             <View
@@ -148,12 +155,7 @@ export default function ThreadPost(props: {
                     }}
                     onImagePress={(image) => {
                       setPreviewIndex(images.findIndex((item) => item.url === image.url));
-                      setPreviews(
-                        images.map((item) => ({
-                          url: getImageUrl(item),
-                          originalUrl: getThumbnailUrl(item),
-                        }))
-                      );
+                      setPreviews(previews);
                       navigation.navigate("PreviewModal");
                     }}
                     maxHeight={

@@ -1,17 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
-import { useContext, useMemo } from "react";
-import { PixelRatio, Pressable, View } from "react-native";
+import { useMemo } from "react";
+import { Pressable, View } from "react-native";
 
-import { SizeContext } from "../ThemeContextProvider";
 import Header from "./Header";
 import HtmlView from "./HtmlView";
-import ImageView, { getImageUrl } from "./ImageView";
+import ImageList from "./ImageList";
+import { getImageUrl } from "./ImageView";
 import Wrapper from "./Wrapper";
 
 import { Image, Post } from "@/api";
-import { imageWidthAtom, lineHeightAtom, previewIndexAtom, previewsAtom } from "@/atoms";
-import { useThemeColor } from "@/components/Themed";
+import { previewIndexAtom, previewsAtom } from "@/atoms";
 
 export default function ReplyPost(props: {
   data: Partial<Post>;
@@ -24,10 +23,8 @@ export default function ReplyPost(props: {
   maxHeight?: number;
 }) {
   const [previews] = useAtom(previewsAtom);
-  const [imageWidth] = useAtom(imageWidthAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const navigation = useNavigation();
-  const borderColor = useThemeColor({}, "border");
   const isPo = props.data.cookie === props.po;
   const onImagePress = (image: Image) => {
     setPreviewIndex(previews.findIndex((item) => item.url === getImageUrl(image)));
@@ -45,25 +42,18 @@ export default function ReplyPost(props: {
           flexWrap: "wrap",
           justifyContent: "flex-start",
         }}>
-        {props.data?.images?.map((image) => (
-          <ImageView
-            key={image.url}
-            onPress={props.onImagePress?.bind(null, image) || onImagePress.bind(null, image)}
-            style={{
-              flexBasis: imageWidth,
-              aspectRatio: 1,
-              borderColor,
-              borderWidth: 1,
-              marginTop: 10,
-              marginRight: "1%",
+        {props.data?.images && (
+          <ImageList
+            images={props.data.images}
+            onPress={(image) => {
+              if (props.onImagePress) {
+                props.onImagePress(image);
+              } else {
+                onImagePress(image);
+              }
             }}
-            imageStyle={{
-              width: "100%",
-              height: "100%",
-            }}
-            data={image}
           />
-        ))}
+        )}
       </View>
     );
   }, [props.data?.images]);

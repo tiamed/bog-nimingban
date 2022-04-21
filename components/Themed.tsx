@@ -60,12 +60,14 @@ export function Text(props: TextProps) {
   );
 }
 
-export function View(props: ViewProps) {
+export const View = forwardRef(function (props: ViewProps, ref) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, "background");
 
-  return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
-}
+  return (
+    <DefaultView ref={ref as unknown as any} style={[{ backgroundColor }, style]} {...otherProps} />
+  );
+});
 
 export function ScrollView(props: ScrollViewProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
