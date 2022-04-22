@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.31](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.30...v1.0.0-alpha.31) (2022-04-22)
+
+
+### Features
+
+* font tweaking ([f60ea77](https://github.com/tiamed/bog-nimingban/commit/f60ea77484ef13b0c8eba92de9c235d55debca5b))
+* sketch ([c9fe09c](https://github.com/tiamed/bog-nimingban/commit/c9fe09c12de36e0ae479939b37bd1682ec74f2b7))
+* sketch webview ([05e3397](https://github.com/tiamed/bog-nimingban/commit/05e33979091e2a9387ee623c7526259793c09680))
+
 ## [1.0.0-alpha.30](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.29...v1.0.0-alpha.30) (2022-04-19)
 
 
