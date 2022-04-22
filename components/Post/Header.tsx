@@ -49,7 +49,14 @@ export default function Header(props: {
               Po
             </Text>
           )}
-          <Text style={{ fontSize: BASE_SIZE * 0.8, color: tintColor }}>{props.data.cookie}</Text>
+          <Text
+            style={{
+              fontSize: BASE_SIZE * 0.8,
+              color: props.data.admin ? highlightColor : tintColor,
+              fontWeight: props.data.admin ? "bold" : "normal",
+            }}>
+            {props.data.cookie}
+          </Text>
         </View>
         <Text style={{ fontSize: BASE_SIZE * 0.8, flex: 1 }}>Po.{props.data.id}</Text>
         <Text
