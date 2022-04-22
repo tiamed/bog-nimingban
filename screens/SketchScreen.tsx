@@ -1,8 +1,8 @@
 import { useSetAtom } from "jotai";
-import { Canvas } from "katachidraw/src/library";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dimensions, Pressable } from "react-native";
 import { captureRef } from "react-native-view-shot";
+import WebView from "react-native-webview";
 
 import { sketchUriAtom } from "@/atoms";
 import Icon from "@/components/Icon";
@@ -15,6 +15,7 @@ const height = Dimensions.get("window").height;
 export default function SketchScreen({ route, navigation }: RootStackScreenProps<"About">) {
   const [isCapturing, setIsCapturing] = useState(false);
   const viewRef = useRef(null);
+  const webRef = useRef<WebView>(null);
 
   const setSketchUri = useSetAtom(sketchUriAtom);
   const tintColor = useThemeColor({}, "tint");
@@ -35,6 +36,16 @@ export default function SketchScreen({ route, navigation }: RootStackScreenProps
   }, [viewRef]);
 
   useEffect(() => {
+    if (isCapturing) {
+      const hideTools = `
+      document.querySelector('.FixedSideContainer').style.display = 'none';
+      document.querySelector('.App-bottom-bar').style.display = 'none';`;
+
+      webRef.current?.injectJavaScript(hideTools);
+    }
+  }, [isCapturing]);
+
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <Pressable onPress={onPress}>
@@ -45,12 +56,11 @@ export default function SketchScreen({ route, navigation }: RootStackScreenProps
   }, []);
 
   return (
-    <View ref={viewRef} collapsable={false}>
-      <Canvas
-        width={width}
-        height={height}
-        sliderPosition={isCapturing ? [0, 0] : undefined}
-        toolbarPosition={isCapturing ? [-100, 0] : undefined}
+    <View ref={viewRef} collapsable={false} style={{ flex: 1 }}>
+      <WebView
+        ref={webRef}
+        source={{ uri: "https://excalidraw.com/" }}
+        androidHardwareAccelerationDisabled
       />
     </View>
   );
