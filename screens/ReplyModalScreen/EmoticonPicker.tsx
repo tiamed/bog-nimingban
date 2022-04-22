@@ -1,4 +1,3 @@
-import { useKeyboard } from "@react-native-community/hooks";
 import { useAtom } from "jotai";
 import { useState } from "react";
 import { StyleSheet, TouchableOpacity, FlatList, View } from "react-native";

@@ -1,9 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import Color from "color";
 import { decode } from "html-entities";
 import { useAtom } from "jotai";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Dimensions, Linking, PixelRatio, Pressable, View } from "react-native";
+import { Dimensions, Linking, PixelRatio, Pressable, TextStyle, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { useCollapsible, AnimatedSection } from "reanimated-collapsible-helpers";
 
@@ -25,6 +26,7 @@ export default function HtmlView(props: { content: string; level?: number }) {
       const quote = decode(node.children[0].data || "");
       return <Quote key={index} data={quote} level={props.level || 1} />;
     }
+
     if (node.name === "a") {
       const isBog = /http:\/\/bog\.ac\/t\/([0-9]{0,})/.test(node.attribs?.href);
       if (isBog) {
@@ -45,21 +47,30 @@ export default function HtmlView(props: { content: string; level?: number }) {
       }
       return <Link key={index} href={node.attribs?.href} />;
     }
+
     if (node.name === undefined) {
       const isBilibili = /(BV([a-zA-Z0-9]{10})|(AV[0-9]{1,}))/i.test(node.data?.trim());
       const isAcFun = /(ac([0-9]{1,}))/i.test(node.data?.trim());
+
       if (isBilibili) {
         return <Link key={index} href={`${Urls.bilibili}${node.data?.trim()}`} text={node.data} />;
       }
+
       if (isAcFun) {
         return <Link key={index} href={`${Urls.acfun}${node.data?.trim()}`} text={node.data} />;
       }
 
-      return <PureText key={index}>{decode(node.data)}</PureText>;
+      return (
+        <PureText key={index} style={parseStyle(node.parent?.attribs?.style)}>
+          {decode(node.data)}
+        </PureText>
+      );
     }
+
     if (node.name === "br" && node?.next?.name === "br") {
       return <EmptyLine key={index} />;
     }
+
     return <View key={index}>{defaultRenderer(node.children, parent)}</View>;
   }
 }
@@ -185,7 +196,7 @@ function Link(props: { href: string; text?: string; onPress?: () => void }) {
   );
 }
 
-function PureText(props: { children: any }) {
+function PureText(props: { children: any; style?: TextStyle }) {
   const { children } = props;
 
   const BASE_SIZE = useContext(SizeContext);
@@ -193,12 +204,15 @@ function PureText(props: { children: any }) {
 
   return (
     <Text
-      style={{
-        fontSize: BASE_SIZE,
-        lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT),
-        textAlign: "left",
-        minWidth: "100%",
-      }}>
+      style={[
+        props.style!,
+        {
+          fontSize: BASE_SIZE,
+          lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT),
+          textAlign: "left",
+          minWidth: "100%",
+        },
+      ]}>
       {children}
     </Text>
   );
@@ -215,4 +229,20 @@ function EmptyLine() {
       }}
     />
   );
+}
+
+function parseStyle(style?: string) {
+  if (style) {
+    const styles = style.split(";");
+    const colorString = /color:/i.test(styles[0]) ? styles[0].split(":")[1] : "";
+    if (colorString) {
+      try {
+        const color = Color(colorString.trim()).hex();
+        return { color };
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
+  return undefined;
 }

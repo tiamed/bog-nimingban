@@ -1,5 +1,5 @@
-const tintColorLight = "#FC88B3";
-const tintColorDark = "#FC88B3";
+const tintColorLight = "#ff7096";
+const tintColorDark = "#ff7096";
 
 export default {
   light: {
@@ -10,7 +10,7 @@ export default {
     tabIconDefault: "#ccc",
     border: "#eee",
     inactive: "#ccc",
-    highlight: "#ff7096",
+    highlight: "#ff4d6d",
     button: tintColorLight,
     active: tintColorLight,
     tabIconSelected: tintColorLight,
@@ -25,7 +25,7 @@ export default {
     tabIconDefault: "#ccc",
     border: "#333",
     inactive: "#444",
-    highlight: "#ff7096",
+    highlight: "#ff4d6d",
     button: tintColorDark,
     active: tintColorDark,
     tabIconSelected: tintColorDark,
