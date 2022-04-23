@@ -39,6 +39,7 @@ export default function FavoriteFloatingAction() {
         onValueChange={([id]) => {
           setFavoriteFilter(id || "");
         }}
+        showDefault
       />
     </>
   );

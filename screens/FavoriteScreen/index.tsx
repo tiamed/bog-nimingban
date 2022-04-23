@@ -59,10 +59,16 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
 
   useEffect(() => {
     if (favorite?.length) {
-      if (favoriteFilter) {
-        setFilteredFavorite(favorite?.filter((item) => item?.tags?.includes(favoriteFilter)));
-      } else {
-        setFilteredFavorite(favorite);
+      switch (favoriteFilter) {
+        case "empty":
+          setFilteredFavorite(favorite.filter((item) => !item?.tags?.length));
+          break;
+        case "":
+          setFilteredFavorite(favorite);
+          break;
+        default:
+          setFilteredFavorite(favorite?.filter((item) => item?.tags?.includes(favoriteFilter)));
+          break;
       }
     }
   }, [favorite, favoriteFilter]);

@@ -13,7 +13,14 @@ import { showBackupModalAtom, Cookie } from "./common";
 import Modal from "@/components/Modal";
 import { Button, Text, View, TextInput } from "@/components/Themed";
 
-const BACKUP_KEYS = ["cookies", "favorite", "history", "replyHistory", "blackListPosts"];
+const BACKUP_KEYS = [
+  "cookies",
+  "favorite",
+  "favoriteTags",
+  "history",
+  "replyHistory",
+  "blackListPosts",
+];
 
 export default function AddCookieModal(props: { cookie?: Cookie }) {
   const [visible, setVisible] = useAtom(showBackupModalAtom);

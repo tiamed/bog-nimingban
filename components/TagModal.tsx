@@ -1,6 +1,6 @@
 import * as Haptics from "expo-haptics";
 import { atom, useAtom, useSetAtom } from "jotai";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, InteractionManager, StyleSheet, TouchableOpacity } from "react-native";
 import Toast from "react-native-toast-message";
 
@@ -25,6 +25,7 @@ export default function TagModal(props: {
   initialValue: string[];
   maxLimit?: number;
   visible: boolean;
+  showDefault?: boolean;
   onValueChange: (value: string[]) => void;
   onDismiss: () => void;
   onOpen: () => void;
@@ -84,13 +85,25 @@ export default function TagModal(props: {
   const renderLabel = useCallback(
     (item: Tag) => {
       if (item.id) {
-        const count = favorite?.filter((record) => record.tags?.includes(item.id))?.length;
+        let count;
+        if (item.id === "empty") {
+          count = favorite?.filter((record) => !record.tags?.length).length;
+        } else {
+          count = favorite?.filter((record) => record.tags?.includes(item.id))?.length;
+        }
         return `${item.name}(${count || 0})`;
       }
       return item.name;
     },
     [favorite]
   );
+
+  const options = useMemo(() => {
+    if (props.showDefault) {
+      return [{ id: "empty", name: "默认" } as Tag, ...tags];
+    }
+    return tags;
+  }, [tags, props.showDefault]);
 
   useEffect(() => {
     setSelectedValue(props.initialValue);
@@ -108,7 +121,7 @@ export default function TagModal(props: {
             style={styles.list}
             contentContainerStyle={styles.contentContainer}
             numColumns={1}
-            data={tags}
+            data={options}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <TagItem
