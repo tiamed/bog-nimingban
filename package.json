@@ -48,6 +48,7 @@
     "html-entities": "^2.3.3",
     "html-to-text": "^8.2.0",
     "jotai": "^1.6.2",
+    "node-html-parser": "^5.3.3",
     "qs": "^6.10.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

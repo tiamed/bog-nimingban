@@ -37,6 +37,7 @@ export type RootStackParamList = {
     query: string;
   };
   Sketch: undefined;
+  Recommend: undefined;
   NotFound: undefined;
 };
 

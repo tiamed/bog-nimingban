@@ -169,3 +169,5 @@ export const deleteSlaveCookie = (id: string, hash: string, slaveId: string) =>
   });
 
 export const getEmoticons = () => axios.get<EmoticonResponse>("/static/js/kaomoji.json");
+
+export const getRecommendations = () => axios.get("/webapp/pages/main/search.html");

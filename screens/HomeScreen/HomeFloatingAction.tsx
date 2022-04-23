@@ -21,6 +21,9 @@ export default function HomeFloatingAction() {
       case "search":
         navigation.navigate("SearchModal");
         break;
+      case "recommend":
+        navigation.navigate("Recommend");
+        break;
       default:
         break;
     }
@@ -29,6 +32,11 @@ export default function HomeFloatingAction() {
     <FloatingAction
       color={tintColor}
       actions={[
+        {
+          icon: <Icon name="list-alt" color="white" />,
+          name: "recommend",
+          color: tintColor,
+        },
         {
           icon: <Icon name="edit" color="white" />,
           name: "post",

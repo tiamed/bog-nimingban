@@ -42,6 +42,7 @@ import PostScreenHeaderRight from "@/screens/PostScreen/HeaderRight";
 import PreviewModalScreen from "@/screens/PreviewModalScreen";
 import ProfileScreen from "@/screens/ProfileScreen";
 import QuoteModalScreen from "@/screens/QuoteModalScreen";
+import RecommendScreen from "@/screens/RecommendScreen";
 import ReplyHistoryScreen from "@/screens/ReplyHistoryScreen";
 import ReplyModalScreen from "@/screens/ReplyModalScreen";
 import SearchModalScreen from "@/screens/SearchModalScreen";
@@ -153,6 +154,7 @@ function RootNavigator() {
       />
       <Stack.Screen name="About" component={AboutScreen} options={{ title: "关于" }} />
       <Stack.Screen name="Sketch" component={SketchScreen} options={{ title: "涂鸦" }} />
+      <Stack.Screen name="Recommend" component={RecommendScreen} options={{ title: "推荐串" }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: "Oops!" }} />
       <Stack.Group
         screenOptions={{
