@@ -15,14 +15,14 @@ export default function ImageList(props: {
   onPress?: (image: Image) => void;
 }) {
   const [imageWidth] = useAtom(imageWidthAtom);
-  const setPreivews = useSetAtom(previewsAtom);
+  const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const navigation = useNavigation();
   const borderColor = useThemeColor({}, "border");
 
   const onPress = (image: Image) => {
     const images = props.previews || props.images;
-    setPreivews(
+    setPreviews(
       images.map((item) => ({
         url: getImageUrl(item),
       }))
