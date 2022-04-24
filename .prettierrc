@@ -1,6 +1,7 @@
 {
   "printWidth": 100,
   "tabWidth": 2,
+  "indent": 2,
   "doubleQuote": true,
   "bracketSameLine": true,
   "trailingComma": "es5"
