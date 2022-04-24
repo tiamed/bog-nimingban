@@ -34,6 +34,7 @@ import BlackListScreen from "@/screens/BlackListScreen";
 import BrowseHistoryScreen from "@/screens/BrowseHistoryScreen";
 import FavoriteScreen from "@/screens/FavoriteScreen";
 import FooterLayoutScreen from "@/screens/FooterLayoutScreen";
+import GeneralSettingsScreen from "@/screens/GeneralSettingsScreen";
 import HomeScreen from "@/screens/HomeScreen";
 import LayoutSettingsScreen from "@/screens/LayoutSettingsScreen";
 import NotFoundScreen from "@/screens/NotFoundScreen";
@@ -143,10 +144,11 @@ function RootNavigator() {
         options={{ title: "显示设置" }}
       />
       <Stack.Screen
-        name="BlackList"
-        component={BlackListScreen}
-        options={{ title: "屏蔽串设置" }}
+        name="GeneralSettings"
+        component={GeneralSettingsScreen}
+        options={{ title: "通用设置" }}
       />
+      <Stack.Screen name="BlackList" component={BlackListScreen} options={{ title: "屏蔽设置" }} />
       <Stack.Screen
         name="FooterLayout"
         component={FooterLayoutScreen}

@@ -30,6 +30,7 @@ export type RootStackParamList = {
     title: string;
   };
   LayoutSettings: undefined;
+  GeneralSettings: undefined;
   BlackList: undefined;
   About: undefined;
   FooterLayout: undefined;

@@ -1,4 +1,3 @@
-import * as Haptics from "expo-haptics";
 import { atom, useAtom, useSetAtom } from "jotai";
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, InteractionManager, StyleSheet, TouchableOpacity } from "react-native";
@@ -11,6 +10,7 @@ import { SizeContext } from "./ThemeContextProvider";
 import { accurateTimeFormatAtom, favoriteAtom, favoriteTagsAtom } from "@/atoms";
 import Modal from "@/components/Modal";
 import { View, Button, Text, useThemeColor, TextInput } from "@/components/Themed";
+import useHaptics from "@/hooks/useHaptics";
 import { formatTime } from "@/utils/format";
 
 interface Tag {
@@ -245,10 +245,11 @@ function TagItem(props: {
   const borderColor = useThemeColor({}, "border");
   const inactiveColor = useThemeColor({}, "inactive");
   const BASE_SIZE = useContext(SizeContext);
+  const haptics = useHaptics();
   return (
     <TouchableOpacity
       onPress={() => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        haptics.light();
         props.onPress();
       }}
       style={[styles.item, { borderColor: props.highlight ? tintColor : borderColor }]}>

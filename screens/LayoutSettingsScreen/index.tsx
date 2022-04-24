@@ -2,7 +2,6 @@ import { useSetAtom } from "jotai";
 import { useContext, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
-import { JumpToSettings } from "../ProfileScreen/Settings";
 import ColorPickerModal from "./ColorPickerModal";
 
 import {
@@ -23,6 +22,7 @@ import {
   threadReplyReverseAtom,
 } from "@/atoms";
 import Icon from "@/components/Icon";
+import JumpToSettings from "@/components/JumpToSettings";
 import SettingPicker from "@/components/SettingPicker";
 import SettingSwitch from "@/components/SettingSwitch";
 import { SizeContext } from "@/components/ThemeContextProvider";
@@ -38,7 +38,11 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
   return (
     <ScrollView style={{ flex: 1, flexDirection: "column" }}>
       <View style={styles.container}>
-        <JumpToSettings title="底栏按钮调整" navigateTo="FooterLayout" />
+        <JumpToSettings
+          title="底栏按钮调整"
+          desc="调整串内底栏按钮顺序"
+          navigateTo="FooterLayout"
+        />
         <SettingSwitch title="首页展示回复" atom={showThreadReplyAtom} />
         <SettingSwitch title="搜索结果按主题展示" atom={groupSearchResultsAtom} />
         <SettingSwitch title="展示回复时逆序" atom={threadReplyReverseAtom} />
@@ -159,9 +163,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    paddingLeft: 15,
-    paddingRight: 15,
-    marginTop: 15,
+    paddingHorizontal: 15,
+    paddingTop: 15,
     paddingBottom: 50,
   },
   item: {

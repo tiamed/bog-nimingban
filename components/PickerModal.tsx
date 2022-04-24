@@ -1,10 +1,10 @@
-import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import { StyleSheet, FlatList, TouchableOpacity } from "react-native";
 
 import Modal from "./Modal";
 
 import { View, Button, Text, useThemeColor } from "@/components/Themed";
+import useHaptics from "@/hooks/useHaptics";
 
 interface Option {
   label: string;
@@ -94,10 +94,11 @@ export default function PickerModal(props: {
 function OptionItem(props: { name: string; highlight?: boolean; onPress: () => void }) {
   const tintColor = useThemeColor({}, "tint");
   const borderColor = useThemeColor({}, "border");
+  const haptics = useHaptics();
   return (
     <TouchableOpacity
       onPress={() => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        haptics.light();
         props.onPress();
       }}
       style={[styles.item, { borderColor: props.highlight ? tintColor : borderColor }]}>

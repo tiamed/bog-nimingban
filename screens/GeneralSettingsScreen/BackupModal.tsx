@@ -3,12 +3,12 @@ import { format } from "date-fns";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { useState } from "react";
 import { Alert, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 
-import { showBackupModalAtom, Cookie } from "./common";
+import { Cookie } from "../ProfileScreen/common";
 
 import Modal from "@/components/Modal";
 import { Button, Text, View, TextInput } from "@/components/Themed";
@@ -21,6 +21,8 @@ const BACKUP_KEYS = [
   "replyHistory",
   "blackListPosts",
 ];
+
+export const showBackupModalAtom = atom(false);
 
 export default function AddCookieModal(props: { cookie?: Cookie }) {
   const [visible, setVisible] = useAtom(showBackupModalAtom);

@@ -1,7 +1,6 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
-import * as Haptics from "expo-haptics";
 import { useAtom } from "jotai";
 import React, { useState, useEffect, useMemo } from "react";
 import { StyleSheet, TouchableOpacity, Share, Alert } from "react-native";
@@ -17,6 +16,7 @@ import Icon from "@/components/Icon";
 import TagModal from "@/components/TagModal";
 import { Text, View, useThemeColor } from "@/components/Themed";
 import Urls from "@/constants/Urls";
+import useHaptics from "@/hooks/useHaptics";
 import { UserFavorite } from "@/screens/FavoriteScreen";
 
 export default function Footer(props: {
@@ -32,6 +32,7 @@ export default function Footer(props: {
   const [favorite, setFavorite] = useAtom<UserFavorite[], UserFavorite[], void>(favoriteAtom);
   const [footerLayout] = useAtom<string[]>(footerLayoutAtom);
   const navigation = useNavigation();
+  const haptics = useHaptics();
   const tintColor = useThemeColor({}, "tint");
   const height = useSharedValue(50);
   const insets = useSafeAreaInsets();
@@ -57,7 +58,7 @@ export default function Footer(props: {
 
   const confirmToggleFavorite = () => {
     if (isFavorite) {
-      Haptics.selectionAsync();
+      haptics.heavy();
       Alert.alert("提示", "确定要取消收藏吗？", [
         {
           text: "取消",
@@ -213,15 +214,16 @@ function FooterItem(props: {
   disabled: boolean;
 }) {
   const tintColor = useThemeColor({}, "tint");
+  const haptics = useHaptics();
 
   return (
     <TouchableOpacity
       onPress={() => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        haptics.light();
         props.handler?.();
       }}
       onLongPress={() => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        haptics.heavy();
         props.longPressHandler?.();
       }}
       disabled={props.disabled}

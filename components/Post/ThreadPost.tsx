@@ -1,5 +1,4 @@
 import { useNavigation } from "@react-navigation/native";
-import * as Haptics from "expo-haptics";
 import { useAtom, useSetAtom } from "jotai";
 import { Fragment, useContext, useMemo } from "react";
 import { Dimensions, PixelRatio, Pressable, View } from "react-native";
@@ -17,6 +16,7 @@ import { Post, Image } from "@/api";
 import { lineHeightAtom, previewIndexAtom, previewsAtom, threadDirectionAtom } from "@/atoms";
 import { SizeContext, ThreadReplyReverseContext } from "@/components/ThemeContextProvider";
 import { useForumsIdMap } from "@/hooks/useForums";
+import useHaptics from "@/hooks/useHaptics";
 
 const width = Dimensions.get("window").width;
 
@@ -36,6 +36,7 @@ export default function ThreadPost(props: {
 
   const forumsIdMap = useForumsIdMap();
   const navigation = useNavigation();
+  const haptics = useHaptics();
   const replyBackgroundColor = useThemeColor({}, "replyBackground");
   const borderColor = useThemeColor({}, "border");
   const BASE_SIZE = useContext(SizeContext);
@@ -83,7 +84,7 @@ export default function ThreadPost(props: {
       <Pressable
         onPress={props.onPress?.bind(null, props.data) || OnPress}
         onLongPress={() => {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+          haptics.heavy();
           props.onLongPress?.(props.data);
         }}
         delayLongPress={800}>
@@ -150,7 +151,7 @@ export default function ThreadPost(props: {
                       });
                     }}
                     onLongPress={() => {
-                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                      haptics.heavy();
                       props.onLongPress?.(props.data);
                     }}
                     onImagePress={(image) => {
