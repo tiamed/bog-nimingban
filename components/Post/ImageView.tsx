@@ -5,6 +5,7 @@ import { StyleProp, TouchableOpacity } from "react-native";
 import { Image } from "@/api";
 import { thumbnailResizeAtom } from "@/atoms";
 import Urls from "@/constants/Urls";
+import useShowImage from "@/hooks/useShowImage";
 
 export default function ImageView(props: {
   onPress: () => void;
@@ -14,14 +15,17 @@ export default function ImageView(props: {
   path?: string;
 }) {
   const [thumbnailResize] = useAtom(thumbnailResizeAtom);
+  const showImage = useShowImage();
   return (
     <TouchableOpacity onPress={props.onPress} style={props.style}>
-      <CachedImage
-        source={{ uri: getThumbnailUrl(props.data, props.path) }}
-        cacheKey={`${props.data.url}-thumb-${props.path || ""}`}
-        resizeMode={thumbnailResize}
-        style={props.imageStyle}
-      />
+      {showImage ? (
+        <CachedImage
+          source={{ uri: getThumbnailUrl(props.data, props.path) }}
+          cacheKey={`${props.data.url}-thumb-${props.path || ""}`}
+          resizeMode={thumbnailResize}
+          style={props.imageStyle}
+        />
+      ) : null}
     </TouchableOpacity>
   );
 }
