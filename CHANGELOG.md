@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.32](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.31...v1.0.0-alpha.32) (2022-04-25)
+
+
+### Features
+
+* no image mode ([bf98d5a](https://github.com/tiamed/bog-nimingban/commit/bf98d5a6b52db444d8dd812f28858e52a90d0ead))
+* recommendation ([aa11aa3](https://github.com/tiamed/bog-nimingban/commit/aa11aa32981a5390935fb60ce9e95767e5f2ba14))
+
 ## [1.0.0-alpha.31](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.30...v1.0.0-alpha.31) (2022-04-22)
 
 
