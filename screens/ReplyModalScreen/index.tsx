@@ -16,6 +16,7 @@ import { useDebouncedCallback } from "use-debounce/lib";
 import EmoticonPicker from "./EmoticonPicker";
 import Footer from "./Footer";
 
+import { SizeContext } from "@/Provider";
 import { addReply, uploadImage, Image, getReply } from "@/api";
 import {
   cookiesAtom,
@@ -31,7 +32,6 @@ import Icon from "@/components/Icon";
 import Overlay from "@/components/Overlay";
 import Picker from "@/components/Picker";
 import ImageView from "@/components/Post/ImageView";
-import { SizeContext } from "@/components/ThemeContextProvider";
 import { Button, Text, useThemeColor, View, TextInput } from "@/components/Themed";
 import Errors from "@/constants/Errors";
 import useForums, { useForumsIdMap } from "@/hooks/useForums";

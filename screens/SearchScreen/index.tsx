@@ -1,18 +1,13 @@
 import { useAtom, useSetAtom } from "jotai";
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useContext } from "react";
 import { StyleSheet, FlatList, FlatListProps, InteractionManager } from "react-native";
 import { useIsMounted } from "usehooks-ts";
 
 import SearchFloatingAction from "./SearchFloatingAction";
 
+import { GroupSearchResultContext } from "@/Provider";
 import { getSearchResults, Reply, Image, Post } from "@/api";
-import {
-  maxLineAtom,
-  previewIndexAtom,
-  previewsAtom,
-  searchForumFilterAtom,
-  groupSearchResultsAtom,
-} from "@/atoms";
+import { maxLineAtom, previewIndexAtom, previewsAtom, searchForumFilterAtom } from "@/atoms";
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
 import ThreadPost from "@/components/Post/ThreadPost";
@@ -32,12 +27,12 @@ export default function SearchScreen({ route, navigation }: RootStackScreenProps
   const [hasNoMore, setHasNoMore] = useState(false);
 
   const [maxLine] = useAtom(maxLineAtom);
-  const [groupSearchResults] = useAtom(groupSearchResultsAtom);
   const [searchForumFilter] = useAtom(searchForumFilterAtom);
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewIndex = useSetAtom(previewIndexAtom);
   const listRef = useRef<any>(null);
   const isMounted = useIsMounted();
+  const groupSearchResults = useContext(GroupSearchResultContext);
   const loadData = async (page: number) => {
     if (!isMounted) return;
     setPage(page);
@@ -188,7 +183,13 @@ export default function SearchScreen({ route, navigation }: RootStackScreenProps
             keyExtractor={keyExtractor}
             onEndReached={loadMoreData}
             onEndReachedThreshold={0.1}
-            ListFooterComponent={() => renderFooter(isLoading, hasNoMore)}
+            ListFooterComponent={() =>
+              renderFooter({
+                loading: isLoading,
+                hasNoMore,
+                empty: !filteredPosts.length,
+              })
+            }
           />
         ) : (
           <FlatList
@@ -200,7 +201,13 @@ export default function SearchScreen({ route, navigation }: RootStackScreenProps
             keyExtractor={keyExtractor}
             onEndReached={loadMoreData}
             onEndReachedThreshold={0.1}
-            ListFooterComponent={() => renderFooter(isLoading, hasNoMore)}
+            ListFooterComponent={() =>
+              renderFooter({
+                loading: isLoading,
+                hasNoMore,
+                empty: !filteredReplies.length,
+              })
+            }
           />
         )}
       </View>

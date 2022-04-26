@@ -15,8 +15,8 @@ import {
 import { SuccessToast, InfoToast, ErrorToast } from "react-native-toast-message";
 
 import Colors from "../constants/Colors";
-import { ColorSchemeContext, FontFamilyContext, SizeContext } from "./ThemeContextProvider";
 
+import { ColorSchemeContext, FontFamilyContext, SizeContext } from "@/Provider";
 import useColor from "@/hooks/useColor";
 
 export function useThemeColor(

@@ -4,10 +4,10 @@ import { useContext, useMemo } from "react";
 import { TouchableOpacity, View } from "react-native";
 
 import Icon from "../Icon";
-import { SizeContext } from "../ThemeContextProvider";
 import { Text, useThemeColor } from "../Themed";
 import ImageView, { getImageUrl } from "./ImageView";
 
+import { SizeContext } from "@/Provider";
 import { Image } from "@/api";
 import { imageWidthAtom, previewIndexAtom, previewsAtom } from "@/atoms";
 import useShowImage from "@/hooks/useShowImage";

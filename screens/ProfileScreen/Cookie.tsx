@@ -9,10 +9,10 @@ import Toast from "react-native-toast-message";
 import AddCookieModal from "./AddCookieModal";
 import { Cookie, showAddModalAtom } from "./common";
 
+import { SizeContext } from "@/Provider";
 import { SignInfo, signIn, createCookie, deleteSlaveCookie } from "@/api";
 import { cookiesAtom, selectedCookieAtom, signDictAtom } from "@/atoms/index";
 import Icon from "@/components/Icon";
-import { SizeContext } from "@/components/ThemeContextProvider";
 import { Button, Text, useThemeColor } from "@/components/Themed";
 import Errors from "@/constants/Errors";
 

@@ -3,8 +3,9 @@ import { useContext } from "react";
 import { StyleSheet, View } from "react-native";
 
 import Picker from "./Picker";
-import { SizeContext } from "./ThemeContextProvider";
 import { Text } from "./Themed";
+
+import { SizeContext } from "@/Provider";
 
 interface Option {
   label: string;

@@ -80,7 +80,12 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={() => renderFooter(false, true)}
+        ListFooterComponent={() =>
+          renderFooter({
+            loading: false,
+            hasNoMore: true,
+          })
+        }
       />
       <FavoriteFloatingAction />
       <TagModal

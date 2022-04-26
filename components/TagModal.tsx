@@ -5,8 +5,8 @@ import Toast from "react-native-toast-message";
 
 import { UserFavorite } from "../screens/FavoriteScreen/index";
 import Icon from "./Icon";
-import { SizeContext } from "./ThemeContextProvider";
 
+import { SizeContext } from "@/Provider";
 import { accurateTimeFormatAtom, favoriteAtom, favoriteTagsAtom } from "@/atoms";
 import Modal from "@/components/Modal";
 import { View, Button, Text, useThemeColor, TextInput } from "@/components/Themed";

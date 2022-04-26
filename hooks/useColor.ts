@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { HighlightContext, TintContext } from "@/components/ThemeContextProvider";
+import { HighlightContext, TintContext } from "@/Provider";
 import Colors from "@/constants/Colors";
 
 export type ColorName = keyof typeof Colors.light & keyof typeof Colors.dark;

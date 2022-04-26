@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { StyleSheet, View } from "react-native";
 
+import { SizeContext } from "@/Provider";
 import JumpToSettings from "@/components/JumpToSettings";
-import { SizeContext } from "@/components/ThemeContextProvider";
 import { Text } from "@/components/Themed";
 
 export default function Settings() {

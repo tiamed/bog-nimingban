@@ -14,6 +14,7 @@ import {
   showHomeActionModalAtom,
   blackListPostsAtom,
   showThreadReplyAtom,
+  blackListForumsAtom,
 } from "@/atoms";
 import ThreadPost from "@/components/Post/ThreadPost";
 import { View } from "@/components/Themed";
@@ -27,6 +28,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
   const [maxLine] = useAtom(maxLineAtom);
   const setShowHomeActionModal = useSetAtom(showHomeActionModalAtom);
   const [blackListPosts] = useAtom(blackListPostsAtom);
+  const [blackListForums] = useAtom(blackListForumsAtom);
   const [showThreadReply] = useAtom(showThreadReplyAtom);
 
   const [posts, setPosts] = useState<Post[]>([]);
@@ -116,7 +118,14 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
   }, [forumsIdMap, thread]);
 
   useEffect(() => {
-    setFilteredPosts(posts?.filter((post) => !blackListPosts.includes(post.id)));
+    let filtered = posts;
+    if (blackListPosts?.length) {
+      filtered = filtered.filter((post) => !blackListPosts.includes(post.id));
+    }
+    if (blackListForums?.length && thread === 0) {
+      filtered = filtered.filter((post) => !blackListForums.includes(post.forum));
+    }
+    setFilteredPosts(filtered);
   }, [posts]);
 
   return (
@@ -130,7 +139,12 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
         keyExtractor={keyExtractor}
         onEndReached={loadMoreData}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={() => renderFooter(isLoading, hasNoMore)}
+        ListFooterComponent={() =>
+          renderFooter({
+            loading: isLoading,
+            hasNoMore,
+          })
+        }
       />
       <HomeFloatingAction />
       <ActionModal item={focusItem} />

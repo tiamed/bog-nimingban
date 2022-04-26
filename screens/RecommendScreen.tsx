@@ -1,14 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import { parse, HTMLElement } from "node-html-parser";
 import { useContext, useEffect, useState } from "react";
-import { StyleSheet, ScrollView, TouchableOpacity, FlatList, Dimensions } from "react-native";
+import { StyleSheet, TouchableOpacity, FlatList, Dimensions } from "react-native";
 
+import { SizeContext } from "@/Provider";
 import { getRecommendations } from "@/api";
-import { SizeContext } from "@/components/ThemeContextProvider";
 import { View, Text, useThemeColor } from "@/components/Themed";
 import { RootStackScreenProps } from "@/types";
-
-const width = Dimensions.get("window").width;
 
 interface RecommendItem {
   id: string;

@@ -12,9 +12,9 @@ import ImageView, { getImageUrl, getThumbnailUrl } from "./ImageView";
 import ReplyPost from "./ReplyPost";
 import Wrapper from "./Wrapper";
 
+import { SizeContext, ThreadReplyReverseContext } from "@/Provider";
 import { Post, Image } from "@/api";
 import { lineHeightAtom, previewIndexAtom, previewsAtom, threadDirectionAtom } from "@/atoms";
-import { SizeContext, ThreadReplyReverseContext } from "@/components/ThemeContextProvider";
 import { useForumsIdMap } from "@/hooks/useForums";
 import useHaptics from "@/hooks/useHaptics";
 

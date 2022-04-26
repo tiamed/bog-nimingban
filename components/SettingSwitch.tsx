@@ -2,8 +2,9 @@ import { useAtom } from "jotai";
 import { useContext } from "react";
 import { StyleSheet, View, Switch } from "react-native";
 
-import { SizeContext } from "./ThemeContextProvider";
 import { Text, useThemeColor } from "./Themed";
+
+import { SizeContext } from "@/Provider";
 
 export default function SettingSwitch(props: { title: string; atom: any }) {
   const [value, setValue] = useAtom<boolean, boolean, void>(props.atom);

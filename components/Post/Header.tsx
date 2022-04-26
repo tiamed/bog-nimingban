@@ -4,8 +4,8 @@ import { useContext } from "react";
 import { View } from "react-native";
 import { Badge } from "react-native-paper";
 
+import { AccurateTimeFormatContext, SizeContext } from "@/Provider";
 import { Post } from "@/api";
-import { AccurateTimeFormatContext, SizeContext } from "@/components/ThemeContextProvider";
 import { Text, useThemeColor } from "@/components/Themed";
 import { useForumsIdMap } from "@/hooks/useForums";
 

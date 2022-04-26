@@ -4,6 +4,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 
 import ColorPickerModal from "./ColorPickerModal";
 
+import { SizeContext } from "@/Provider";
 import {
   colorSchemeAtom,
   imageWidthAtom,
@@ -25,7 +26,6 @@ import Icon from "@/components/Icon";
 import JumpToSettings from "@/components/JumpToSettings";
 import SettingPicker from "@/components/SettingPicker";
 import SettingSwitch from "@/components/SettingSwitch";
-import { SizeContext } from "@/components/ThemeContextProvider";
 import { ScrollView, View, Text, useThemeColor } from "@/components/Themed";
 import { RootStackScreenProps } from "@/types";
 

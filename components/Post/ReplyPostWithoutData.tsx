@@ -8,9 +8,9 @@ import { useIsMounted } from "usehooks-ts";
 import { getImageUrl, getThumbnailUrl } from "./ImageView";
 import ReplyPost from "./ReplyPost";
 
+import { SizeContext } from "@/Provider";
 import { getReply, Post, Reply, Image } from "@/api";
 import { previewIndexAtom, previewsAtom } from "@/atoms";
-import { SizeContext } from "@/components/ThemeContextProvider";
 import { Text, useThemeColor } from "@/components/Themed";
 import { MainPostContext } from "@/screens/PostScreen";
 

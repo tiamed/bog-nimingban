@@ -2,8 +2,9 @@ import { useContext } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import Icon from "./Icon";
-import { SizeContext } from "./ThemeContextProvider";
 import { Text, useThemeColor } from "./Themed";
+
+import { SizeContext } from "@/Provider";
 
 export default function SettingItem(props: { title: string; desc?: string; onPress: () => void }) {
   const tintColor = useThemeColor({}, "tint");

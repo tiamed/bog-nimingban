@@ -5,11 +5,17 @@ import { ActivityIndicator, TouchableOpacity, View } from "react-native";
 import { Text, useThemeColor } from "@/components/Themed";
 import Loadings from "@/constants/Loadings";
 
-export default function renderFooter(
-  loading: boolean = false,
-  hasNoMore: boolean = false,
-  loadMore: () => void = () => {}
-) {
+export default function renderFooter({
+  loading = false,
+  hasNoMore = false,
+  empty = false,
+  loadMore = () => {},
+}: {
+  loading: boolean;
+  hasNoMore: boolean;
+  empty?: boolean;
+  loadMore?: () => void;
+}) {
   const [randomIndex, setRadomIndex] = useState(0);
   const onPress = useCallback(() => {
     if (!loading && typeof loadMore === "function") {
@@ -20,9 +26,10 @@ export default function renderFooter(
     if (loading) {
       return Loadings[randomIndex];
     } else {
+      if (empty) return "暂无数据";
       return hasNoMore ? "已经没有更多了" : "下拉加载更多";
     }
-  }, [loading, hasNoMore, randomIndex]);
+  }, [loading, hasNoMore, empty, randomIndex]);
   useEffect(() => {
     setRadomIndex((Loadings.length * Math.random()) | 0);
   }, []);

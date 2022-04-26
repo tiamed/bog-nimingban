@@ -391,7 +391,11 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
           onEndReached={() => loadMoreData(false)}
           onEndReachedThreshold={0.5}
           ListFooterComponent={() =>
-            renderFooter(isLoading, hasNoMore, loadMoreData.bind(null, true))
+            renderFooter({
+              loading: isLoading,
+              hasNoMore,
+              loadMore: loadMoreData.bind(null, true),
+            })
           }
           viewabilityConfig={viewConfigRef.current}
           onViewableItemsChanged={onViewRef.current}

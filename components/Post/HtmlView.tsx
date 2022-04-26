@@ -10,8 +10,8 @@ import { useCollapsible, AnimatedSection } from "reanimated-collapsible-helpers"
 
 import ReplyPostWithoutData from "./ReplyPostWithoutData";
 
+import { SizeContext } from "@/Provider";
 import { lineHeightAtom } from "@/atoms";
-import { SizeContext } from "@/components/ThemeContextProvider";
 import { Text, useThemeColor } from "@/components/Themed";
 import Urls from "@/constants/Urls";
 

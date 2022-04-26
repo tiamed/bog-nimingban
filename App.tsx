@@ -2,12 +2,14 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { ColorSchemeProvider } from "./components/ThemeContextProvider";
 import { getToastConfig } from "./components/Themed";
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 import CheckFavoriteUpdate from "./tasks/CheckFavoriteUpdate";
+
+import LayoutProvider from "@/Provider/Layout";
+import ThemeProvider from "@/Provider/Theme";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -17,19 +19,21 @@ export default function App() {
     return null;
   } else {
     return (
-      <ColorSchemeProvider>
-        <SafeAreaProvider>
-          <Navigation colorScheme={colorScheme} />
-          <StatusBar style={colorScheme === "light" ? "dark" : "light"} />
-          <Toast
-            position="bottom"
-            bottomOffset={100}
-            visibilityTime={2500}
-            config={getToastConfig(colorScheme)}
-          />
-          <CheckFavoriteUpdate />
-        </SafeAreaProvider>
-      </ColorSchemeProvider>
+      <ThemeProvider>
+        <LayoutProvider>
+          <SafeAreaProvider>
+            <Navigation colorScheme={colorScheme} />
+            <StatusBar style={colorScheme === "light" ? "dark" : "light"} />
+            <Toast
+              position="bottom"
+              bottomOffset={100}
+              visibilityTime={2500}
+              config={getToastConfig(colorScheme)}
+            />
+            <CheckFavoriteUpdate />
+          </SafeAreaProvider>
+        </LayoutProvider>
+      </ThemeProvider>
     );
   }
 }

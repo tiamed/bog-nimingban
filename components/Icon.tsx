@@ -1,7 +1,7 @@
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useContext } from "react";
 
-import { SizeContext } from "./ThemeContextProvider";
+import { SizeContext } from "@/Provider";
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
