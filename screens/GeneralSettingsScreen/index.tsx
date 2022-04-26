@@ -2,6 +2,7 @@ import { useSetAtom } from "jotai";
 import { StyleSheet } from "react-native";
 
 import BackupModal, { showBackupModalAtom } from "./BackupModal";
+import BlackListForumsItem from "./BlackListForumsItem";
 
 import { noImageModeAtom, vibrateAtom } from "@/atoms";
 import JumpToSettings from "@/components/JumpToSettings";
@@ -29,6 +30,7 @@ export default function GeneralSettingsScreen() {
         desc="设置屏蔽串，可在首页长按串进行屏蔽"
         navigateTo="BlackList"
       />
+      <BlackListForumsItem />
       <SettingItem title="备份设置" desc="导出导入备份" onPress={() => setShowBackupModal(true)} />
       <BackupModal />
     </View>

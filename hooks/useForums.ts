@@ -18,6 +18,11 @@ export default function useForums() {
   return forums;
 }
 
+export function useReachableForums() {
+  const forums = useForums();
+  return forums.filter((forum) => !forum.hide && forum.id !== 0);
+}
+
 export function useForumsIdMap() {
   const [idMap] = useAtom(forumsIdMapAtom);
   return idMap;
