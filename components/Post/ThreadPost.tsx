@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
 import { Fragment, useContext, useMemo } from "react";
-import { Dimensions, PixelRatio, Pressable, View } from "react-native";
+import { Dimensions, Pressable, View } from "react-native";
 import { TapGestureHandler } from "react-native-gesture-handler";
 
 import { useThemeColor } from "../Themed";
@@ -65,8 +65,7 @@ export default function ThreadPost(props: {
   }, [images]);
 
   const imageSize = useMemo(() => {
-    const calculated =
-      PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) * (props.maxLine || 999) - 2;
+    const calculated = LINE_HEIGHT * (props.maxLine || 999) - 2;
     return calculated < 150 ? calculated : 150;
   }, [props.maxLine, BASE_SIZE, LINE_HEIGHT]);
 
@@ -100,8 +99,7 @@ export default function ThreadPost(props: {
             <View
               style={{
                 flex: 2,
-                maxHeight:
-                  PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) * (props.maxLine || 999),
+                maxHeight: LINE_HEIGHT * (props.maxLine || 999),
                 overflow: "hidden",
               }}>
               <HtmlView content={props.data.content as string} />
@@ -159,10 +157,7 @@ export default function ThreadPost(props: {
                       setPreviews(previews);
                       navigation.navigate("PreviewModal");
                     }}
-                    maxHeight={
-                      PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) *
-                      (props.maxLine || 999)
-                    }
+                    maxHeight={LINE_HEIGHT * (props.maxLine || 999)}
                   />
                 )
               )}

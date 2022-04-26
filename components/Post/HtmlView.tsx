@@ -4,7 +4,7 @@ import Color from "color";
 import { decode } from "html-entities";
 import { useAtom } from "jotai";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Dimensions, Linking, PixelRatio, Pressable, TextStyle, View } from "react-native";
+import { Dimensions, Linking, Pressable, TextStyle, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { useCollapsible, AnimatedSection } from "reanimated-collapsible-helpers";
 
@@ -137,7 +137,7 @@ function Quote(props: { data: string; level: number }) {
             darkColor="#999999"
             style={{
               fontSize: BASE_SIZE * 0.8,
-              lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) - 4,
+              lineHeight: LINE_HEIGHT - 4,
               backgroundColor: "#eee",
               width: "auto",
               borderRadius: 2,
@@ -149,7 +149,7 @@ function Quote(props: { data: string; level: number }) {
         <Text
           style={{
             fontSize: BASE_SIZE * 0.8,
-            lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT) - 4,
+            lineHeight: LINE_HEIGHT - 4,
             marginLeft: 5,
           }}>
           {loadingText}
@@ -187,7 +187,7 @@ function Link(props: { href: string; text?: string; onPress?: () => void }) {
       <Text
         style={{
           fontSize: BASE_SIZE,
-          lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT),
+          lineHeight: LINE_HEIGHT,
           color: highlight,
         }}>
         {text || href}
@@ -208,7 +208,7 @@ function PureText(props: { children: any; style?: TextStyle }) {
         props.style!,
         {
           fontSize: BASE_SIZE,
-          lineHeight: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT),
+          lineHeight: LINE_HEIGHT,
           textAlign: "left",
           minWidth: "100%",
         },
@@ -219,13 +219,12 @@ function PureText(props: { children: any; style?: TextStyle }) {
 }
 
 function EmptyLine() {
-  const BASE_SIZE = useContext(SizeContext);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
 
   return (
     <View
       style={{
-        height: PixelRatio.roundToNearestPixel(BASE_SIZE * LINE_HEIGHT),
+        height: LINE_HEIGHT,
       }}
     />
   );

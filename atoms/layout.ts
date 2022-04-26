@@ -1,11 +1,15 @@
 import { atom } from "jotai";
+import { PixelRatio } from "react-native";
 
 import { atomWithAsyncStorage } from "./lib";
 
-export const sizeAtom = atomWithAsyncStorage("fontSize", "normal");
+export const sizeAtom = atomWithAsyncStorage("baseSize", 14);
 
-export const lineHeightAtom = atomWithAsyncStorage("lineHeight", 1.4);
+export const lineHeightTimesAtom = atomWithAsyncStorage("lineHeight", 1.4);
 
+export const lineHeightAtom = atom<number>(
+  (get) => PixelRatio.roundToNearestPixel(get(sizeAtom) * get(lineHeightTimesAtom)) || 0
+);
 export const maxLineAtom = atomWithAsyncStorage("maxLine", 10);
 
 export const threadDirectionAtom = atomWithAsyncStorage("threadDirection", "row");

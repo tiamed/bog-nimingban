@@ -7,7 +7,7 @@ import ColorPickerModal from "./ColorPickerModal";
 import {
   colorSchemeAtom,
   imageWidthAtom,
-  lineHeightAtom,
+  lineHeightTimesAtom,
   maxLineAtom,
   showColorPickerModalAtom,
   sizeAtom,
@@ -60,16 +60,16 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
           title="字体大小"
           atom={sizeAtom}
           options={[
-            { label: "小", value: "small" },
-            { label: "普通", value: "normal" },
-            { label: "中", value: "medium" },
-            { label: "大", value: "large" },
-            { label: "特大", value: "extraLarge" },
+            { label: "小", value: 12 },
+            { label: "普通", value: 14 },
+            { label: "中", value: 16 },
+            { label: "大", value: 18 },
+            { label: "特大", value: 20 },
           ]}
         />
         <SettingPicker
           title="行距"
-          atom={lineHeightAtom}
+          atom={lineHeightTimesAtom}
           options={[
             { label: "小", value: 1.2 },
             { label: "普通", value: 1.3 },

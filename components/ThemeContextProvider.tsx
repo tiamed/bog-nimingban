@@ -5,14 +5,14 @@ import {
   accurateTimeFormatAtom,
   fontFamilyAtom,
   highlightColorAtom,
+  sizeAtom,
   threadReplyReverseAtom,
   tintColorAtom,
 } from "@/atoms";
 import useColorScheme from "@/hooks/useColorScheme";
-import useSize from "@/hooks/useSize";
 
 export const ColorSchemeContext = createContext("light");
-export const SizeContext = createContext(16);
+export const SizeContext = createContext(14);
 export const TintContext = createContext("#FC88B3");
 export const HighlightContext = createContext("#FC4C5D");
 export const AccurateTimeFormatContext = createContext(false);
@@ -21,7 +21,7 @@ export const ThreadReplyReverseContext = createContext(false);
 
 export function ColorSchemeProvider(props: any) {
   const colorScheme = useColorScheme();
-  const size = useSize();
+  const [size] = useAtom(sizeAtom);
   const [tint] = useAtom(tintColorAtom);
   const [highlight] = useAtom(highlightColorAtom);
   const [accurate] = useAtom(accurateTimeFormatAtom);
