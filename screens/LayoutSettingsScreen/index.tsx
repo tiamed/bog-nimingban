@@ -22,10 +22,12 @@ import {
   fontFamilyAtom,
   threadReplyReverseAtom,
   textColorAlphaAtom,
+  bottomGapAtom,
 } from "@/atoms";
 import Icon from "@/components/Icon";
 import JumpToSettings from "@/components/JumpToSettings";
 import SettingPicker from "@/components/SettingPicker";
+import SettingSlider from "@/components/SettingSlider";
 import SettingSwitch from "@/components/SettingSwitch";
 import { ScrollView, View, Text, useThemeColor } from "@/components/Themed";
 import { RootStackScreenProps } from "@/types";
@@ -57,29 +59,9 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
             { label: "space-mono", value: "space-mono" },
           ]}
         />
-        <SettingPicker
-          title="文字透明度"
-          atom={textColorAlphaAtom}
-          options={[
-            { label: "不透明", value: 1 },
-            { label: "0.9", value: 0.9 },
-            { label: "0.8", value: 0.8 },
-            { label: "0.7", value: 0.7 },
-            { label: "0.6", value: 0.6 },
-            { label: "0.5", value: 0.5 },
-          ]}
-        />
-        <SettingPicker
-          title="字体大小"
-          atom={sizeAtom}
-          options={[
-            { label: "小", value: 12 },
-            { label: "普通", value: 14 },
-            { label: "中", value: 16 },
-            { label: "大", value: 18 },
-            { label: "特大", value: 20 },
-          ]}
-        />
+        <SettingSlider title="文字亮度" atom={textColorAlphaAtom} min={0.5} max={1} />
+        <SettingSlider title="字体大小" atom={sizeAtom} min={12} max={20} step={1} />
+        <SettingSlider title="主题串间距" atom={bottomGapAtom} min={1} max={16} />
         <SettingPicker
           title="行距"
           atom={lineHeightTimesAtom}

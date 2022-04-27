@@ -18,7 +18,6 @@ import {
   previewsAtom,
   draftAtom,
   postIdRefreshingAtom,
-  postFilteredAtom,
   orderAtom,
   selectionAtom,
 } from "@/atoms/index";
@@ -27,6 +26,7 @@ import ReplyPost from "@/components/Post/ReplyPost";
 import { View } from "@/components/Themed";
 import Errors from "@/constants/Errors";
 import { useForumsIdMap } from "@/hooks/useForums";
+import usePostFiltered from "@/hooks/usePostFiltered";
 import { UserHistory } from "@/screens//BrowseHistoryScreen";
 import renderFooter from "@/screens/HomeScreen/renderFooter";
 import { RootStackScreenProps } from "@/types";
@@ -60,13 +60,13 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   const [postIdRefreshing, setPostIdRefreshing] = useAtom(postIdRefreshingAtom);
   const setPreviews = useSetAtom(previewsAtom);
   const [history, setHistory] = useAtom<UserHistory[], UserHistory[], void>(historyAtom);
-  const [postFiltered] = useAtom(postFilteredAtom);
   const [order] = useAtom(orderAtom);
 
   const setDraft = useSetAtom(draftAtom);
   const setSelection = useSetAtom(selectionAtom);
   const forumsIdMap = useForumsIdMap();
   const isMounted = useIsMounted();
+  const { result: postFiltered, setCurrentId } = usePostFiltered(Number(route.params.id));
 
   const listRef = useRef<FlatList>(null);
 
@@ -313,9 +313,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
 
   // 更新标题及草稿
   useEffect(() => {
-    navigation.setOptions({
-      title: route.params.title,
-    });
+    setCurrentId(route.params.id);
     setDraft("");
     setSelection({ start: 0, end: 0 });
     return () => {

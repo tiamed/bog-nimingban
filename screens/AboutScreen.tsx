@@ -5,33 +5,53 @@ import { manualUpdate } from "@/tasks/checkAppUpdate";
 import { RootStackScreenProps } from "@/types";
 
 export default function AboutScreen({ route, navigation }: RootStackScreenProps<"About">) {
-  const tintColor = useThemeColor({}, "tint");
-  const underlayColor = useThemeColor({}, "inactive");
   return (
     <View style={styles.container}>
-      <TouchableHighlight
-        underlayColor={underlayColor}
-        style={styles.item}
+      <AboutItem
+        title="反馈串"
         onPress={() => {
           navigation.navigate("Post", {
             id: 141412,
             title: "Po.141412",
           });
-        }}>
-        <Text style={{ color: tintColor }}>反馈串</Text>
-      </TouchableHighlight>
-      <TouchableHighlight
-        underlayColor={underlayColor}
-        style={styles.item}
+        }}
+      />
+      <AboutItem
+        title="Github"
         onPress={() => {
           Linking.openURL("https://github.com/tiamed/bog-nimingban");
-        }}>
-        <Text style={{ color: tintColor }}>Github</Text>
-      </TouchableHighlight>
-      <TouchableHighlight underlayColor={underlayColor} style={styles.item} onPress={manualUpdate}>
-        <Text style={{ color: tintColor }}>检查更新</Text>
-      </TouchableHighlight>
+        }}
+      />
+      <AboutItem
+        title="安卓安装包 (br65)"
+        onPress={() => {
+          Linking.openURL("https://wwz.lanzouf.com/b01v7e4ng");
+        }}
+      />
+      <AboutItem
+        title="支持BTM"
+        onPress={() => {
+          Linking.openURL("https://afdian.net/@kaiki");
+        }}
+      />
+      <AboutItem
+        title="支持粉岛"
+        onPress={() => {
+          Linking.openURL("https://afdian.net/@tiamed");
+        }}
+      />
+      <AboutItem title="检查更新" onPress={manualUpdate} />
     </View>
+  );
+}
+
+function AboutItem(props: { title: string; onPress?: () => void }) {
+  const underlayColor = useThemeColor({}, "inactive");
+  const tintColor = useThemeColor({}, "tint");
+  return (
+    <TouchableHighlight underlayColor={underlayColor} style={styles.item} onPress={props.onPress}>
+      <Text style={{ color: tintColor }}>{props.title}</Text>
+    </TouchableHighlight>
   );
 }
 

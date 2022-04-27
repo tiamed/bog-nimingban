@@ -126,10 +126,10 @@ function RootNavigator() {
       <Stack.Screen
         name="Post"
         component={PostScreen}
-        options={{
-          title: "",
-          headerRight: PostScreenHeaderRight,
-        }}
+        options={({ route, navigation }) => ({
+          title: route.params.title || `Po.${route.params.id}`,
+          headerRight: () => <PostScreenHeaderRight id={route.params.id} />,
+        })}
       />
       <Stack.Screen
         name="Search"

@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 import BackupModal, { showBackupModalAtom } from "./BackupModal";
 import BlackListForumsItem from "./BlackListForumsItem";
 
-import { noImageModeAtom, vibrateAtom } from "@/atoms";
+import { noImageModeAtom, shouldMemorizePostFilteredAtom, vibrateAtom } from "@/atoms";
 import JumpToSettings from "@/components/JumpToSettings";
 import SettingItem from "@/components/SettingItem";
 import SettingPicker from "@/components/SettingPicker";
@@ -16,6 +16,7 @@ export default function GeneralSettingsScreen() {
   return (
     <View style={styles.container}>
       <SettingSwitch title="振动反馈" atom={vibrateAtom} />
+      <SettingSwitch title="记住只看po" atom={shouldMemorizePostFilteredAtom} />
       <SettingPicker
         title="无图模式"
         options={[

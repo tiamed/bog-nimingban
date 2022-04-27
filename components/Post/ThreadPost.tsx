@@ -87,7 +87,7 @@ export default function ThreadPost(props: {
           props.onLongPress?.(props.data);
         }}
         delayLongPress={800}>
-        <Wrapper>
+        <Wrapper bottomGap>
           <Header data={props.data} isPo={false} newCount={props.newCount} showForum />
           <View
             style={{

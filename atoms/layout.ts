@@ -40,3 +40,12 @@ export const fullscreenInputAtom = atomWithAsyncStorage("fullscreenInput", false
 export const orderAtom = atomWithAsyncStorage("order", 0);
 
 export const postFilteredAtom = atom(false);
+
+export const bottomGapAtom = atomWithAsyncStorage("bottomGap", 1);
+
+export const postFilteredRecordsAtom = atomWithAsyncStorage("postFilteredRecords", []);
+
+export const shouldMemorizePostFilteredAtom = atomWithAsyncStorage(
+  "shouldMemorizePostFiltered",
+  false
+);

@@ -1,17 +1,20 @@
 import { useAtom } from "jotai";
+import { useEffect } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 
-import { canCheckUpdateAtom, orderAtom, postFilteredAtom } from "@/atoms";
+import { canCheckUpdateAtom, orderAtom } from "@/atoms";
 import { Ionicon } from "@/components/Icon";
 import { useThemeColor } from "@/components/Themed";
+import usePostFiltered from "@/hooks/usePostFiltered";
 
-export default function HeaderRight() {
-  const activeColor = useThemeColor({}, "active");
-  const inactiveColor = useThemeColor({}, "inactive");
-  const [postFiltered, setPostFiltered] = useAtom(postFilteredAtom);
+export default function HeaderRight(props: { id: number }) {
   const [order, setOrder] = useAtom(orderAtom);
   const [canCheckUpdate, setCanCheckUpdate] = useAtom(canCheckUpdateAtom);
+
+  const activeColor = useThemeColor({}, "active");
+  const inactiveColor = useThemeColor({}, "inactive");
+  const { result: postFiltered, toggle } = usePostFiltered(Number(props.id));
 
   return (
     <>
@@ -33,11 +36,7 @@ export default function HeaderRight() {
         }}>
         <Ionicon name={order ? "caret-down" : "caret-up"} color={activeColor} />
       </Pressable>
-      <Pressable
-        style={styles.item}
-        onPress={() => {
-          setPostFiltered(!postFiltered);
-        }}>
+      <Pressable style={styles.item} onPress={toggle}>
         <Ionicon name="filter" color={postFiltered ? activeColor : inactiveColor} />
       </Pressable>
     </>
