@@ -132,6 +132,7 @@ export default function ThreadPost(props: {
               style={{
                 backgroundColor: replyBackgroundColor,
                 overflow: "hidden",
+                marginTop: "1%",
                 borderRadius: 4,
                 borderColor,
                 borderWidth: 1,

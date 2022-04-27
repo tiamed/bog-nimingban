@@ -54,7 +54,7 @@ export default function ImageList(props: {
                 aspectRatio: 1,
                 borderColor,
                 borderWidth: 1,
-                marginTop: 10,
+                marginTop: "1%",
                 marginRight: "1%",
               }}
               imageStyle={{
