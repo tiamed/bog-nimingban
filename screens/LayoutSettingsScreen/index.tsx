@@ -21,6 +21,7 @@ import {
   groupSearchResultsAtom,
   fontFamilyAtom,
   threadReplyReverseAtom,
+  textColorAlphaAtom,
 } from "@/atoms";
 import Icon from "@/components/Icon";
 import JumpToSettings from "@/components/JumpToSettings";
@@ -54,6 +55,18 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
             { label: "noto-sans", value: "noto-sans" },
             { label: "noto-serif", value: "noto-serif" },
             { label: "space-mono", value: "space-mono" },
+          ]}
+        />
+        <SettingPicker
+          title="文字透明度"
+          atom={textColorAlphaAtom}
+          options={[
+            { label: "不透明", value: 1 },
+            { label: "0.9", value: 0.9 },
+            { label: "0.8", value: 0.8 },
+            { label: "0.7", value: 0.7 },
+            { label: "0.6", value: 0.6 },
+            { label: "0.5", value: 0.5 },
           ]}
         />
         <SettingPicker
