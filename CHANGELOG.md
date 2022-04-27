@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.33](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.32...v1.0.0-alpha.33) (2022-04-27)
+
+
+### Features
+
+* memorize po, thread bottom gap ([8e66b35](https://github.com/tiamed/bog-nimingban/commit/8e66b35018b801c41d9dbe26b7fcd38d54047611))
+* support adjust text color alpha ([2ea6a38](https://github.com/tiamed/bog-nimingban/commit/2ea6a3865da8beb74963dc405525223f65d735aa))
+* timeline forums blacklist ([5eb6d1e](https://github.com/tiamed/bog-nimingban/commit/5eb6d1ee149695e6dc824bfeaa1818826e165533))
+
+
+### Bug Fixes
+
+* search screen first time empty ([fbbdef1](https://github.com/tiamed/bog-nimingban/commit/fbbdef1c60ae378e7afcef5d3a9a7cb7a015f92e))
+
 ## [1.0.0-alpha.32](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.31...v1.0.0-alpha.32) (2022-04-25)
 
 
