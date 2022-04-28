@@ -40,3 +40,13 @@ export function getThumbnailUrl(image: any, path: string = "image") {
 export function getImageUrl(image: any) {
   return `${Urls.baseURL}image/large/${image.url}${image.ext}`;
 }
+
+export function parseImageUrl(url: string) {
+  const match = url.match(/\/image\/large\/(.*)(\..*)/);
+  if (match) {
+    return {
+      url: match[1],
+      ext: match[2],
+    };
+  }
+}
