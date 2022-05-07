@@ -1,17 +1,16 @@
 import { useAtom } from "jotai";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import DraggableFlatList, { ShadowDecorator } from "react-native-draggable-flatlist";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Toast from "react-native-toast-message";
 
 import { Forum } from "@/api";
 import { forumsAtom, forumsOrderAtom, forumsVisibilityAtom } from "@/atoms";
+import { Ionicon } from "@/components/Icon";
 import { View, Text, Button, useThemeColor } from "@/components/Themed";
 import { refreshForums } from "@/hooks/useForums";
 import { RootStackScreenProps } from "@/types";
-import { Ionicon } from "@/components/Icon";
-import { SizeContext } from "@/Provider";
-import Toast from "react-native-toast-message";
 
 export default function ForumSettingsScreen({
   route,
@@ -21,7 +20,6 @@ export default function ForumSettingsScreen({
   const [order, setOrder] = useAtom(forumsOrderAtom);
   const [visibility] = useAtom(forumsVisibilityAtom);
   const inactiveColor = useThemeColor({}, "inactive");
-  const BASE_SIZE = useContext(SizeContext);
   const renderItem = ({ item, drag }: { item: number; drag: () => void; isActive: boolean }) => (
     <Item key={item} data={forums.find((f) => f.id === item)} drag={drag} />
   );

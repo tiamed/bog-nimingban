@@ -1,4 +1,4 @@
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useContext, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
@@ -23,6 +23,7 @@ import {
   threadReplyReverseAtom,
   textColorAlphaAtom,
   bottomGapAtom,
+  lineHeightAtom,
 } from "@/atoms";
 import Icon from "@/components/Icon";
 import JumpToSettings from "@/components/JumpToSettings";
@@ -30,6 +31,7 @@ import SettingPicker from "@/components/SettingPicker";
 import SettingSlider from "@/components/SettingSlider";
 import SettingSwitch from "@/components/SettingSwitch";
 import { ScrollView, View, Text, useThemeColor } from "@/components/Themed";
+import Texts from "@/constants/Texts";
 import { RootStackScreenProps } from "@/types";
 
 export default function ProfileScreen({ navigation }: RootStackScreenProps<"LayoutSettings">) {
@@ -38,6 +40,7 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
   const highlightColor = useThemeColor({}, "highlight");
   const [currentAtom, setCurrentAtom] = useState(tintColorAtom);
   const BASE_SIZE = useContext(SizeContext);
+  const [LINE_HEIGHT] = useAtom(lineHeightAtom);
   return (
     <ScrollView style={{ flex: 1, flexDirection: "column" }}>
       <View style={styles.container}>
@@ -49,6 +52,16 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
         <SettingSwitch title="首页展示回复" atom={showThreadReplyAtom} />
         <SettingSwitch title="搜索结果按主题展示" atom={groupSearchResultsAtom} />
         <SettingSwitch title="展示回复时逆序" atom={threadReplyReverseAtom} />
+        <Text
+          style={{
+            lineHeight: LINE_HEIGHT,
+            borderColor: tintColor,
+            borderWidth: 1,
+            borderRadius: 10,
+            padding: 10,
+          }}>
+          {Texts.sample}
+        </Text>
         <SettingPicker
           title="字体"
           atom={fontFamilyAtom}
@@ -62,17 +75,7 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
         <SettingSlider title="文字亮度" atom={textColorAlphaAtom} min={0.5} max={1} />
         <SettingSlider title="字体大小" atom={sizeAtom} min={12} max={20} step={1} />
         <SettingSlider title="主题串间距" atom={bottomGapAtom} min={1} max={16} />
-        <SettingPicker
-          title="行距"
-          atom={lineHeightTimesAtom}
-          options={[
-            { label: "小", value: 1.2 },
-            { label: "普通", value: 1.3 },
-            { label: "中", value: 1.4 },
-            { label: "大", value: 1.5 },
-            { label: "特大", value: 1.6 },
-          ]}
-        />
+        <SettingSlider title="行距" atom={lineHeightTimesAtom} min={1.2} max={1.6} step={0.1} />
         <SettingPicker
           title="行数"
           atom={maxLineAtom}
