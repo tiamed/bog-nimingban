@@ -76,14 +76,16 @@ export function ScrollView(props: ScrollViewProps) {
   return <DefaultScrollView style={[{ backgroundColor }, style]} {...otherProps} />;
 }
 
-export function Button(props: ButtonProps) {
+export function Button(props: ButtonProps & { color?: string }) {
   const { lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "button");
   const BASE_SIZE = useContext(SizeContext);
 
   return (
     <TouchableOpacity hitSlop={{ left: 5, right: 5, top: 5, bottom: 5 }} {...otherProps}>
-      <DefaultText style={[{ color, fontSize: BASE_SIZE }]} allowFontScaling={false}>
+      <DefaultText
+        style={[{ color: props.color || color, fontSize: BASE_SIZE }]}
+        allowFontScaling={false}>
         {otherProps.title}
       </DefaultText>
     </TouchableOpacity>

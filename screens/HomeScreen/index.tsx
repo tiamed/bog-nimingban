@@ -15,6 +15,7 @@ import {
   blackListPostsAtom,
   showThreadReplyAtom,
   blackListForumsAtom,
+  blackListCookiesAtom,
 } from "@/atoms";
 import ThreadPost from "@/components/Post/ThreadPost";
 import { View } from "@/components/Themed";
@@ -28,6 +29,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
   const [maxLine] = useAtom(maxLineAtom);
   const setShowHomeActionModal = useSetAtom(showHomeActionModalAtom);
   const [blackListPosts] = useAtom(blackListPostsAtom);
+  const [blackListCookies] = useAtom(blackListCookiesAtom);
   const [blackListForums] = useAtom(blackListForumsAtom);
   const [showThreadReply] = useAtom(showThreadReplyAtom);
 
@@ -121,6 +123,9 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
     let filtered = posts;
     if (blackListPosts?.length) {
       filtered = filtered.filter((post) => !blackListPosts.includes(post.id));
+    }
+    if (blackListCookies?.length) {
+      filtered = filtered.filter((post) => !blackListCookies.includes(post.cookie));
     }
     if (blackListForums?.length && thread === 0) {
       filtered = filtered.filter((post) => !blackListForums.includes(post.forum));

@@ -20,7 +20,7 @@ export default function BlackListScreen({ route, navigation }: RootStackScreenPr
         onEndReachedThreshold={0.5}
         ListEmptyComponent={() => (
           <View style={styles.empty}>
-            <Text style={styles.emptyText}>暂无屏蔽的串，板块列表中长按可屏蔽串</Text>
+            <Text style={styles.emptyText}>暂无屏蔽的串，首页长按串可进行屏蔽</Text>
           </View>
         )}
       />

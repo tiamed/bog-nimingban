@@ -32,6 +32,8 @@ export type RootStackParamList = {
   LayoutSettings: undefined;
   GeneralSettings: undefined;
   BlackList: undefined;
+  BlackListUser: undefined;
+  ForumSettings: undefined;
   About: undefined;
   FooterLayout: undefined;
   Search: {

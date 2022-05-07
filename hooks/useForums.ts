@@ -2,16 +2,17 @@ import { useAtom } from "jotai";
 import { useEffect } from "react";
 
 import { Forum, getForums } from "@/api";
-import { forumsAtom, forumsIdMapAtom } from "@/atoms";
+import { forumsAtom, forumsIdMapAtom, forumsOrderAtom, forumsVisibilityAtom } from "@/atoms";
 
 export default function useForums() {
   const [forums, setForums] = useAtom<Forum[], Forum[], void>(forumsAtom);
+  const [order] = useAtom(forumsOrderAtom);
+  const [visibility] = useAtom(forumsVisibilityAtom);
+
   useEffect(() => {
     if (forums) {
       if (forums.length === 0) {
-        getForums().then(({ data: { info } }) => {
-          setForums(info);
-        });
+        refreshForums(order, visibility, setForums);
       }
     }
   }, [forums]);
@@ -26,4 +27,17 @@ export function useReachableForums() {
 export function useForumsIdMap() {
   const [idMap] = useAtom(forumsIdMapAtom);
   return idMap;
+}
+
+export function refreshForums(order: any, visibility: any, setForums: (update: Forum[]) => void) {
+  getForums().then(({ data: { info } }) => {
+    const withOrder = info.sort((a, b) => {
+      return order.indexOf(a.id) - order.indexOf(b.id);
+    });
+    const withVisibility = withOrder.map((f) =>
+      visibility[f.id] === undefined ? f : { ...f, hide: visibility[f.id] as boolean }
+    );
+
+    setForums(withVisibility);
+  });
 }

@@ -31,9 +31,11 @@ import Icon from "@/components/Icon";
 import { useThemeColor } from "@/components/Themed";
 import AboutScreen from "@/screens/AboutScreen";
 import BlackListScreen from "@/screens/BlackListScreen";
+import BlackListUserScreen from "@/screens/BlackListUserScreen";
 import BrowseHistoryScreen from "@/screens/BrowseHistoryScreen";
 import FavoriteScreen from "@/screens/FavoriteScreen";
 import FooterLayoutScreen from "@/screens/FooterLayoutScreen";
+import ForumSettingsScreen from "@/screens/ForumSettingsScreen";
 import GeneralSettingsScreen from "@/screens/GeneralSettingsScreen";
 import HomeScreen from "@/screens/HomeScreen";
 import LayoutSettingsScreen from "@/screens/LayoutSettingsScreen";
@@ -148,11 +150,25 @@ function RootNavigator() {
         component={GeneralSettingsScreen}
         options={{ title: "通用设置" }}
       />
-      <Stack.Screen name="BlackList" component={BlackListScreen} options={{ title: "屏蔽设置" }} />
+      <Stack.Screen
+        name="BlackList"
+        component={BlackListScreen}
+        options={{ title: "屏蔽串设置" }}
+      />
+      <Stack.Screen
+        name="BlackListUser"
+        component={BlackListUserScreen}
+        options={{ title: "屏蔽饼干设置" }}
+      />
       <Stack.Screen
         name="FooterLayout"
         component={FooterLayoutScreen}
         options={{ title: "底栏按钮设置" }}
+      />
+      <Stack.Screen
+        name="ForumSettings"
+        component={ForumSettingsScreen}
+        options={{ title: "版块管理" }}
       />
       <Stack.Screen name="About" component={AboutScreen} options={{ title: "关于" }} />
       <Stack.Screen name="Sketch" component={SketchScreen} options={{ title: "涂鸦" }} />

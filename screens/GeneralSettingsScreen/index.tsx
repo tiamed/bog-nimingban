@@ -26,11 +26,13 @@ export default function GeneralSettingsScreen() {
         ]}
         atom={noImageModeAtom}
       />
+      <JumpToSettings title="屏蔽串设置" desc="首页长按串进行屏蔽" navigateTo="BlackList" />
       <JumpToSettings
-        title="屏蔽设置"
-        desc="设置屏蔽串，可在首页长按串进行屏蔽"
-        navigateTo="BlackList"
+        title="屏蔽饼干设置"
+        desc="首页长按串进行屏蔽，将隐藏对应的主题串"
+        navigateTo="BlackListUser"
       />
+      <JumpToSettings title="版块管理" desc="版块排序和隐藏" navigateTo="ForumSettings" />
       <BlackListForumsItem />
       <SettingItem title="备份设置" desc="导出导入备份" onPress={() => setShowBackupModal(true)} />
       <BackupModal />
