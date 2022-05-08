@@ -49,8 +49,8 @@ export default function HtmlView(props: { content: string; level?: number }) {
     }
 
     if (node.name === undefined) {
-      const isBilibili = /(BV([a-zA-Z0-9]{10})|(AV[0-9]{1,}))/i.test(node.data?.trim());
-      const isAcFun = /(ac([0-9]{1,}))/i.test(node.data?.trim());
+      const isBilibili = /(BV([a-zA-Z0-9]{10})|(AV[0-9]{1,}))$/i.test(node.data?.trim());
+      const isAcFun = /(ac([0-9]{1,}))$/i.test(node.data?.trim());
 
       if (isBilibili) {
         return <Link key={index} href={`${Urls.bilibili}${node.data?.trim()}`} text={node.data} />;
