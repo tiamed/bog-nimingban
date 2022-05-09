@@ -1,20 +1,17 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
-import { useState, useEffect, useCallback, useMemo, createContext, useRef } from "react";
-import { StyleSheet, FlatList, Platform, FlatListProps } from "react-native";
+import { useState, useEffect, useMemo, createContext, useRef } from "react";
+import { StyleSheet, FlatList, Platform, FlatListProps, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Toast from "react-native-toast-message";
 import { useDebouncedCallback } from "use-debounce";
-import { useIsMounted } from "usehooks-ts";
 
 import ActionModal from "./ActionModal";
 import CheckUpdate from "./CheckUpdate";
 import Footer from "./Footer";
 import PageModal from "./PageModal";
 
-import { Reply, getPostById, Post } from "@/api";
+import { Reply, Post } from "@/api";
 import {
-  historyAtom,
   previewsAtom,
   draftAtom,
   postIdRefreshingAtom,
@@ -24,10 +21,8 @@ import {
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
 import { View } from "@/components/Themed";
-import Errors from "@/constants/Errors";
 import { useForumsIdMap } from "@/hooks/useForums";
-import usePostFiltered from "@/hooks/usePostFiltered";
-import { UserHistory } from "@/screens//BrowseHistoryScreen";
+import usePosts from "@/hooks/usePosts";
 import renderFooter from "@/screens/HomeScreen/renderFooter";
 import { RootStackScreenProps } from "@/types";
 
@@ -39,40 +34,51 @@ interface ReplyWithPage extends Reply {
 
 export default function PostScreen({ route, navigation }: RootStackScreenProps<"Post">) {
   const insets = useSafeAreaInsets();
-  const [posts, setPosts] = useState<ReplyWithPage[]>([]);
-  const [filteredPosts, setFilteredPosts] = useState<ReplyWithPage[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [firstPage, setFirstPage] = useState(1);
-  const [lastPage, setLastPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [hasNoMore, setHasNoMore] = useState(false);
-  const [lastPageFinished, setLastPageFinished] = useState(false);
   const [focusItem, setFocusItem] = useState({} as Reply);
   const [isShowFooter, setIsShowFooter] = useState(true);
   const [lastContentOffset, setLastContentOffset] = useState(0);
-  const [mainPost, setMainPost] = useState<Post>({} as Post);
-  const [lastPosition, setLastPosition] = useState(0);
-  const [currentHistory, setCurrentHistory] = useState({} as UserHistory);
   const [showActionModal, setShowActionModal] = useState(false);
   const [showPageModal, setShowPageModal] = useState(false);
 
   const [postIdRefreshing, setPostIdRefreshing] = useAtom(postIdRefreshingAtom);
   const setPreviews = useSetAtom(previewsAtom);
-  const [history, setHistory] = useAtom<UserHistory[], UserHistory[], void>(historyAtom);
   const [order] = useAtom(orderAtom);
 
   const setDraft = useSetAtom(draftAtom);
   const setSelection = useSetAtom(selectionAtom);
   const forumsIdMap = useForumsIdMap();
-  const isMounted = useIsMounted();
-  const { result: postFiltered, setCurrentId } = usePostFiltered(Number(route.params.id));
 
   const listRef = useRef<FlatList>(null);
 
+  const {
+    mainPost,
+    filteredPosts,
+    isLoading,
+    isRefreshing,
+    hasNoMore,
+    firstPage,
+    lastPage,
+    lastPosition,
+    currentPage,
+    currentHistory,
+    loadData,
+    refreshPosts,
+    loadMoreData,
+    addToHistory,
+    setCurrentPage,
+    setCurrentId,
+    setMainPost,
+    setLastPosition,
+  } = usePosts(Number(route.params.id));
+
+  const debouncedRefreshPosts = useDebouncedCallback(refreshPosts, 1000, {
+    leading: true,
+    trailing: false,
+  });
+
   const images = useMemo(() => {
-    return posts.map((x) => x.images || []).flat();
-  }, [posts]);
+    return filteredPosts.map((x) => x.images || []).flat();
+  }, [filteredPosts]);
 
   const onViewRef = useRef<FlatListProps<ReplyWithPage>["onViewableItemsChanged"]>(
     ({ viewableItems }) => {
@@ -94,96 +100,6 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
     waitForInteraction: true,
   });
 
-  const loadData = async (
-    nextPage: number,
-    jump: boolean = false,
-    updatePosition: boolean = false
-  ) => {
-    if (!isMounted) return;
-    try {
-      setIsLoading(true);
-      const {
-        data: {
-          type,
-          code,
-          info: { reply, ...rest },
-        },
-      } = await getPostById(route.params.id as number, nextPage, 20, order);
-
-      if (rest.id) {
-        setMainPost(rest as Post);
-      }
-
-      if (type === "error") {
-        setHasNoMore(true);
-        if (code !== 6202) {
-          Toast.show({
-            type: "error",
-            text1: Errors[code],
-          });
-        }
-        return;
-      }
-
-      const replyWithPage: ReplyWithPage[] = reply.map((x) => ({ ...x, currentPage: nextPage }));
-
-      let nextPosts = nextPage === 1 ? [rest, ...replyWithPage] : [...replyWithPage];
-      if (!jump) {
-        nextPosts = nextPosts.filter((post) => !posts.find((x) => x.id === post.id));
-      }
-
-      if (jump) {
-        setPosts(nextPosts);
-        setFirstPage(nextPage);
-        setLastPage(nextPage);
-        setCurrentPage(nextPage);
-        setHasNoMore(reply?.length !== 20);
-        setLastPageFinished(reply?.length === 20);
-      } else {
-        if (nextPage < firstPage) {
-          setPosts([...nextPosts, ...posts]);
-          setFirstPage(nextPage);
-        } else {
-          setPosts([...posts, ...nextPosts]);
-          setLastPage(nextPage);
-          setHasNoMore(reply?.length !== 20);
-          setLastPageFinished(reply?.length === 20);
-        }
-      }
-      if (updatePosition) {
-        setLastPosition(nextPosts[0].id);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const refreshPosts = useCallback(async () => {
-    if (firstPage === 1) {
-      setIsRefreshing(true);
-      await loadData(1);
-      setIsRefreshing(false);
-    } else {
-      await loadData(firstPage - 1);
-    }
-    addToHistory(true);
-  }, [firstPage, order]);
-
-  const debouncedRefreshPosts = useDebouncedCallback(refreshPosts, 1000, {
-    leading: true,
-    trailing: false,
-  });
-
-  const loadMoreData = async (force = false) => {
-    if (isLoading || (hasNoMore && !force)) return;
-    if (hasNoMore && !lastPageFinished) {
-      await loadData(lastPage);
-    } else {
-      await loadData(lastPage + 1);
-    }
-    addToHistory(true);
-  };
-
   const updatePreviews = () => {
     if (images.length) {
       setPreviews(
@@ -195,35 +111,9 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
     }
   };
 
-  // 添加历史记录
-  const addToHistory = (noPositionChange: boolean = false) => {
-    if (!mainPost?.id) return;
-    let newHistory = history.filter((x) => x.id) || [];
-    const oldHistory = currentHistory;
-    if (oldHistory) {
-      newHistory = history.filter((record) => record.id && record.id !== route.params.id);
-    }
-    if (noPositionChange) {
-      newHistory.unshift({
-        ...mainPost,
-        createTime: Date.now(),
-        currentPage: oldHistory?.currentPage || currentPage,
-        position: oldHistory?.position || lastPosition,
-      });
-    } else {
-      newHistory.unshift({
-        ...mainPost,
-        createTime: Date.now(),
-        currentPage,
-        position: lastPosition,
-      });
-    }
-    setHistory(newHistory);
-  };
-
   const scrollToLastPosition = () => {
-    if (listRef.current && currentHistory?.position && posts.length && !lastPosition) {
-      const index = posts.findIndex((post) => post.id === currentHistory.position);
+    if (listRef.current && currentHistory?.position && filteredPosts.length && !lastPosition) {
+      const index = filteredPosts.findIndex((post) => post.id === currentHistory.position);
       if (index !== -1 && filteredPosts.length) {
         try {
           listRef.current.scrollToIndex({ animated: false, index, viewPosition: 0 });
@@ -271,19 +161,6 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
 
   const keyExtractor = (item: any) => item.id.toString();
 
-  useEffect(() => {
-    if (history) {
-      const current = history?.find((x) => x.id === route.params.id);
-      if (current) {
-        setCurrentHistory(current);
-      }
-      setCurrentPage(current?.currentPage || 1);
-      if (posts.length === 0) {
-        loadData(current?.currentPage || 1, true);
-      }
-    }
-  }, [history]);
-
   // 更新预览图集合
   useEffect(() => {
     updatePreviews();
@@ -301,15 +178,6 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
       addToHistory(true);
     }
   }, [mainPost]);
-
-  // 更新历史记录
-  useEffect(() => {
-    const shouldUpdate =
-      currentHistory.currentPage !== currentPage || currentHistory.position !== lastPosition;
-    if (lastPosition && mainPost.id === route.params.id && shouldUpdate) {
-      addToHistory();
-    }
-  }, [currentPage, lastPosition, mainPost]);
 
   // 更新标题及草稿
   useEffect(() => {
@@ -330,25 +198,10 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   }, [postIdRefreshing]);
 
   useEffect(() => {
-    if (postFiltered) {
-      setFilteredPosts(posts.filter((post) => post.cookie === mainPost.cookie));
-    } else {
-      setFilteredPosts(posts);
-    }
-  }, [posts, postFiltered]);
-
-  useEffect(() => {
     if (!(isLoading || isRefreshing) && filteredPosts.length) {
       scrollToLastPosition();
     }
   }, [filteredPosts, isLoading, isRefreshing]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      setPosts([]);
-      loadData(1, true);
-    }
-  }, [order]);
 
   return (
     <MainPostContext.Provider value={mainPost}>
