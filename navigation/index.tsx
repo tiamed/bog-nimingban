@@ -42,6 +42,7 @@ import LayoutSettingsScreen from "@/screens/LayoutSettingsScreen";
 import NotFoundScreen from "@/screens/NotFoundScreen";
 import PostScreen from "@/screens/PostScreen";
 import PostScreenHeaderRight from "@/screens/PostScreen/HeaderRight";
+import PostScreenHeaderTitle from "@/screens/PostScreen/HeaderTitle";
 import PreviewModalScreen from "@/screens/PreviewModalScreen";
 import ProfileScreen from "@/screens/ProfileScreen";
 import QuoteModalScreen from "@/screens/QuoteModalScreen";
@@ -123,6 +124,7 @@ function RootNavigator() {
     <Stack.Navigator
       screenOptions={{
         animation: "fade_from_bottom",
+        headerBackTitle: "返回",
       }}>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen
@@ -130,6 +132,7 @@ function RootNavigator() {
         component={PostScreen}
         options={({ route, navigation }) => ({
           title: route.params.title || `Po.${route.params.id}`,
+          headerTitle: PostScreenHeaderTitle,
           headerRight: () => <PostScreenHeaderRight id={route.params.id} />,
         })}
       />

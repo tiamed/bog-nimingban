@@ -185,7 +185,7 @@ export default function ReplyModalScreen({
         setTimeout(() => {
           navigation.push("Post", {
             id: newPostId,
-            title: `${forumsIdMap.get(params.forum)} Po.${newPostId}`,
+            title: `Po.${newPostId},${forumsIdMap.get(params.forum)}`,
           });
         }, 500);
       } else {
