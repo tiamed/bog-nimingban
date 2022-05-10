@@ -72,7 +72,7 @@ export default function ThreadPost(props: {
   const OnPress = () => {
     navigation.navigate("Post", {
       id: props.data.id as number,
-      title: `Po.${props.data.id},${forumsIdMap.get(props.data.forum as number)}`,
+      title: `Po.${props.data.id}`,
     });
   };
 

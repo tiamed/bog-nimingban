@@ -173,7 +173,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   useEffect(() => {
     if (mainPost.id) {
       navigation.setOptions({
-        title: `Po.${mainPost.id},${forumsIdMap.get(mainPost.forum)}`,
+        title: `Po.${mainPost.id},${forumsIdMap.get(mainPost.forum)}·${mainPost.reply_count}`,
       });
       addToHistory(true);
     }

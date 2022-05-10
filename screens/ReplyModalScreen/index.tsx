@@ -34,7 +34,7 @@ import Picker from "@/components/Picker";
 import ImageView from "@/components/Post/ImageView";
 import { Button, Text, useThemeColor, View, TextInput } from "@/components/Themed";
 import Errors from "@/constants/Errors";
-import useForums, { useForumsIdMap } from "@/hooks/useForums";
+import useForums from "@/hooks/useForums";
 import { ReplyHistory } from "@/screens/ReplyHistoryScreen";
 import { RootStackScreenProps } from "@/types";
 
@@ -67,7 +67,6 @@ export default function ReplyModalScreen({
   const tintColor = useThemeColor({}, "tint");
   const backgroundColor = useThemeColor({}, "background");
   const forums = useForums();
-  const forumsIdMap = useForumsIdMap();
   const BASE_SIZE = useContext(SizeContext);
   const inputRef = useRef<any>(null);
   const close = () => {
@@ -185,7 +184,7 @@ export default function ReplyModalScreen({
         setTimeout(() => {
           navigation.push("Post", {
             id: newPostId,
-            title: `Po.${newPostId},${forumsIdMap.get(params.forum)}`,
+            title: `Po.${newPostId}`,
           });
         }, 500);
       } else {
