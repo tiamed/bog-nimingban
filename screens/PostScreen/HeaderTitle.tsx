@@ -15,7 +15,11 @@ export default function HeaderTitle(props: { children: string; tintColor?: strin
 
 const styles = StyleSheet.create({
   container: Platform.select({
-    ios: { flexDirection: "column", alignItems: "center" },
+    ios: {
+      flexDirection: "column",
+      alignItems: "center",
+      height: 30,
+    },
     android: { flexDirection: "column", alignItems: "flex-start" },
     default: { flexDirection: "column", alignItems: "flex-start" },
   }),
