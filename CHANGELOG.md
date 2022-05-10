@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.34](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.33...v1.0.0-alpha.34) (2022-05-10)
+
+
+### Features
+
+* forum setting, block cookie ([c71a3ad](https://github.com/tiamed/bog-nimingban/commit/c71a3ad25c3cdd3e0b17972cad2e293a68ecc090))
+
+
+### Bug Fixes
+
+* bili ac link ([33194ea](https://github.com/tiamed/bog-nimingban/commit/33194eabbb79f5bfedbebc4a214c5c5cf8c001d9))
+* image margin ([3c293c2](https://github.com/tiamed/bog-nimingban/commit/3c293c202441a700855201c6bf2c6b3f75987926))
+* ios post header flicker ([f079f35](https://github.com/tiamed/bog-nimingban/commit/f079f356eb542cc7a66dd2731f1a052a886f12e8))
+
 ## [1.0.0-alpha.33](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.32...v1.0.0-alpha.33) (2022-04-27)
 
 
