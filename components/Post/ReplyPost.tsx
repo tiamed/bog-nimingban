@@ -70,7 +70,7 @@ export default function ReplyPost(props: {
           }}>
           <View
             style={{
-              maxHeight: props.maxHeight || 9999,
+              maxHeight: props.maxHeight || undefined,
               overflow: "hidden",
             }}>
             {memoizedHtmlView}

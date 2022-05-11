@@ -37,6 +37,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   const [focusItem, setFocusItem] = useState({} as Reply);
   const [isShowFooter, setIsShowFooter] = useState(true);
   const [lastContentOffset, setLastContentOffset] = useState(0);
+  const [maxToRenderPerBatch, setMaxToRenderPerBatch] = useState(10);
   const [showActionModal, setShowActionModal] = useState(false);
   const [showPageModal, setShowPageModal] = useState(false);
 
@@ -203,6 +204,14 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
     }
   }, [filteredPosts, isLoading, isRefreshing]);
 
+  useEffect(() => {
+    if (filteredPosts?.some((post) => post.content.length > 5000)) {
+      setMaxToRenderPerBatch(1);
+    } else {
+      setMaxToRenderPerBatch(10);
+    }
+  }, [filteredPosts]);
+
   return (
     <MainPostContext.Provider value={mainPost}>
       <View style={{ ...styles.container, paddingBottom: insets.bottom }}>
@@ -212,6 +221,8 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
           refreshing={isRefreshing}
           onRefresh={debouncedRefreshPosts}
           scrollEventThrottle={16}
+          windowSize={21}
+          maxToRenderPerBatch={maxToRenderPerBatch}
           onScroll={(e) => {
             const isScrollUp =
               Platform.OS === "ios"
