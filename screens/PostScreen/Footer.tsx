@@ -1,4 +1,4 @@
-import { FontAwesome } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import { useAtom } from "jotai";
@@ -12,7 +12,7 @@ import { footerLayoutAtom } from "../../atoms/index";
 
 import { Post } from "@/api";
 import { favoriteAtom } from "@/atoms/index";
-import Icon from "@/components/Icon";
+import { Ionicon } from "@/components/Icon";
 import TagModal from "@/components/TagModal";
 import { Text, View, useThemeColor } from "@/components/Themed";
 import Urls from "@/constants/Urls";
@@ -102,7 +102,7 @@ export default function Footer(props: {
   const items = [
     {
       label: "收藏",
-      icon: isFavorite ? "heart" : "heart-o",
+      icon: isFavorite ? "heart" : "heart-outline",
       handler: confirmToggleFavorite,
       longPressHandler: () => {
         setShowTagModal(true);
@@ -110,7 +110,7 @@ export default function Footer(props: {
     },
     {
       label: "分享",
-      icon: "share",
+      icon: "share-social",
       handler: onShare.bind(null, props.mainPost),
       longPressHandler: () => {
         Clipboard.setString(`${Urls.baseURL}t/${props.id}/`);
@@ -119,7 +119,7 @@ export default function Footer(props: {
     },
     {
       label: "回复",
-      icon: "edit",
+      icon: "create",
       handler: () => {
         navigation.navigate("ReplyModal", {
           postId: props.id,
@@ -145,7 +145,7 @@ export default function Footer(props: {
         <FooterItem
           key={item.label}
           label={item.label}
-          icon={item.icon as React.ComponentProps<typeof FontAwesome>["name"]}
+          icon={item.icon as React.ComponentProps<typeof Ionicons>["name"]}
           handler={item.handler}
           longPressHandler={item.longPressHandler}
           disabled={props.disabled}
@@ -209,7 +209,7 @@ export default function Footer(props: {
 
 function FooterItem(props: {
   label: string;
-  icon: React.ComponentProps<typeof FontAwesome>["name"];
+  icon: React.ComponentProps<typeof Ionicons>["name"];
   handler?: () => void;
   longPressHandler?: () => void;
   disabled: boolean;
@@ -230,7 +230,7 @@ function FooterItem(props: {
       disabled={props.disabled}
       hitSlop={{ left: 20, right: 20, top: 20, bottom: 20 }}>
       <View style={styles.footerItem}>
-        <Icon name={props.icon} color={tintColor} />
+        <Ionicon name={props.icon} color={tintColor} />
         <Text lightColor={tintColor} darkColor={tintColor} style={styles.footerItemText}>
           {props.label}
         </Text>

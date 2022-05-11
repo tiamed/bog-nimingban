@@ -29,6 +29,8 @@ export const footerLayoutAtom = atomWithAsyncStorage("footerLayout", [
 
 export const fontFamilyAtom = atomWithAsyncStorage("fontFamily", null);
 
+export const showTabBarLabelAtom = atomWithAsyncStorage("showTabBarLabel", true);
+
 export const showThreadReplyAtom = atomWithAsyncStorage("showThreadReply", false);
 
 export const threadReplyReverseAtom = atomWithAsyncStorage("threadReplyReverse", false);

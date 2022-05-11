@@ -24,6 +24,7 @@ import {
   textColorAlphaAtom,
   bottomGapAtom,
   lineHeightAtom,
+  showTabBarLabelAtom,
 } from "@/atoms";
 import Icon from "@/components/Icon";
 import JumpToSettings from "@/components/JumpToSettings";
@@ -49,6 +50,7 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
           desc="调整串内底栏按钮顺序"
           navigateTo="FooterLayout"
         />
+        <SettingSwitch title="展示首页底栏文字" atom={showTabBarLabelAtom} />
         <SettingSwitch title="首页展示回复" atom={showThreadReplyAtom} />
         <SettingSwitch title="搜索结果按主题展示" atom={groupSearchResultsAtom} />
         <SettingSwitch title="展示回复时逆序" atom={threadReplyReverseAtom} />

@@ -23,3 +23,12 @@ export function Ionicon(props: {
   const BASE_SIZE = useContext(SizeContext);
   return <Ionicons size={BASE_SIZE * 1.25} style={{ marginBottom: 0 }} {...props} />;
 }
+
+export function TabBarIcon(props: {
+  name: React.ComponentProps<typeof Ionicons>["name"];
+  color: string;
+  size?: number;
+}) {
+  const BASE_SIZE = useContext(SizeContext);
+  return <Ionicons size={BASE_SIZE * 1.5} style={{ marginBottom: 0 }} {...props} />;
+}

@@ -25,9 +25,9 @@ import { PageControlAji } from "react-native-chi-page-control";
 
 import LinkingConfiguration from "./LinkingConfiguration";
 
-import { historyTabAtom, tabRefreshingAtom } from "@/atoms";
+import { historyTabAtom, showTabBarLabelAtom, sizeAtom, tabRefreshingAtom } from "@/atoms";
 import DrawerContent from "@/components/DrawerContent";
-import Icon from "@/components/Icon";
+import { TabBarIcon } from "@/components/Icon";
 import { useThemeColor } from "@/components/Themed";
 import AboutScreen from "@/screens/AboutScreen";
 import BlackListScreen from "@/screens/BlackListScreen";
@@ -270,6 +270,8 @@ function BottomTabNavigator() {
   const inactiveColor = useThemeColor({}, "inactive");
   const setTabRefreshing = useSetAtom(tabRefreshingAtom);
   const [historyTab] = useAtom(historyTabAtom);
+  const [BASE_SIZE] = useAtom(sizeAtom);
+  const [showTabBarLabel] = useAtom(showTabBarLabelAtom);
 
   return (
     <BottomTab.Navigator
@@ -277,6 +279,21 @@ function BottomTabNavigator() {
       screenOptions={{
         tabBarActiveTintColor: tintColor,
         tabBarAllowFontScaling: false,
+        tabBarStyle: {
+          height: showTabBarLabel ? BASE_SIZE * 3.8 : BASE_SIZE * 3.5,
+          paddingTop: showTabBarLabel ? BASE_SIZE * 0.62 : undefined,
+          borderTopWidth: 0,
+        },
+        tabBarIconStyle: {
+          margin: 0,
+          height: "auto",
+          padding: 0,
+        },
+        tabBarLabelStyle: {
+          marginBottom: BASE_SIZE * 0.4,
+          fontSize: BASE_SIZE * 0.7,
+          lineHeight: BASE_SIZE * 1.33,
+        },
       }}>
       <BottomTab.Screen
         name="Home"
@@ -284,8 +301,8 @@ function BottomTabNavigator() {
         options={({ navigation, route }: RootTabScreenProps<"Home">) => ({
           headerShown: false,
           title: "版块",
-          tabBarIcon: ({ color }) => <Icon name="home" color={color} />,
-          tabBarLabelStyle,
+          tabBarShowLabel: showTabBarLabel,
+          tabBarIcon: ({ color }) => <TabBarIcon name="home-sharp" color={color} />,
         })}
         listeners={({ navigation, route }) => ({
           tabPress: () => {
@@ -300,8 +317,8 @@ function BottomTabNavigator() {
         component={FavoriteScreen}
         options={{
           title: "收藏",
-          tabBarIcon: ({ color }) => <Icon name="heart" color={color} />,
-          tabBarLabelStyle,
+          tabBarShowLabel: showTabBarLabel,
+          tabBarIcon: ({ color }) => <TabBarIcon name="heart" color={color} />,
         }}
       />
       <BottomTab.Screen
@@ -309,8 +326,8 @@ function BottomTabNavigator() {
         component={HistoryTabNavigator}
         options={{
           title: "历史",
-          tabBarIcon: ({ color }) => <Icon name="clock-o" color={color} />,
-          tabBarLabelStyle,
+          tabBarShowLabel: showTabBarLabel,
+          tabBarIcon: ({ color }) => <TabBarIcon name="time" color={color} />,
           headerRight: () => (
             <PageControlAji
               progress={historyTab}
@@ -327,8 +344,8 @@ function BottomTabNavigator() {
         component={ProfileScreen}
         options={{
           title: "设置",
-          tabBarIcon: ({ color }) => <Icon name="cog" color={color} />,
-          tabBarLabelStyle,
+          tabBarShowLabel: showTabBarLabel,
+          tabBarIcon: ({ color }) => <TabBarIcon name="settings-sharp" color={color} />,
         }}
       />
     </BottomTab.Navigator>
@@ -356,7 +373,3 @@ function DrawerNavigator() {
     </Drawer.Navigator>
   );
 }
-
-const tabBarLabelStyle = {
-  marginBottom: 6,
-};
