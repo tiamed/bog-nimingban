@@ -67,6 +67,14 @@ export default function HtmlView(props: { content: string; level?: number }) {
       );
     }
 
+    if (node.name === "b") {
+      return (
+        <PureText key={index} style={{ fontWeight: "bold" }}>
+          {decode(node.children[0].data || "")}
+        </PureText>
+      );
+    }
+
     if (node.name === "br" && node?.next?.name === "br") {
       return <EmptyLine key={index} />;
     }
