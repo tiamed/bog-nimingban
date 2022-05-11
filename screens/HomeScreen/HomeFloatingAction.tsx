@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { FloatingAction } from "react-native-floating-action";
 
 import { threadAtom } from "@/atoms";
-import Icon from "@/components/Icon";
+import Icon, { Ionicon } from "@/components/Icon";
 import { useThemeColor } from "@/components/Themed";
 
 export default function HomeFloatingAction() {
@@ -36,16 +36,25 @@ export default function HomeFloatingAction() {
           icon: <Icon name="list-alt" color="white" />,
           name: "recommend",
           color: tintColor,
+          text: "推荐串",
+          textColor: "white",
+          textBackground: tintColor,
         },
         {
-          icon: <Icon name="edit" color="white" />,
+          icon: <Ionicon name="create" color="white" />,
           name: "post",
           color: tintColor,
+          text: "发布新串",
+          textColor: "white",
+          textBackground: tintColor,
         },
         {
           icon: <Icon name="search" color="white" />,
           name: "search",
           color: tintColor,
+          text: "搜索",
+          textColor: "white",
+          textBackground: tintColor,
         },
       ]}
       onPressItem={onPressFAB}
