@@ -70,6 +70,7 @@ export default function PreviewModalScreen() {
         imageUrls={previews as IImageInfo[]}
         enableSwipeDown
         onSwipeDown={() => navigation.goBack()}
+        onClick={() => navigation.goBack()}
         saveToLocalByLongPress={false}
         onChange={(index) => setIndex(index!)}
         loadingRender={() => (
