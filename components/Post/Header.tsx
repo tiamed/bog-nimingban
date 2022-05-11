@@ -1,5 +1,6 @@
 import { formatRelative, formatDistance, format } from "date-fns";
 import { zhCN } from "date-fns/locale";
+import { decode } from "html-entities";
 import { useContext } from "react";
 import { View } from "react-native";
 import { Badge } from "react-native-paper";
@@ -8,6 +9,7 @@ import { AccurateTimeFormatContext, SizeContext } from "@/Provider";
 import { Post } from "@/api";
 import { Text, useThemeColor } from "@/components/Themed";
 import { useForumsIdMap } from "@/hooks/useForums";
+import { normalizeHtml } from "@/utils/format";
 
 export default function Header(props: {
   data: Partial<Post>;
@@ -86,7 +88,7 @@ export default function Header(props: {
                   fontSize: BASE_SIZE * 0.8,
                   color: tintColor,
                 }}>
-                {props.data.name}
+                {normalizeHtml(props.data.name!)}
               </Text>
             </View>
           )}
@@ -99,7 +101,7 @@ export default function Header(props: {
                   fontSize: BASE_SIZE * 0.8,
                   color: highlightColor,
                 }}>
-                {props.data.title}
+                {normalizeHtml(props.data.title!)}
               </Text>
             </View>
           )}

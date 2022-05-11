@@ -18,6 +18,7 @@ import { Text, View, useThemeColor } from "@/components/Themed";
 import Urls from "@/constants/Urls";
 import useHaptics from "@/hooks/useHaptics";
 import { UserFavorite } from "@/screens/FavoriteScreen";
+import { normalizeHtml } from "@/utils/format";
 
 export default function Footer(props: {
   id: number;
@@ -110,7 +111,7 @@ export default function Footer(props: {
     {
       label: "分享",
       icon: "share",
-      handler: onShare.bind(null, props.id, props.mainPost?.content),
+      handler: onShare.bind(null, props.mainPost),
       longPressHandler: () => {
         Clipboard.setString(`${Urls.baseURL}t/${props.id}/`);
         Toast.show({ type: "success", text1: "已复制链接" });
@@ -238,11 +239,18 @@ function FooterItem(props: {
   );
 }
 
-function onShare(id: number, content: string) {
+function onShare(mainPost: Post) {
   Share.share({
-    message: `${content.replace(/<[^>]+>/g, "").slice(0, 100)} ${Urls.baseURL}t/${id}/
+    message: `${mainPost?.title ? normalizeHtml(mainPost?.title) + "\n" : ""}${normalizeHtml(
+      mainPost?.content || ""
+    )
+      .split("\n")
+      .slice(0, 8)
+      .join("\n")}
+${Urls.baseURL}t/${mainPost?.id}/
 
-来自B岛匿名版 https://github.com/tiamed/bog-nimingban`,
+来自B岛匿名版
+https://github.com/tiamed/bog-nimingban`,
   });
 }
 

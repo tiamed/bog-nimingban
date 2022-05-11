@@ -1,10 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
-import { decode } from "html-entities";
-import { convert } from "html-to-text";
 import { useAtom } from "jotai";
 import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import Toast from "react-native-toast-message";
+
+import { normalizeHtml } from "../../utils/format";
 
 import { Reply, deleteReply } from "@/api";
 import { cookiesAtom } from "@/atoms/index";
@@ -36,7 +36,7 @@ export default function ActionModal(props: {
     }, 300);
   };
   const onCopy = () => {
-    Clipboard.setString(convert(decode(props.item.content)?.replace(/网页链接<\/a>/g, "</a>")));
+    Clipboard.setString(normalizeHtml(props.item.content));
     close();
     Toast.show({ type: "success", text1: "已复制到剪贴板" });
   };
