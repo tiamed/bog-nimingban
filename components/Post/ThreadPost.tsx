@@ -15,7 +15,6 @@ import Wrapper from "./Wrapper";
 import { SizeContext, ThreadReplyReverseContext } from "@/Provider";
 import { Post, Image } from "@/api";
 import { lineHeightAtom, previewIndexAtom, previewsAtom, threadDirectionAtom } from "@/atoms";
-import { useForumsIdMap } from "@/hooks/useForums";
 import useHaptics from "@/hooks/useHaptics";
 
 const width = Dimensions.get("window").width;
@@ -34,7 +33,6 @@ export default function ThreadPost(props: {
   const [threadDirection] = useAtom(threadDirectionAtom);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
 
-  const forumsIdMap = useForumsIdMap();
   const navigation = useNavigation();
   const haptics = useHaptics();
   const replyBackgroundColor = useThemeColor({}, "replyBackground");
@@ -120,6 +118,8 @@ export default function ThreadPost(props: {
                     height: "100%",
                     minHeight: imageSize,
                     marginTop: 2,
+                    marginRight: threadDirection === "row-reverse" ? 4 : 0,
+                    marginLeft: threadDirection === "row" ? 4 : 0,
                   }}
                   style={{}}
                 />

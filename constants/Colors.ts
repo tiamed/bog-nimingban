@@ -17,6 +17,7 @@ export default {
     tabIconSelected: tintColorLight,
     tint: tintColorLight,
     badge: "#ee240e",
+    overlay: "rgba(255, 255, 255, 0.9)",
   },
   dark: {
     text: "#fff",
@@ -33,5 +34,6 @@ export default {
     tabIconSelected: tintColorDark,
     tint: tintColorDark,
     badge: "#ee240e",
+    overlay: "rgba(0, 0, 0, 0.9)",
   },
 };

@@ -306,7 +306,7 @@ function BottomTabNavigator() {
           headerShown: false,
           title: "版块",
           tabBarShowLabel: showTabBarLabel,
-          tabBarIcon: ({ color }) => <TabBarIcon name="home-sharp" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         })}
         listeners={({ navigation, route }) => ({
           tabPress: () => {
@@ -331,7 +331,7 @@ function BottomTabNavigator() {
         options={{
           title: "历史",
           tabBarShowLabel: showTabBarLabel,
-          tabBarIcon: ({ color }) => <TabBarIcon name="time" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="history" color={color} />,
           headerRight: () => (
             <PageControlAji
               progress={historyTab}
@@ -349,7 +349,7 @@ function BottomTabNavigator() {
         options={{
           title: "设置",
           tabBarShowLabel: showTabBarLabel,
-          tabBarIcon: ({ color }) => <TabBarIcon name="settings-sharp" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
         }}
       />
     </BottomTab.Navigator>
@@ -372,6 +372,8 @@ function DrawerNavigator() {
         component={HomeScreen}
         options={{
           swipeEdgeWidth: width * 0.75,
+          title: "",
+          drawerIcon: ({ color }) => <TabBarIcon name="three-bars" color={color} />,
         }}
       />
     </Drawer.Navigator>

@@ -1,4 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import { useAtom } from "jotai";
@@ -12,7 +11,7 @@ import { footerLayoutAtom } from "../../atoms/index";
 
 import { Post } from "@/api";
 import { favoriteAtom } from "@/atoms/index";
-import { Ionicon } from "@/components/Icon";
+import { Octicon } from "@/components/Icon";
 import TagModal from "@/components/TagModal";
 import { Text, View, useThemeColor } from "@/components/Themed";
 import Urls from "@/constants/Urls";
@@ -102,7 +101,7 @@ export default function Footer(props: {
   const items = [
     {
       label: "收藏",
-      icon: isFavorite ? "heart" : "heart-outline",
+      icon: isFavorite ? "heart-fill" : "heart",
       handler: confirmToggleFavorite,
       longPressHandler: () => {
         setShowTagModal(true);
@@ -110,7 +109,7 @@ export default function Footer(props: {
     },
     {
       label: "分享",
-      icon: "share-social",
+      icon: "share-android",
       handler: onShare.bind(null, props.mainPost),
       longPressHandler: () => {
         Clipboard.setString(`${Urls.baseURL}t/${props.id}/`);
@@ -119,7 +118,7 @@ export default function Footer(props: {
     },
     {
       label: "回复",
-      icon: "create",
+      icon: "pencil",
       handler: () => {
         navigation.navigate("ReplyModal", {
           postId: props.id,
@@ -145,7 +144,7 @@ export default function Footer(props: {
         <FooterItem
           key={item.label}
           label={item.label}
-          icon={item.icon as React.ComponentProps<typeof Ionicons>["name"]}
+          icon={item.icon as React.ComponentProps<typeof Octicon>["name"]}
           handler={item.handler}
           longPressHandler={item.longPressHandler}
           disabled={props.disabled}
@@ -209,7 +208,7 @@ export default function Footer(props: {
 
 function FooterItem(props: {
   label: string;
-  icon: React.ComponentProps<typeof Ionicons>["name"];
+  icon: React.ComponentProps<typeof Octicon>["name"];
   handler?: () => void;
   longPressHandler?: () => void;
   disabled: boolean;
@@ -230,7 +229,7 @@ function FooterItem(props: {
       disabled={props.disabled}
       hitSlop={{ left: 20, right: 20, top: 20, bottom: 20 }}>
       <View style={styles.footerItem}>
-        <Ionicon name={props.icon} color={tintColor} />
+        <Octicon name={props.icon} color={tintColor} />
         <Text lightColor={tintColor} darkColor={tintColor} style={styles.footerItemText}>
           {props.label}
         </Text>

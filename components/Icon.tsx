@@ -1,4 +1,4 @@
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons, Octicons } from "@expo/vector-icons";
 import { useContext } from "react";
 
 import { SizeContext } from "@/Provider";
@@ -24,11 +24,20 @@ export function Ionicon(props: {
   return <Ionicons size={BASE_SIZE * 1.25} style={{ marginBottom: 0 }} {...props} />;
 }
 
-export function TabBarIcon(props: {
-  name: React.ComponentProps<typeof Ionicons>["name"];
+export function Octicon(props: {
+  name: React.ComponentProps<typeof Octicons>["name"];
   color: string;
   size?: number;
 }) {
   const BASE_SIZE = useContext(SizeContext);
-  return <Ionicons size={BASE_SIZE * 1.5} style={{ marginBottom: 0 }} {...props} />;
+  return <Octicons size={BASE_SIZE * 1.25} style={{ marginBottom: 0 }} {...props} />;
+}
+
+export function TabBarIcon(props: {
+  name: React.ComponentProps<typeof Octicons>["name"];
+  color: string;
+  size?: number;
+}) {
+  const BASE_SIZE = useContext(SizeContext);
+  return <Octicons size={BASE_SIZE * 1.4} style={{ marginBottom: 0 }} {...props} />;
 }
