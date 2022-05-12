@@ -22,6 +22,7 @@ import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Alert, AppState, ColorSchemeName, Dimensions, Platform } from "react-native";
 import { PageControlAji } from "react-native-chi-page-control";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import LinkingConfiguration from "./LinkingConfiguration";
 
@@ -268,6 +269,7 @@ function BottomTabNavigator() {
   const tintColor = useThemeColor({}, "tint");
   const activeColor = useThemeColor({}, "active");
   const inactiveColor = useThemeColor({}, "inactive");
+  const insets = useSafeAreaInsets();
   const setTabRefreshing = useSetAtom(tabRefreshingAtom);
   const [historyTab] = useAtom(historyTabAtom);
   const [BASE_SIZE] = useAtom(sizeAtom);
@@ -280,8 +282,9 @@ function BottomTabNavigator() {
         tabBarActiveTintColor: tintColor,
         tabBarAllowFontScaling: false,
         tabBarStyle: {
-          height: showTabBarLabel ? BASE_SIZE * 3.8 : BASE_SIZE * 3.5,
+          height: (showTabBarLabel ? BASE_SIZE * 3.8 : BASE_SIZE * 3.5) + insets.bottom,
           paddingTop: showTabBarLabel ? BASE_SIZE * 0.62 : undefined,
+          paddingBottom: insets.bottom,
           borderTopWidth: 0,
         },
         tabBarIconStyle: {
@@ -292,6 +295,7 @@ function BottomTabNavigator() {
         tabBarLabelStyle: {
           marginBottom: BASE_SIZE * 0.4,
           fontSize: BASE_SIZE * 0.7,
+          fontWeight: "bold",
           lineHeight: BASE_SIZE * 1.33,
         },
       }}>
