@@ -13,7 +13,7 @@ import { View, Button, Text, useThemeColor, TextInput } from "@/components/Theme
 import useHaptics from "@/hooks/useHaptics";
 import { formatTime } from "@/utils/format";
 
-interface Tag {
+export interface Tag {
   id: string;
   name: string;
   createTime: number;
@@ -37,6 +37,7 @@ export default function TagModal(props: {
   const setEditingTag = useSetAtom(editingTagAtom);
 
   const close = () => {
+    setSelectedValue(props.initialValue);
     props.onDismiss();
   };
   const confirm = () => {
@@ -269,10 +270,10 @@ function TagItem(props: {
       {props.time && (
         <View style={styles.itemActionWrapper}>
           <TouchableOpacity style={styles.itemAction} onPress={props.onEdit}>
-            <Icon name="edit" color={tintColor} size={BASE_SIZE} />
+            <Icon name="edit" color={tintColor} size={BASE_SIZE * 1.4} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.itemAction} onPress={props.onDelete}>
-            <Icon name="minus-circle" color={tintColor} size={BASE_SIZE} />
+            <Icon name="minus-circle" color={tintColor} size={BASE_SIZE * 1.4} />
           </TouchableOpacity>
         </View>
       )}

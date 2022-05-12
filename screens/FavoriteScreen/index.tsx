@@ -6,9 +6,9 @@ import renderFooter from "../HomeScreen/renderFooter";
 import FavoriteFloatingAction from "./FavoriteFloatingAction";
 
 import { Post } from "@/api";
-import { favoriteAtom, favoriteFilterAtom, maxLineAtom } from "@/atoms";
+import { favoriteAtom, favoriteFilterAtom, favoriteTagsAtom, maxLineAtom } from "@/atoms";
 import ThreadPost from "@/components/Post/ThreadPost";
-import TagModal from "@/components/TagModal";
+import TagModal, { Tag } from "@/components/TagModal";
 import { View } from "@/components/Themed";
 import { RootTabScreenProps } from "@/types";
 export interface UserFavorite extends Post {
@@ -22,6 +22,7 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
   const [showTagModal, setShowTagModal] = useState(false);
   const [currentFavorite, setCurrentFavorite] = useState<UserFavorite>();
   const [favorite, setFavorite] = useAtom<UserFavorite[], UserFavorite[], void>(favoriteAtom);
+  const [favoriteTags] = useAtom(favoriteTagsAtom);
   const [filteredFavorite, setFilteredFavorite] = useState<UserFavorite[]>([]);
   const [maxLine] = useAtom(maxLineAtom);
   const [favoriteFilter] = useAtom(favoriteFilterAtom);
@@ -40,6 +41,12 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
     );
 
   const keyExtractor = (item: Post) => item.id?.toString();
+
+  const getFavoriteName = (id: string) => {
+    if (!id) return "";
+    if (id === "empty") return "默认";
+    return favoriteTags?.find((tag: Tag) => tag.id === favoriteFilter)?.name;
+  };
 
   const onTagsChange = (tags: string[]) => {
     if (currentFavorite) {
@@ -72,6 +79,13 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
       }
     }
   }, [favorite, favoriteFilter]);
+
+  useEffect(() => {
+    const favoriteName = getFavoriteName(favoriteFilter);
+    navigation.setOptions({
+      title: `收藏·${favoriteName || "全部"} (${filteredFavorite.length})`,
+    });
+  }, [filteredFavorite]);
 
   return (
     <View style={styles.container}>
