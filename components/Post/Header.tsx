@@ -1,6 +1,5 @@
 import { formatRelative, formatDistance, format } from "date-fns";
 import { zhCN } from "date-fns/locale";
-import { decode } from "html-entities";
 import { useContext } from "react";
 import { View } from "react-native";
 import { Badge } from "react-native-paper";
@@ -10,7 +9,6 @@ import { Post } from "@/api";
 import { Text, useThemeColor } from "@/components/Themed";
 import { useForumsIdMap } from "@/hooks/useForums";
 import { normalizeHtml } from "@/utils/format";
-
 export default function Header(props: {
   data: Partial<Post>;
   isPo?: boolean;
@@ -21,6 +19,7 @@ export default function Header(props: {
   const BASE_SIZE = useContext(SizeContext);
   const tintColor = useThemeColor({}, "tint");
   const highlightColor = useThemeColor({}, "highlight");
+  const highlighBackgroundColor = useThemeColor({}, "highlightBackground");
   const badgeColor = useThemeColor({}, "badge");
   const accurate = useContext(AccurateTimeFormatContext);
 
@@ -95,8 +94,6 @@ export default function Header(props: {
           {Boolean(props.data.title) && (
             <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
               <Text
-                lightColor="white"
-                darkColor="white"
                 style={{
                   fontSize: BASE_SIZE * 0.8,
                   color: highlightColor,
@@ -131,11 +128,11 @@ export default function Header(props: {
               </View>
             )}
             <Text
-              lightColor="white"
-              darkColor="white"
               style={{
                 fontSize: BASE_SIZE * 0.8,
-                backgroundColor: highlightColor,
+                fontWeight: "bold",
+                color: highlightColor,
+                backgroundColor: highlighBackgroundColor,
                 paddingVertical: 2,
                 paddingHorizontal: 6,
                 borderRadius: 8,

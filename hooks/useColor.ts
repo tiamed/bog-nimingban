@@ -1,3 +1,4 @@
+import Color from "color";
 import { useContext } from "react";
 
 import { HighlightContext, TintContext, TextColorAlphaContext } from "@/Provider";
@@ -20,6 +21,8 @@ export default function useColor() {
   dark.highlight = highlight;
   light.text = `rgba(0,0,0,${textColorAlpha})`;
   dark.text = `rgba(255,255,255,${textColorAlpha})`;
+  light.highlightBackground = Color(highlight).alpha(0.1).string();
+  dark.highlightBackground = Color(highlight).alpha(0.1).string();
   return {
     light,
     dark,
