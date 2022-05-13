@@ -153,7 +153,10 @@ export const getCookies = (id: string, hash: string) =>
     code: hash,
   });
 
-export const createCookie = () => axios.post<CommonResponse<string>>("/post/cookieGet");
+export const createCookie = (code?: string) =>
+  axios.post<CommonResponse<string>>("/post/cookieGet", {
+    cdk: code,
+  });
 
 export const importCookie = (masterCode: string, code: string) =>
   axios.post<CommonResponse<CookieWithRemarks[]>>("/api/cookieAdd", {

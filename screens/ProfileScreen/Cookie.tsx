@@ -1,5 +1,4 @@
-import { parseISO, addSeconds, formatRelative } from "date-fns";
-import { zhCN } from "date-fns/locale";
+import { parseISO } from "date-fns";
 import * as Clipboard from "expo-clipboard";
 import { useAtom, useSetAtom } from "jotai";
 import { useContext, useEffect, useState } from "react";
@@ -7,10 +6,11 @@ import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import AddCookieModal from "./AddCookieModal";
-import { Cookie, showAddModalAtom } from "./common";
+import CreateCookieModal from "./CreateCookieModal";
+import { Cookie, showAddModalAtom, showCreateModalAtom } from "./common";
 
 import { SizeContext } from "@/Provider";
-import { SignInfo, signIn, createCookie, deleteSlaveCookie } from "@/api";
+import { SignInfo, signIn, deleteSlaveCookie } from "@/api";
 import { cookiesAtom, selectedCookieAtom, signDictAtom } from "@/atoms/index";
 import Icon from "@/components/Icon";
 import { Button, Text, useThemeColor } from "@/components/Themed";
@@ -29,6 +29,7 @@ export default function Cookies() {
   const [signDict, setSignDict] = useAtom<SignDict, SignDict, void>(signDictAtom);
   const [selectedCookie, setSelectedCookie] = useAtom(selectedCookieAtom);
   const setShowAddModal = useSetAtom(showAddModalAtom);
+  const setShowCreateModal = useSetAtom(showCreateModalAtom);
   const iconColor = useThemeColor({}, "tint");
   const BASE_SIZE = useContext(SizeContext);
 
@@ -69,33 +70,6 @@ export default function Cookies() {
     }
     if (info && info.exp) {
       setSignDict({ ...signDict, [cookie.hash]: info });
-    }
-  };
-
-  const handleCreateCookie = async () => {
-    const {
-      data: { code, info },
-    } = await createCookie();
-    if (code === 2) {
-      await Clipboard.setString(info);
-      Toast.show({ type: "success", text1: "饼干已复制到剪贴板", text2: info });
-    } else {
-      switch (code) {
-        case 2001:
-          Toast.show({
-            type: "error",
-            text1: `${formatRelative(addSeconds(new Date(), Number(info)), Date.now(), {
-              locale: zhCN,
-            })} 才可以获取饼干`,
-          });
-          break;
-        default:
-          Toast.show({
-            type: "error",
-            text1: Errors[code] || info,
-          });
-          break;
-      }
     }
   };
 
@@ -181,7 +155,12 @@ export default function Cookies() {
         </View>
       </View>
       <View style={styles.cookieAction}>
-        <Button title="获取饼干" onPress={handleCreateCookie} />
+        <Button
+          title="获取饼干"
+          onPress={() => {
+            setShowCreateModal(true);
+          }}
+        />
         <Button
           title="添加饼干"
           style={{ marginLeft: 10 }}
@@ -192,6 +171,7 @@ export default function Cookies() {
         />
       </View>
       <AddCookieModal cookie={current} />
+      <CreateCookieModal />
     </View>
   );
 
