@@ -8,6 +8,7 @@ import { Dimensions, Linking, Pressable, TextStyle, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { useCollapsible, AnimatedSection } from "reanimated-collapsible-helpers";
 
+import { ExpandableContext } from "../../Provider/Layout";
 import ReplyPostWithoutData from "./ReplyPostWithoutData";
 
 import { SizeContext } from "@/Provider";
@@ -86,6 +87,7 @@ export default function HtmlView(props: { content: string; level?: number }) {
 function Quote(props: { data: string; level: number }) {
   const { data } = props;
   const BASE_SIZE = useContext(SizeContext);
+  const expandable = useContext(ExpandableContext);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
   const [loadingText, setLoadingText] = useState("");
   const quoteId = Number(data.replace(/>>Po\./g, ""));
@@ -135,10 +137,12 @@ function Quote(props: { data: string; level: number }) {
             left: 2,
           }}
           onPress={() => {
-            if (state === "collapsed") {
-              setLoadingText("加载中");
+            if (expandable) {
+              if (state === "collapsed") {
+                setLoadingText("加载中");
+              }
+              onPress();
             }
-            onPress();
           }}>
           <Text
             lightColor="#666666"

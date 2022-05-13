@@ -5,8 +5,15 @@ import { StyleSheet, FlatList, FlatListProps } from "react-native";
 import renderFooter from "../HomeScreen/renderFooter";
 import FavoriteFloatingAction from "./FavoriteFloatingAction";
 
+import { ExpandableContext } from "@/Provider";
 import { Post } from "@/api";
-import { favoriteAtom, favoriteFilterAtom, favoriteTagsAtom, maxLineAtom } from "@/atoms";
+import {
+  expandableAtom,
+  favoriteAtom,
+  favoriteFilterAtom,
+  favoriteTagsAtom,
+  maxLineAtom,
+} from "@/atoms";
 import ThreadPost from "@/components/Post/ThreadPost";
 import TagModal, { Tag } from "@/components/TagModal";
 import { View } from "@/components/Themed";
@@ -25,6 +32,7 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
   const [favoriteTags] = useAtom(favoriteTagsAtom);
   const [filteredFavorite, setFilteredFavorite] = useState<UserFavorite[]>([]);
   const [maxLine] = useAtom(maxLineAtom);
+  const [expandable] = useAtom(expandableAtom);
   const [favoriteFilter] = useAtom(favoriteFilterAtom);
   const renderItem: FlatListProps<UserFavorite>["renderItem"] = ({ item }) =>
     item && (
@@ -88,30 +96,32 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
   }, [filteredFavorite]);
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={filteredFavorite}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={() =>
-          renderFooter({
-            loading: false,
-            hasNoMore: true,
-          })
-        }
-      />
-      <FavoriteFloatingAction />
-      <TagModal
-        visible={showTagModal}
-        initialValue={currentFavorite?.tags || []}
-        onValueChange={onTagsChange}
-        onOpen={() => {
-          setShowTagModal(true);
-        }}
-        onDismiss={() => setShowTagModal(false)}
-      />
-    </View>
+    <ExpandableContext.Provider value={expandable}>
+      <View style={styles.container}>
+        <FlatList
+          data={filteredFavorite}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={() =>
+            renderFooter({
+              loading: false,
+              hasNoMore: true,
+            })
+          }
+        />
+        <FavoriteFloatingAction />
+        <TagModal
+          visible={showTagModal}
+          initialValue={currentFavorite?.tags || []}
+          onValueChange={onTagsChange}
+          onOpen={() => {
+            setShowTagModal(true);
+          }}
+          onDismiss={() => setShowTagModal(false)}
+        />
+      </View>
+    </ExpandableContext.Provider>
   );
 }
 

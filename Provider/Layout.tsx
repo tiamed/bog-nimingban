@@ -15,6 +15,8 @@ export const FontFamilyContext = createContext(undefined);
 export const ThreadReplyReverseContext = createContext(false);
 export const GroupSearchResultContext = createContext(false);
 
+export const ExpandableContext = createContext(true);
+
 export default function LayoutProvider(props: any) {
   const [size] = useAtom(sizeAtom);
   const [accurate] = useAtom(accurateTimeFormatAtom);

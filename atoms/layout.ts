@@ -12,6 +12,8 @@ export const lineHeightAtom = atom<number>(
 );
 export const maxLineAtom = atomWithAsyncStorage("maxLine", 10);
 
+export const expandableAtom = atom<boolean>((get) => get(maxLineAtom) === 999);
+
 export const threadDirectionAtom = atomWithAsyncStorage("threadDirection", "row");
 
 export const thumbnailResizeAtom = atomWithAsyncStorage("thumbnailResize", "contain");

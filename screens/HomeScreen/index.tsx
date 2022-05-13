@@ -6,6 +6,7 @@ import ActionModal from "./ActionModal";
 import HomeFloatingAction from "./HomeFloatingAction";
 import renderFooter from "./renderFooter";
 
+import { ExpandableContext } from "@/Provider";
 import { Post, getPostsByForum } from "@/api";
 import {
   threadAtom,
@@ -16,6 +17,7 @@ import {
   showThreadReplyAtom,
   blackListForumsAtom,
   blackListCookiesAtom,
+  expandableAtom,
 } from "@/atoms";
 import ThreadPost from "@/components/Post/ThreadPost";
 import { View } from "@/components/Themed";
@@ -27,6 +29,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
   const [thread] = useAtom(threadAtom);
   const [tabRefreshing, setTabRefreshing] = useAtom(tabRefreshingAtom);
   const [maxLine] = useAtom(maxLineAtom);
+  const [expandable] = useAtom(expandableAtom);
   const setShowHomeActionModal = useSetAtom(showHomeActionModalAtom);
   const [blackListPosts] = useAtom(blackListPostsAtom);
   const [blackListCookies] = useAtom(blackListCookiesAtom);
@@ -134,26 +137,28 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
   }, [posts]);
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        ref={listRef}
-        data={filteredPosts}
-        refreshing={isRefreshing}
-        onRefresh={refreshPosts}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        onEndReached={loadMoreData}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={() =>
-          renderFooter({
-            loading: isLoading,
-            hasNoMore,
-          })
-        }
-      />
-      <HomeFloatingAction />
-      <ActionModal item={focusItem} />
-    </View>
+    <ExpandableContext.Provider value={expandable}>
+      <View style={styles.container}>
+        <FlatList
+          ref={listRef}
+          data={filteredPosts}
+          refreshing={isRefreshing}
+          onRefresh={refreshPosts}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          onEndReached={loadMoreData}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={() =>
+            renderFooter({
+              loading: isLoading,
+              hasNoMore,
+            })
+          }
+        />
+        <HomeFloatingAction />
+        <ActionModal item={focusItem} />
+      </View>
+    </ExpandableContext.Provider>
   );
 }
 
