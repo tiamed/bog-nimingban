@@ -1,3 +1,4 @@
+import Color from "color";
 import { atom, useAtom, useSetAtom } from "jotai";
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, InteractionManager, StyleSheet, TouchableOpacity } from "react-native";
@@ -245,8 +246,12 @@ function TagItem(props: {
   const tintColor = useThemeColor({}, "tint");
   const borderColor = useThemeColor({}, "border");
   const inactiveColor = useThemeColor({}, "inactive");
+  const textColor = useThemeColor({}, "text");
   const BASE_SIZE = useContext(SizeContext);
   const haptics = useHaptics();
+  const subColor = useMemo(() => {
+    return props.highlight ? Color(tintColor).alpha(0.5).toString() : inactiveColor;
+  }, [props.highlight, tintColor]);
   return (
     <TouchableOpacity
       onPress={() => {
@@ -255,12 +260,18 @@ function TagItem(props: {
       }}
       style={[styles.item, { borderColor: props.highlight ? tintColor : borderColor }]}>
       <View style={styles.itemBody}>
-        <Text style={styles.itemLabel}>{props.name}</Text>
+        <Text style={[styles.itemLabel, { color: props.highlight ? tintColor : textColor }]}>
+          {props.name}
+        </Text>
         <View style={[styles.itemContent]}>
           {props.time && (
             <>
-              <Icon name="history" color={borderColor} size={BASE_SIZE * 0.8} />
-              <Text style={{ color: inactiveColor, fontSize: BASE_SIZE * 0.8 }}>
+              <Icon name="history" color={subColor} size={BASE_SIZE * 0.8} />
+              <Text
+                style={{
+                  color: subColor,
+                  fontSize: BASE_SIZE * 0.8,
+                }}>
                 {formatTime(props.time, accurate)}
               </Text>
             </>

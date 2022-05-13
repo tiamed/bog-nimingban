@@ -23,6 +23,8 @@ export default function useColor() {
   dark.text = `rgba(255,255,255,${textColorAlpha})`;
   light.highlightBackground = Color(highlight).alpha(0.1).string();
   dark.highlightBackground = Color(highlight).alpha(0.1).string();
+  light.tintBackground = Color(color).alpha(0.1).string();
+  dark.tintBackground = Color(color).alpha(0.1).string();
   return {
     light,
     dark,
