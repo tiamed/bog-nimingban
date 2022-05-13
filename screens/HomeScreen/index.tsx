@@ -101,11 +101,15 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
   useEffect(() => {
     setHasNoMore(false);
     if (thread !== null) {
-      refreshPosts().then(() => {
-        if (listRef && listRef.current) {
-          listRef.current.scrollToOffset({ animated: false, offset: 0 });
-        }
-      });
+      if (filteredPosts.length === 0) {
+        loadData(1);
+      } else {
+        refreshPosts().then(() => {
+          if (listRef && listRef.current) {
+            listRef.current.scrollToOffset({ animated: false, offset: 0 });
+          }
+        });
+      }
     }
   }, [thread]);
 
