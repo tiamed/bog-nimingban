@@ -3,7 +3,7 @@ import { View, StyleSheet, Platform } from "react-native";
 import { Text } from "@/components/Themed";
 
 export default function HeaderTitle(props: { children: string; tintColor?: string }) {
-  const { children, tintColor } = props;
+  const { children } = props;
   const [title, subTitle] = children.split(",");
   return (
     <View style={styles.container}>

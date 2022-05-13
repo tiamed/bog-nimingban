@@ -13,6 +13,7 @@ import {
   DarkTheme,
   useNavigation,
   useNavigationState,
+  useTheme,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -21,7 +22,6 @@ import { useAtom, useSetAtom } from "jotai";
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Alert, AppState, ColorSchemeName, Dimensions, Platform } from "react-native";
-import { PageControlAji } from "react-native-chi-page-control";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import LinkingConfiguration from "./LinkingConfiguration";
@@ -223,10 +223,15 @@ const HistoryTab = createMaterialTopTabNavigator<HistoryTabParamList>();
 
 function HistoryTabNavigator() {
   const setHistoryTab = useSetAtom(historyTabAtom);
+  const activeColor = useThemeColor({}, "active");
+  const inactiveColor = useThemeColor({}, "tabInactive");
+  const { colors } = useTheme();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const index = useNavigationState(
     (state) => state.routes.find((route) => route.name === "History")?.state?.index || 0
   );
+  const indicatorWidth = 72;
 
   useEffect(() => {
     navigation.setOptions({
@@ -239,10 +244,40 @@ function HistoryTabNavigator() {
     <HistoryTab.Navigator
       initialRouteName="Browse"
       backBehavior="none"
+      style={{
+        paddingTop: insets.top,
+        backgroundColor: colors.card,
+      }}
       screenOptions={{
-        tabBarContentContainerStyle: {
-          display: "none",
+        tabBarLabelStyle: Platform.select({
+          ios: {
+            fontSize: 17,
+            fontWeight: "600",
+          },
+          android: {
+            fontSize: 18,
+            fontFamily: "sans-serif-medium",
+            fontWeight: "normal",
+          },
+          default: {
+            fontSize: 18,
+            fontWeight: "500",
+          },
+        }),
+        tabBarIndicatorStyle: {
+          backgroundColor: activeColor,
+          width: indicatorWidth,
+          height: 4,
+          borderRadius: 60,
+          overflow: "hidden",
+          left: width / 4 - indicatorWidth / 2,
         },
+        tabBarStyle: {
+          shadowColor: "transparent",
+        },
+        tabBarPressColor: activeColor,
+        tabBarActiveTintColor: activeColor,
+        tabBarInactiveTintColor: inactiveColor,
         swipeEnabled: true,
       }}>
       <HistoryTab.Screen
@@ -331,16 +366,8 @@ function BottomTabNavigator() {
         options={{
           title: "历史",
           tabBarShowLabel: showTabBarLabel,
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="history" color={color} />,
-          headerRight: () => (
-            <PageControlAji
-              progress={historyTab}
-              numberOfPages={2}
-              style={{ marginHorizontal: 10 }}
-              activeTintColor={activeColor}
-              inactiveTintColor={inactiveColor}
-            />
-          ),
         }}
       />
       <BottomTab.Screen

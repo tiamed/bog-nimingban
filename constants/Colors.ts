@@ -15,10 +15,11 @@ export default {
     button: tintColorLight,
     active: tintColorLight,
     tabIconSelected: tintColorLight,
+    tabInactive: "#8e8e8e",
     tint: tintColorLight,
     tintBackground: "#fff",
     badge: "#ee240e",
-    overlay: "rgba(255, 255, 255, 0.9)",
+    overlay: "rgba(255, 255, 255, 0.95)",
   },
   dark: {
     text: "#fff",
@@ -34,8 +35,9 @@ export default {
     button: tintColorDark,
     active: tintColorDark,
     tabIconSelected: tintColorDark,
+    tabInactive: "#7c7c7c",
     tint: tintColorDark,
     badge: "#ee240e",
-    overlay: "rgba(0, 0, 0, 0.9)",
+    overlay: "rgba(0, 0, 0, 0.95)",
   },
 };

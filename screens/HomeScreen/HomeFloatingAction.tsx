@@ -8,6 +8,7 @@ import { useThemeColor } from "@/components/Themed";
 
 export default function HomeFloatingAction() {
   const tintColor = useThemeColor({}, "tint");
+  const tintBackgroundColor = useThemeColor({}, "tintBackground");
   const overlayColor = useThemeColor({}, "overlay");
   const navigation = useNavigation();
   const [thread] = useAtom(threadAtom);
@@ -33,31 +34,32 @@ export default function HomeFloatingAction() {
     <FloatingAction
       color={tintColor}
       overlayColor={overlayColor}
+      shadow={{ shadowColor: "transparent" }}
       floatingIcon={<Octicon name="plus" color="white" />}
       actions={[
         {
-          icon: <Octicon name="list-unordered" color="white" />,
+          icon: <Octicon name="list-unordered" color={tintColor} />,
           name: "recommend",
-          color: tintColor,
+          color: tintBackgroundColor,
           text: "推荐串",
-          textColor: "white",
-          textBackground: tintColor,
+          textColor: tintColor,
+          textBackground: tintBackgroundColor,
         },
         {
-          icon: <Octicon name="pencil" color="white" />,
+          icon: <Octicon name="pencil" color={tintColor} />,
           name: "post",
-          color: tintColor,
+          color: tintBackgroundColor,
           text: "发布新串",
-          textColor: "white",
-          textBackground: tintColor,
+          textColor: tintColor,
+          textBackground: tintBackgroundColor,
         },
         {
-          icon: <Octicon name="search" color="white" />,
+          icon: <Octicon name="search" color={tintColor} />,
           name: "search",
-          color: tintColor,
+          color: tintBackgroundColor,
           text: "搜索",
-          textColor: "white",
-          textBackground: tintColor,
+          textColor: tintColor,
+          textBackground: tintBackgroundColor,
         },
       ]}
       onPressItem={onPressFAB}

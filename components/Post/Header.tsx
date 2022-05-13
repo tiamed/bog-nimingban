@@ -1,8 +1,9 @@
 import { formatRelative, formatDistance, format } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import { useContext } from "react";
-import { View } from "react-native";
-import { Badge } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+
+import { Octicon } from "../Icon";
 
 import { AccurateTimeFormatContext, SizeContext } from "@/Provider";
 import { Post } from "@/api";
@@ -111,35 +112,42 @@ export default function Header(props: {
               alignItems: "flex-start",
             }}>
             {Number(props.newCount) > 0 && (
-              <View
-                style={{
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  height: BASE_SIZE * 0.8 + 8,
-                }}>
-                <Badge
-                  size={BASE_SIZE}
-                  style={{
-                    backgroundColor: badgeColor,
-                    marginRight: BASE_SIZE * 0.25,
-                  }}>
-                  {props.newCount}
-                </Badge>
-              </View>
+              <Text
+                style={[
+                  styles.tag,
+                  {
+                    fontSize: BASE_SIZE * 0.8,
+                    backgroundColor: highlightColor,
+                    color: "white",
+                  },
+                ]}>
+                +{props.newCount}
+              </Text>
             )}
             <Text
-              style={{
-                fontSize: BASE_SIZE * 0.8,
-                fontWeight: "bold",
-                color: highlightColor,
-                backgroundColor: highlighBackgroundColor,
-                paddingVertical: 2,
-                paddingHorizontal: 6,
-                borderRadius: 8,
-                overflow: "hidden",
-              }}>
-              {forumsIdMap.get(props.data.forum as number)}·
+              style={[
+                styles.tag,
+                {
+                  fontSize: BASE_SIZE * 0.8,
+                  color: highlightColor,
+                  backgroundColor: highlighBackgroundColor,
+                },
+              ]}>
+              <Octicon name="comment" color={highlightColor} size={BASE_SIZE * 0.666} />
+              &nbsp;
               {renderReplyCount(props.data.reply_count as number)}
+            </Text>
+            <Text
+              style={[
+                styles.tag,
+                {
+                  fontSize: BASE_SIZE * 0.8,
+                  color: highlightColor,
+                  backgroundColor: highlighBackgroundColor,
+                  marginRight: 0,
+                },
+              ]}>
+              {forumsIdMap.get(props.data.forum as number)}
             </Text>
           </View>
         )}
@@ -173,3 +181,14 @@ export function renderTime(
 export function renderReplyCount(count: number) {
   return count < 1000 ? count : "999+";
 }
+
+const styles = StyleSheet.create({
+  tag: {
+    fontWeight: "bold",
+    paddingVertical: 2,
+    paddingHorizontal: 6,
+    borderRadius: 8,
+    overflow: "hidden",
+    marginRight: 8,
+  },
+});
