@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useMemo } from "react";
 import { Pressable, View } from "react-native";
 
@@ -10,7 +10,7 @@ import { getImageUrl } from "./ImageView";
 import Wrapper from "./Wrapper";
 
 import { Image, Post } from "@/api";
-import { previewIndexAtom, previewsAtom } from "@/atoms";
+import { previewUrlAtom } from "@/atoms";
 
 export default function ReplyPost(props: {
   data: Partial<Post>;
@@ -22,12 +22,11 @@ export default function ReplyPost(props: {
   level?: number;
   maxHeight?: number;
 }) {
-  const [previews] = useAtom(previewsAtom);
-  const setPreviewIndex = useSetAtom(previewIndexAtom);
+  const setPreviewUrl = useSetAtom(previewUrlAtom);
   const navigation = useNavigation();
   const isPo = props.data.cookie === props.po;
   const onImagePress = (image: Image) => {
-    setPreviewIndex(previews.findIndex((item) => item.url === getImageUrl(image)));
+    setPreviewUrl(getImageUrl(image));
     navigation.navigate("PreviewModal");
   };
 

@@ -10,7 +10,7 @@ import ReplyPost from "./ReplyPost";
 
 import { SizeContext } from "@/Provider";
 import { getReply, Post, Reply, Image } from "@/api";
-import { previewIndexAtom, previewsAtom } from "@/atoms";
+import { previewUrlAtom, previewsAtom } from "@/atoms";
 import { Text, useThemeColor } from "@/components/Themed";
 import { MainPostContext } from "@/screens/PostScreen";
 
@@ -22,7 +22,7 @@ export default function ReplyPostWithoutData(props: {
 }) {
   const [data, setData] = useState<Reply>({ content: "加载中..." } as Reply);
   const setPreviews = useSetAtom(previewsAtom);
-  const setPreviewIndex = useSetAtom(previewIndexAtom);
+  const setPreviewUrl = useSetAtom(previewUrlAtom);
   const tintColor = useThemeColor({}, "tint");
   const backgroundColor = useThemeColor({}, "quoteBackground");
   const navigation = useNavigation<StackNavigationProp<any>>();
@@ -93,7 +93,7 @@ export default function ReplyPostWithoutData(props: {
                   originalUrl: getThumbnailUrl(item),
                 }))
               );
-              setPreviewIndex(data.images.findIndex((item) => item.url === image.url));
+              setPreviewUrl(getImageUrl(image));
               navigation.navigate("PreviewModal");
             }}
           />

@@ -7,7 +7,7 @@ import { StyleSheet, FlatList, FlatListProps } from "react-native";
 import renderFooter from "./HomeScreen/renderFooter";
 
 import { Reply, Image } from "@/api";
-import { previewIndexAtom, previewsAtom, replyHistoryAtom } from "@/atoms";
+import { previewUrlAtom, previewsAtom, replyHistoryAtom } from "@/atoms";
 import HistoryFloatingAction from "@/components/HistoryFloatingAction";
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
@@ -27,7 +27,7 @@ export default function ReplyHistoryScreen() {
   const [filteredHistory, setFilteredHistory] = useState<ReplyHistory[]>([]);
   const [range, setRange] = useAtom(rangeAtom);
   const setPreviews = useSetAtom(previewsAtom);
-  const setPreviewIndex = useSetAtom(previewIndexAtom);
+  const setPreviewUrl = useSetAtom(previewUrlAtom);
   const navigation = useNavigation();
 
   const updateHistory = () => {
@@ -58,7 +58,7 @@ export default function ReplyHistoryScreen() {
               originalUrl: getThumbnailUrl(item),
             }))
           );
-          setPreviewIndex(item.images.findIndex((x) => x.url === image.url));
+          setPreviewUrl(getImageUrl(image));
           navigation.navigate("PreviewModal");
         }}
       />

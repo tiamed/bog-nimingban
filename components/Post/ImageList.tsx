@@ -9,7 +9,7 @@ import ImageView, { getImageUrl } from "./ImageView";
 
 import { SizeContext } from "@/Provider";
 import { Image } from "@/api";
-import { imageWidthAtom, previewIndexAtom, previewsAtom } from "@/atoms";
+import { imageWidthAtom, previewUrlAtom, previewsAtom } from "@/atoms";
 import useShowImage from "@/hooks/useShowImage";
 
 export default function ImageList(props: {
@@ -19,7 +19,7 @@ export default function ImageList(props: {
 }) {
   const [imageWidth] = useAtom(imageWidthAtom);
   const setPreviews = useSetAtom(previewsAtom);
-  const setPreviewIndex = useSetAtom(previewIndexAtom);
+  const setPreviewUrl = useSetAtom(previewUrlAtom);
   const navigation = useNavigation();
   const borderColor = useThemeColor({}, "border");
   const inactiveColor = useThemeColor({}, "inactive");
@@ -33,7 +33,7 @@ export default function ImageList(props: {
         url: getImageUrl(item),
       }))
     );
-    setPreviewIndex(images.findIndex((item) => item.url === image.url));
+    setPreviewUrl(getImageUrl(image));
     navigation.navigate("PreviewModal");
   };
   const memoizedImageView = useMemo(() => {

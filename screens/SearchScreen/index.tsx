@@ -7,7 +7,7 @@ import SearchFloatingAction from "./SearchFloatingAction";
 
 import { GroupSearchResultContext } from "@/Provider";
 import { getSearchResults, Reply, Image, Post } from "@/api";
-import { maxLineAtom, previewIndexAtom, previewsAtom, searchForumFilterAtom } from "@/atoms";
+import { maxLineAtom, previewUrlAtom, previewsAtom, searchForumFilterAtom } from "@/atoms";
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
 import ThreadPost from "@/components/Post/ThreadPost";
@@ -29,7 +29,7 @@ export default function SearchScreen({ route, navigation }: RootStackScreenProps
   const [maxLine] = useAtom(maxLineAtom);
   const [searchForumFilter] = useAtom(searchForumFilterAtom);
   const setPreviews = useSetAtom(previewsAtom);
-  const setPreviewIndex = useSetAtom(previewIndexAtom);
+  const setPreviewUrl = useSetAtom(previewUrlAtom);
   const listRef = useRef<any>(null);
   const isMounted = useIsMounted();
   const groupSearchResults = useContext(GroupSearchResultContext);
@@ -112,7 +112,7 @@ export default function SearchScreen({ route, navigation }: RootStackScreenProps
             originalUrl: getThumbnailUrl(item),
           }))
         );
-        setPreviewIndex(data.images.findIndex((item) => item.url === image.url));
+        setPreviewUrl(getImageUrl(image));
         navigation.navigate("PreviewModal");
       }}
     />

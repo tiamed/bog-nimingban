@@ -3,4 +3,8 @@ import { IImageInfo } from "react-native-image-zoom-viewer/built/image-viewer.ty
 
 export const previewsAtom = atom<IImageInfo[]>([]);
 
-export const previewIndexAtom = atom(0);
+export const previewUrlAtom = atom("");
+
+export const previewIndexAtom = atom<number>(
+  (get) => get(previewsAtom)?.findIndex((preview) => preview?.url === get(previewUrlAtom)) || 0
+);

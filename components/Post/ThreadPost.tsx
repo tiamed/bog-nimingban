@@ -14,7 +14,7 @@ import Wrapper from "./Wrapper";
 
 import { SizeContext, ThreadReplyReverseContext } from "@/Provider";
 import { Post, Image } from "@/api";
-import { lineHeightAtom, previewIndexAtom, previewsAtom, threadDirectionAtom } from "@/atoms";
+import { lineHeightAtom, previewUrlAtom, previewsAtom, threadDirectionAtom } from "@/atoms";
 import useHaptics from "@/hooks/useHaptics";
 
 const width = Dimensions.get("window").width;
@@ -29,7 +29,7 @@ export default function ThreadPost(props: {
   showReply?: boolean;
 }) {
   const setPreviews = useSetAtom(previewsAtom);
-  const setPreviewIndex = useSetAtom(previewIndexAtom);
+  const setPreviewUrl = useSetAtom(previewUrlAtom);
   const [threadDirection] = useAtom(threadDirectionAtom);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
 
@@ -107,7 +107,7 @@ export default function ThreadPost(props: {
               (["row", "row-reverse"].includes(threadDirection) ? (
                 <ImageView
                   onPress={() => {
-                    setPreviewIndex(0);
+                    setPreviewUrl(previews[0]?.url);
                     setPreviews(previews);
                     navigation.navigate("PreviewModal");
                   }}
@@ -154,7 +154,7 @@ export default function ThreadPost(props: {
                       props.onLongPress?.(props.data);
                     }}
                     onImagePress={(image) => {
-                      setPreviewIndex(images.findIndex((item) => item.url === image.url));
+                      setPreviewUrl(getImageUrl(image));
                       setPreviews(previews);
                       navigation.navigate("PreviewModal");
                     }}

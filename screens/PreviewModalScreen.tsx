@@ -37,8 +37,7 @@ export default function PreviewModalScreen() {
         setIsLoading(true);
         const { uri } = await FileSystem.downloadAsync(
           previews[index].url,
-          FileSystem.cacheDirectory +
-            previews[previewIndex].url.replace(`${Urls.baseURL}image/large/`, "")
+          FileSystem.cacheDirectory + previews[index].url.replace(`${Urls.baseURL}image/large/`, "")
         );
 
         await callback(uri);
@@ -63,6 +62,7 @@ export default function PreviewModalScreen() {
       await Sharing.shareAsync(uri);
     });
   };
+
   return (
     <>
       <ImageViewer
@@ -73,17 +73,19 @@ export default function PreviewModalScreen() {
         onClick={() => navigation.goBack()}
         saveToLocalByLongPress={false}
         onChange={(index) => setIndex(index!)}
-        loadingRender={() => (
-          <CachedImage
-            source={{ uri: previews[index].url?.replace("large", "thumb") }}
-            cacheKey={`${parseImageUrl(previews[index].url)?.url}-thumb-`}
-            resizeMode="contain"
-            style={{
-              width: "100%",
-              height: "100%",
-            }}
-          />
-        )}
+        loadingRender={() =>
+          previews?.[index] && (
+            <CachedImage
+              source={{ uri: previews[index].url?.replace("large", "thumb") }}
+              cacheKey={`${parseImageUrl(previews[index].url)?.url}-thumb-`}
+              resizeMode="contain"
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            />
+          )
+        }
       />
       <FloatingAction
         color={isLoading ? inactiveColor : activeColor}

@@ -35,7 +35,6 @@ export default function HomeFloatingAction() {
       color={tintColor}
       overlayColor={overlayColor}
       shadow={{ shadowColor: "transparent" }}
-      floatingIcon={<Octicon name="plus" color="white" />}
       actions={[
         {
           icon: <Octicon name="list-unordered" color={tintColor} />,
