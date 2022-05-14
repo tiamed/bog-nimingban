@@ -129,21 +129,7 @@ function Quote(props: { data: string; level: number }) {
           flexDirection: "row",
           minWidth: "100%",
         }}>
-        <Pressable
-          hitSlop={{
-            right: width,
-            top: 2,
-            bottom: 2,
-            left: 2,
-          }}
-          onPress={() => {
-            if (expandable) {
-              if (state === "collapsed") {
-                setLoadingText("加载中");
-              }
-              onPress();
-            }
-          }}>
+        <QuoteReferene>
           <Text
             lightColor="#666666"
             darkColor="#999999"
@@ -157,7 +143,7 @@ function Quote(props: { data: string; level: number }) {
             }}>
             {data}
           </Text>
-        </Pressable>
+        </QuoteReferene>
         <Text
           style={{
             fontSize: BASE_SIZE * 0.8,
@@ -183,6 +169,28 @@ function Quote(props: { data: string; level: number }) {
       </AnimatedSection>
     </View>
   );
+
+  function QuoteReferene(props: { children: any }) {
+    return expandable ? (
+      <Pressable
+        hitSlop={{
+          right: width,
+          top: 2,
+          bottom: 2,
+          left: 2,
+        }}
+        onPress={() => {
+          if (state === "collapsed") {
+            setLoadingText("加载中");
+          }
+          onPress();
+        }}>
+        {props.children}
+      </Pressable>
+    ) : (
+      props.children
+    );
+  }
 }
 
 function Link(props: { href: string; text?: string; onPress?: () => void }) {
