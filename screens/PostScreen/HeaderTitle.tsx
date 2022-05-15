@@ -20,8 +20,18 @@ const styles = StyleSheet.create({
       alignItems: "center",
       height: 30,
     },
-    android: { flexDirection: "column", alignItems: "flex-start" },
-    default: { flexDirection: "column", alignItems: "flex-start" },
+    android: {
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      alignContent: "center",
+    },
+    default: {
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      alignContent: "center",
+    },
   }),
   title: Platform.select({
     ios: {

@@ -62,6 +62,12 @@ import {
 
 const width = Dimensions.get("window").width;
 
+const headerTitleStyle = Platform.select({
+  android: {
+    fontSize: 18,
+  },
+});
+
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer
@@ -126,6 +132,8 @@ function RootNavigator() {
       screenOptions={{
         animation: "fade_from_bottom",
         headerBackTitle: "返回",
+        headerTitleAlign: "center",
+        headerTitleStyle,
       }}>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen
@@ -302,11 +310,8 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
   const tintColor = useThemeColor({}, "tint");
-  const activeColor = useThemeColor({}, "active");
-  const inactiveColor = useThemeColor({}, "inactive");
   const insets = useSafeAreaInsets();
   const setTabRefreshing = useSetAtom(tabRefreshingAtom);
-  const [historyTab] = useAtom(historyTabAtom);
   const [BASE_SIZE] = useAtom(sizeAtom);
   const [showTabBarLabel] = useAtom(showTabBarLabelAtom);
 
@@ -314,6 +319,8 @@ function BottomTabNavigator() {
     <BottomTab.Navigator
       initialRouteName="Home"
       screenOptions={{
+        headerTitleAlign: "center",
+        headerTitleStyle,
         tabBarActiveTintColor: tintColor,
         tabBarAllowFontScaling: false,
         tabBarStyle: {
@@ -356,6 +363,7 @@ function BottomTabNavigator() {
         component={FavoriteScreen}
         options={{
           title: "收藏",
+          tabBarLabel: "收藏",
           tabBarShowLabel: showTabBarLabel,
           tabBarIcon: ({ color }) => <TabBarIcon name="heart" color={color} />,
         }}
@@ -365,6 +373,7 @@ function BottomTabNavigator() {
         component={HistoryTabNavigator}
         options={{
           title: "历史",
+          tabBarLabel: "历史",
           tabBarShowLabel: showTabBarLabel,
           headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="history" color={color} />,
@@ -393,6 +402,8 @@ function DrawerNavigator() {
       drawerContent={(props) => DrawerContent(props)}
       screenOptions={{
         headerTintColor: textColor,
+        headerTitleAlign: "center",
+        headerTitleStyle,
       }}>
       <Drawer.Screen
         name="Main"
