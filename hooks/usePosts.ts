@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAtom } from "jotai";
 import { useState, useEffect, useCallback } from "react";
 import Toast from "react-native-toast-message";
@@ -43,69 +42,68 @@ export default function usePosts(id: number) {
   const isMounted = useIsMounted();
   const { result: postFiltered, setCurrentId } = usePostFiltered(Number(id));
 
-  const loadData = async (
-    nextPage: number,
-    jump: boolean = false,
-    updatePosition: boolean = false
-  ) => {
-    if (!isMounted) return;
-    try {
-      setIsLoading(true);
-      const {
-        data: {
-          type,
-          code,
-          info: { reply, ...rest },
-        },
-      } = await getPostById(id as number, nextPage, 20, order);
+  const loadData = useCallback(
+    async (nextPage: number, jump: boolean = false, updatePosition: boolean = false) => {
+      if (!isMounted) return;
+      try {
+        setIsLoading(true);
+        const {
+          data: {
+            type,
+            code,
+            info: { reply, ...rest },
+          },
+        } = await getPostById(id as number, nextPage, 20, order);
 
-      if (rest.id) {
-        setMainPost(rest as Post);
-      }
-
-      if (type === "error") {
-        setHasNoMore(true);
-        if (code !== 6202) {
-          Toast.show({
-            type: "error",
-            text1: Errors[code],
-          });
+        if (rest.id) {
+          setMainPost(rest as Post);
         }
-        return;
-      }
 
-      const replyWithPage: ReplyWithPage[] = reply.map((x) => ({ ...x, currentPage: nextPage }));
+        if (type === "error") {
+          setHasNoMore(true);
+          if (code !== 6202) {
+            Toast.show({
+              type: "error",
+              text1: Errors[code],
+            });
+          }
+          return;
+        }
 
-      let nextPosts = nextPage === 1 ? [rest, ...replyWithPage] : [...replyWithPage];
-      if (!jump) {
-        nextPosts = nextPosts.filter((post) => !posts.find((x) => x.id === post.id));
-      }
+        const replyWithPage: ReplyWithPage[] = reply.map((x) => ({ ...x, currentPage: nextPage }));
 
-      if (jump) {
-        setFirstPage(nextPage);
-        setLastPage(nextPage);
-        setCurrentPage(nextPage);
-        setHasNoMore(reply?.length !== 20);
-        setLastPageFinished(reply?.length === 20);
-        setPosts(nextPosts);
-      } else {
-        if (nextPage < firstPage) {
+        let nextPosts = replyWithPage;
+        if (!jump) {
+          nextPosts = nextPosts.filter((post) => !posts.find((x) => x.id === post.id));
+        }
+
+        if (jump) {
           setFirstPage(nextPage);
-          setPosts([...nextPosts, ...posts]);
-        } else {
           setLastPage(nextPage);
+          setCurrentPage(nextPage);
           setHasNoMore(reply?.length !== 20);
           setLastPageFinished(reply?.length === 20);
-          setPosts([...posts, ...nextPosts]);
+          setPosts(nextPosts);
+        } else {
+          if (nextPage < firstPage || (nextPage === firstPage && order === 1)) {
+            setFirstPage(nextPage);
+            setPosts([...nextPosts, ...posts]);
+          } else {
+            setLastPage(nextPage);
+            setHasNoMore(reply?.length !== 20);
+            setLastPageFinished(reply?.length === 20);
+            setPosts([...posts, ...nextPosts]);
+          }
         }
+        if (updatePosition) {
+          setLastPosition(nextPosts[0].id);
+        }
+      } finally {
+        setIsLoading(false);
       }
-      if (updatePosition) {
-        setLastPosition(nextPosts[0].id);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [posts, order, id]
+  );
 
   const refreshPosts = useCallback(async () => {
     if (firstPage === 1) {
@@ -116,7 +114,7 @@ export default function usePosts(id: number) {
       await loadData(firstPage - 1);
     }
     addToHistory(true);
-  }, [firstPage, order]);
+  }, [firstPage, order, loadData]);
 
   const loadMoreData = async (force = false) => {
     if (isLoading || (hasNoMore && !force)) return;

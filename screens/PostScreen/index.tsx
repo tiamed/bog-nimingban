@@ -259,6 +259,9 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
               loadMore: loadMoreData.bind(null, true),
             })
           }
+          ListHeaderComponent={() =>
+            firstPage === 1 && mainPost.id ? renderItem({ item: mainPost }) : <></>
+          }
           viewabilityConfig={viewConfigRef.current}
           onViewableItemsChanged={onViewRef.current}
           onScrollToIndexFailed={({ highestMeasuredFrameIndex }) => {
