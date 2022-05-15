@@ -20,6 +20,7 @@ export default function Wrapper(props: {
         alignSelf: "center",
         flexDirection: "column",
         padding: 8,
+        paddingHorizontal: 16,
         borderBottomWidth: props.bottomGap ? bottomGap : 1,
       }}>
       {props.children}
