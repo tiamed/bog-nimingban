@@ -30,7 +30,7 @@ export default function DrawerContent(props: any) {
           <Octicon name="gear" color={textColor} size={22} />
         </TouchableOpacity>
       </View>
-      <ScrollView>
+      <ScrollView style={styles.list}>
         {forums
           ?.filter((forum) => !forum.hide)
           ?.map((forum) => (
@@ -62,14 +62,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginHorizontal: 20,
-    marginTop: 32,
-    marginBottom: 36,
+    marginVertical: 32,
   },
   headerLabel: {
     fontSize: 18,
   },
   headerIcon: {
     padding: 1,
+  },
+  list: {
+    paddingTop: 4,
   },
   item: {
     paddingVertical: 16,
