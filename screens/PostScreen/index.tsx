@@ -78,7 +78,11 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   });
 
   const images = useMemo(() => {
-    return filteredPosts.map((x) => x.images || []).flat();
+    const replyImages = filteredPosts.map((x) => x.images || []).flat();
+    if (firstPage === 1) {
+      return [...(mainPost?.images || []), ...replyImages];
+    }
+    return replyImages;
   }, [filteredPosts]);
 
   const onViewRef = useRef<FlatListProps<ReplyWithPage>["onViewableItemsChanged"]>(
@@ -159,6 +163,11 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   );
 
   const renderItemMemoized = useMemo(() => renderItem, [filteredPosts]);
+
+  const renderMainPostMemoized = useMemo(
+    () => (firstPage === 1 && mainPost.id ? renderItem({ item: mainPost }) : null),
+    [mainPost, firstPage]
+  );
 
   const keyExtractor = (item: any) => item.id.toString();
 
@@ -259,9 +268,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
               loadMore: loadMoreData.bind(null, true),
             })
           }
-          ListHeaderComponent={() =>
-            firstPage === 1 && mainPost.id ? renderItem({ item: mainPost }) : <></>
-          }
+          ListHeaderComponent={renderMainPostMemoized}
           viewabilityConfig={viewConfigRef.current}
           onViewableItemsChanged={onViewRef.current}
           onScrollToIndexFailed={({ highestMeasuredFrameIndex }) => {
