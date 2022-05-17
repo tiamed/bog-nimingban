@@ -19,7 +19,7 @@ export default function DrawerContent(props: any) {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={{ marginTop: insets.top }}>
+    <View style={{ marginTop: insets.top, flex: 1 }}>
       <View style={styles.header}>
         <Text style={[styles.headerLabel, { color: textColor }]}>所有板块</Text>
         <TouchableOpacity
