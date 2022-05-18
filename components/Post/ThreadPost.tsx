@@ -3,6 +3,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { Fragment, useContext, useMemo } from "react";
 import { Dimensions, Pressable, View } from "react-native";
 import { TapGestureHandler } from "react-native-gesture-handler";
+import { TouchableRipple } from "react-native-paper";
 
 import { useThemeColor } from "../Themed";
 import Header from "./Header";
@@ -35,8 +36,9 @@ export default function ThreadPost(props: {
 
   const navigation = useNavigation();
   const haptics = useHaptics();
-  const replyBackgroundColor = useThemeColor({}, "replyBackground");
   const borderColor = useThemeColor({}, "border");
+  const replyBackgroundColor = useThemeColor({}, "replyBackground");
+  const tintBackgroundColor = useThemeColor({}, "tintBackground");
   const BASE_SIZE = useContext(SizeContext);
   const threadReplyReverse = useContext(ThreadReplyReverseContext);
 
@@ -78,13 +80,15 @@ export default function ThreadPost(props: {
 
   return (
     <PressableWrapper>
-      <Pressable
+      <TouchableRipple
+        delayLongPress={800}
+        rippleColor={tintBackgroundColor}
+        underlayColor={tintBackgroundColor}
         onPress={props.onPress?.bind(null, props.data) || OnPress}
         onLongPress={() => {
           haptics.heavy();
           props.onLongPress?.(props.data);
-        }}
-        delayLongPress={800}>
+        }}>
         <Wrapper bottomGap>
           <Header data={props.data} isPo={false} newCount={props.newCount} showForum />
           <View
@@ -159,13 +163,14 @@ export default function ThreadPost(props: {
                       navigation.navigate("PreviewModal");
                     }}
                     maxHeight={LINE_HEIGHT * (props.maxLine || 999)}
+                    hideFeedBack
                   />
                 )
               )}
             </View>
           )}
         </Wrapper>
-      </Pressable>
+      </TouchableRipple>
     </PressableWrapper>
   );
 }

@@ -2,7 +2,9 @@ import { useNavigation } from "@react-navigation/native";
 import { useSetAtom } from "jotai";
 import { useMemo } from "react";
 import { Pressable, View } from "react-native";
+import { TouchableRipple } from "react-native-paper";
 
+import { useThemeColor } from "../Themed";
 import Header from "./Header";
 import HtmlView from "./HtmlView";
 import ImageList from "./ImageList";
@@ -21,9 +23,11 @@ export default function ReplyPost(props: {
   width?: number | string;
   level?: number;
   maxHeight?: number;
+  hideFeedBack?: boolean;
 }) {
   const setPreviewUrl = useSetAtom(previewUrlAtom);
   const navigation = useNavigation();
+  const tintBackgroundColor = useThemeColor({}, "tintBackground");
   const isPo = props.data.cookie === props.po;
   const onImagePress = (image: Image) => {
     setPreviewUrl(getImageUrl(image));
@@ -58,7 +62,11 @@ export default function ReplyPost(props: {
   }, [props.data?.images]);
 
   return (
-    <Pressable onPress={props.onPress} onLongPress={props.onLongPress}>
+    <TouchableRipple
+      rippleColor={props.hideFeedBack ? "transparent" : tintBackgroundColor}
+      underlayColor={props.hideFeedBack ? "transparent" : tintBackgroundColor}
+      onPress={props.onPress}
+      onLongPress={props.onLongPress}>
       <Wrapper width={props.width}>
         <Header data={props.data} isPo={isPo} />
         <View
@@ -77,6 +85,6 @@ export default function ReplyPost(props: {
           {memoizedImageView}
         </View>
       </Wrapper>
-    </Pressable>
+    </TouchableRipple>
   );
 }
