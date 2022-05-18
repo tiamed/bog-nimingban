@@ -14,6 +14,7 @@ import ReplyPostWithoutData from "./ReplyPostWithoutData";
 import { SizeContext } from "@/Provider";
 import { lineHeightAtom } from "@/atoms";
 import { Text, useThemeColor } from "@/components/Themed";
+import Layout from "@/constants/Layout";
 import Urls from "@/constants/Urls";
 
 const width = Dimensions.get("window").width;
@@ -96,7 +97,12 @@ function Quote(props: { data: string; level: number }) {
     () => (
       <ReplyPostWithoutData
         id={quoteId}
-        width={width - 20 * props.level}
+        width={
+          width -
+          2 -
+          Layout.postHorizontalPadding * 2 -
+          (props.level - 1) * (Layout.postHorizontalPaddingSecondary * 2 + 2)
+        }
         level={props.level + 1}
         onLoaded={() => {
           setTimeout(() => {

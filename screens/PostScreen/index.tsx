@@ -1,7 +1,7 @@
 import { useFocusEffect } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
 import { useState, useEffect, useMemo, createContext, useRef } from "react";
-import { StyleSheet, FlatList, Platform, FlatListProps, Text } from "react-native";
+import { StyleSheet, FlatList, Platform, FlatListProps } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -159,6 +159,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
         setFocusItem(item);
         setShowActionModal(true);
       }}
+      withPadding
     />
   );
 

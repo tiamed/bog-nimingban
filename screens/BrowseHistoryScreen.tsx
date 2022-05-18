@@ -5,8 +5,9 @@ import { StyleSheet, FlatList, FlatListProps } from "react-native";
 
 import renderFooter from "./HomeScreen/renderFooter";
 
+import { ExpandableContext } from "@/Provider";
 import { Post } from "@/api";
-import { historyAtom, maxLineAtom } from "@/atoms";
+import { expandableAtom, historyAtom, maxLineAtom } from "@/atoms";
 import HistoryFloatingAction from "@/components/HistoryFloatingAction";
 import ThreadPost from "@/components/Post/ThreadPost";
 import { View } from "@/components/Themed";
@@ -22,10 +23,11 @@ export interface UserHistory extends Post {
 }
 
 export default function BrowseHistoryScreen() {
+  const [filteredHistory, setFilteredHistory] = useState<UserHistory[]>([]);
   const [history] = useAtom<UserHistory[]>(historyAtom);
   const [maxLine] = useAtom(maxLineAtom);
-  const [filteredHistory, setFilteredHistory] = useState<UserHistory[]>([]);
   const [range, setRange] = useAtom(rangeAtom);
+  const [expandable] = useAtom(expandableAtom);
 
   const updateHistory = () => {
     setFilteredHistory(
@@ -45,27 +47,29 @@ export default function BrowseHistoryScreen() {
   }, [range, history]);
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={filteredHistory}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={() =>
-          renderFooter({
-            loading: false,
-            hasNoMore: true,
-          })
-        }
-      />
-      <HistoryFloatingAction
-        start={range.start}
-        end={range.end}
-        onChange={(start, end) => {
-          setRange({ start, end });
-        }}
-      />
-    </View>
+    <ExpandableContext.Provider value={expandable}>
+      <View style={styles.container}>
+        <FlatList
+          data={filteredHistory}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={() =>
+            renderFooter({
+              loading: false,
+              hasNoMore: true,
+            })
+          }
+        />
+        <HistoryFloatingAction
+          start={range.start}
+          end={range.end}
+          onChange={(start, end) => {
+            setRange({ start, end });
+          }}
+        />
+      </View>
+    </ExpandableContext.Provider>
   );
 }
 

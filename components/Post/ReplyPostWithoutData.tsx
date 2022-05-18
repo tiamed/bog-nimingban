@@ -12,6 +12,7 @@ import { SizeContext } from "@/Provider";
 import { getReply, Post, Reply, Image } from "@/api";
 import { previewUrlAtom, previewsAtom } from "@/atoms";
 import { Text, useThemeColor } from "@/components/Themed";
+import Layout from "@/constants/Layout";
 import { MainPostContext } from "@/screens/PostScreen";
 
 export default function ReplyPostWithoutData(props: {
@@ -105,6 +106,6 @@ export default function ReplyPostWithoutData(props: {
 
 const styles = StyleSheet.create({
   actionWrapper: {
-    paddingRight: 10,
+    paddingRight: Layout.postHorizontalPaddingSecondary,
   },
 });

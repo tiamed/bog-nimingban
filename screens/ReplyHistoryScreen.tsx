@@ -61,6 +61,7 @@ export default function ReplyHistoryScreen() {
           setPreviewUrl(getImageUrl(image));
           navigation.navigate("PreviewModal");
         }}
+        withPadding
       />
     );
 

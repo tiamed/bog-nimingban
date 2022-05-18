@@ -9,4 +9,6 @@ export default {
     height,
   },
   isSmallDevice: width < 375,
+  postHorizontalPadding: 16,
+  postHorizontalPaddingSecondary: 4,
 };

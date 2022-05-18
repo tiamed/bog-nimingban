@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useSetAtom } from "jotai";
 import { useMemo } from "react";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { TouchableRipple } from "react-native-paper";
 
 import { useThemeColor } from "../Themed";
@@ -24,6 +24,7 @@ export default function ReplyPost(props: {
   level?: number;
   maxHeight?: number;
   hideFeedBack?: boolean;
+  withPadding?: boolean;
 }) {
   const setPreviewUrl = useSetAtom(previewUrlAtom);
   const navigation = useNavigation();
@@ -67,7 +68,7 @@ export default function ReplyPost(props: {
       underlayColor={props.hideFeedBack ? "transparent" : tintBackgroundColor}
       onPress={props.onPress}
       onLongPress={props.onLongPress}>
-      <Wrapper width={props.width}>
+      <Wrapper width={props.width} withPadding={props.withPadding}>
         <Header data={props.data} isPo={isPo} />
         <View
           style={{

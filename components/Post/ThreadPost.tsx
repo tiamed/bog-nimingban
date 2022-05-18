@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
 import { Fragment, useContext, useMemo } from "react";
-import { Dimensions, Pressable, View } from "react-native";
+import { Dimensions, View } from "react-native";
 import { TapGestureHandler } from "react-native-gesture-handler";
 import { TouchableRipple } from "react-native-paper";
 
@@ -16,6 +16,7 @@ import Wrapper from "./Wrapper";
 import { SizeContext, ThreadReplyReverseContext } from "@/Provider";
 import { Post, Image } from "@/api";
 import { lineHeightAtom, previewUrlAtom, previewsAtom, threadDirectionAtom } from "@/atoms";
+import Layout from "@/constants/Layout";
 import useHaptics from "@/hooks/useHaptics";
 
 const width = Dimensions.get("window").width;
@@ -89,7 +90,7 @@ export default function ThreadPost(props: {
           haptics.heavy();
           props.onLongPress?.(props.data);
         }}>
-        <Wrapper bottomGap>
+        <Wrapper bottomGap withPadding>
           <Header data={props.data} isPo={false} newCount={props.newCount} showForum />
           <View
             style={{
@@ -146,7 +147,7 @@ export default function ThreadPost(props: {
                   <ReplyPost
                     key={item.id}
                     data={item}
-                    width={width - 8}
+                    width={width - Layout.postHorizontalPadding * 2}
                     onPress={() => {
                       navigation.navigate("Post", {
                         id: item.res as number,
@@ -163,6 +164,7 @@ export default function ThreadPost(props: {
                       navigation.navigate("PreviewModal");
                     }}
                     maxHeight={LINE_HEIGHT * (props.maxLine || 999)}
+                    level={1}
                     hideFeedBack
                   />
                 )

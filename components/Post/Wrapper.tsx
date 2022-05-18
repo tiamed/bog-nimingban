@@ -3,10 +3,12 @@ import { Dimensions, View } from "react-native";
 
 import { bottomGapAtom } from "@/atoms";
 import { useThemeColor } from "@/components/Themed";
+import Layout from "@/constants/Layout";
 
 export default function Wrapper(props: {
   width?: number | string;
   bottomGap?: boolean;
+  withPadding?: boolean;
   children: React.ReactNode;
 }) {
   const borderColor = useThemeColor({}, "border");
@@ -20,7 +22,9 @@ export default function Wrapper(props: {
         alignSelf: "center",
         flexDirection: "column",
         padding: 8,
-        paddingHorizontal: 16,
+        paddingHorizontal: props.withPadding
+          ? Layout.postHorizontalPadding
+          : Layout.postHorizontalPaddingSecondary,
         borderBottomWidth: props.bottomGap ? bottomGap : 1,
       }}>
       {props.children}
