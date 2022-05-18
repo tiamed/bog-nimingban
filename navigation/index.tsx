@@ -323,6 +323,7 @@ function BottomTabNavigator() {
         headerTitleStyle,
         tabBarActiveTintColor: tintColor,
         tabBarAllowFontScaling: false,
+        tabBarLabelPosition: "below-icon",
         tabBarStyle: {
           height: (showTabBarLabel ? BASE_SIZE * 3.8 : BASE_SIZE * 3.5) + insets.bottom,
           paddingTop: showTabBarLabel ? BASE_SIZE * 0.62 : undefined,
