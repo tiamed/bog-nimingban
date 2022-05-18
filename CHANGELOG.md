@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.35](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.34...v1.0.0-alpha.35) (2022-05-18)
+
+
+### Features
+
+* click to dismiss preview ([0c8573e](https://github.com/tiamed/bog-nimingban/commit/0c8573e7a7823218b2c165bc68c5fc9137a208c1))
+* create cookie with exchange code ([aea29fc](https://github.com/tiamed/bog-nimingban/commit/aea29fc72e19a3399a7dbdbcdbe8ee7bd1ed5287))
+* hide tabbar label ([23e2c7d](https://github.com/tiamed/bog-nimingban/commit/23e2c7d0f57735842e2101e4549174d0e66aa328))
+
+
+### Bug Fixes
+
+* bottom bar for pad ([908b39f](https://github.com/tiamed/bog-nimingban/commit/908b39fb9ce43c69a6f85fb9fc76b71fcca6ba04))
+* disable expanding when maxLine limited ([b33e73b](https://github.com/tiamed/bog-nimingban/commit/b33e73bc248648d5dd27298fb71efe96cd6f5e00))
+* drawer content height ([94e3b80](https://github.com/tiamed/bog-nimingban/commit/94e3b80785c3768e5f99da7980eced3a67e3eb9b))
+* hide refresh control on init ([37aa24b](https://github.com/tiamed/bog-nimingban/commit/37aa24b317273495da5b61103dfbdb5fad6b9ebf))
+* **HtmlView:** b tag node bold ([f8fb981](https://github.com/tiamed/bog-nimingban/commit/f8fb98139644f5fdb89d50ffc5aa7a66bc78a94d))
+* image preview crashes ([2f75db2](https://github.com/tiamed/bog-nimingban/commit/2f75db20a2dde7ef684c1367e1883fed8408b36a))
+* ios tabbar height ([4fd2396](https://github.com/tiamed/bog-nimingban/commit/4fd2396a71a44089513440e9234e776a6d417ab0))
+* **post:** desc order refresh ([8855696](https://github.com/tiamed/bog-nimingban/commit/885569616786c6f89902f244e4fd234b6a3cca00))
+* **post:** large content performance issue ([caa8558](https://github.com/tiamed/bog-nimingban/commit/caa8558302cf318b1d525c9c2ff3bbf02bb9844e))
+* **post:** main post image preview ([6bb9dd1](https://github.com/tiamed/bog-nimingban/commit/6bb9dd150308c18fe848caa75ccd75c0f331ee90))
+* reply width ([fe53690](https://github.com/tiamed/bog-nimingban/commit/fe53690bc411d451ad36ad7f22ecdff32082326c))
+* unclickable quote ([b6f8414](https://github.com/tiamed/bog-nimingban/commit/b6f84144f83cf63352d3a44ee3b8685b152d1a87))
+
 ## [1.0.0-alpha.34](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.33...v1.0.0-alpha.34) (2022-05-10)
 
 

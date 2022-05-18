@@ -2,7 +2,7 @@
   "expo": {
     "name": "bog-nimingban",
     "slug": "bog-nimingban",
-    "version": "1.0.0-alpha.34",
+    "version": "1.0.0-alpha.35",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "bog",
