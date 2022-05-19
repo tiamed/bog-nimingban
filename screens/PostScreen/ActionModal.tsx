@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import { useAtom } from "jotai";
-import { StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert, Dimensions } from "react-native";
 import Toast from "react-native-toast-message";
 
 import { normalizeHtml } from "../../utils/format";
@@ -9,8 +9,9 @@ import { normalizeHtml } from "../../utils/format";
 import { Reply, deleteReply } from "@/api";
 import { cookiesAtom } from "@/atoms/index";
 import Modal from "@/components/Modal";
-import { Text, View } from "@/components/Themed";
+import { Text, useThemeColor, View } from "@/components/Themed";
 import Errors from "@/constants/Errors";
+import Texts from "@/constants/Texts";
 import { Cookie } from "@/screens/ProfileScreen/Cookie";
 
 export default function ActionModal(props: {
@@ -22,6 +23,7 @@ export default function ActionModal(props: {
 }) {
   const [cookies] = useAtom<Cookie[]>(cookiesAtom);
   const navigation = useNavigation();
+  const borderColor = useThemeColor({}, "border");
   const close = () => {
     props.onClose();
   };
@@ -74,24 +76,26 @@ export default function ActionModal(props: {
       isVisible={props.visible}
       onBackdropPress={close}
       animationInTiming={1}
-      animationOutTiming={1}
-      style={styles.modalWrapper}>
-      <View style={styles.modal}>
-        <TouchableOpacity onPress={onReply}>
-          <View style={styles.actionModalItem}>
-            <Text>回复</Text>
-          </View>
+      animationOutTiming={1}>
+      <View style={styles.actionModal}>
+        <View
+          style={[styles.actionModalItem, styles.actionHeader, { borderBottomColor: borderColor }]}>
+          <Text style={styles.actionHeaderContent} numberOfLines={1}>
+            {normalizeHtml(props.item.content) || Texts.defaultContent}
+          </Text>
+          <Text style={styles.actionHeaderId} numberOfLines={1}>
+            Po.{props.item.id}
+          </Text>
+        </View>
+        <TouchableOpacity style={styles.actionModalItem} onPress={onReply}>
+          <Text>回复</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onCopy}>
-          <View style={styles.actionModalItem}>
-            <Text>复制</Text>
-          </View>
+        <TouchableOpacity style={styles.actionModalItem} onPress={onCopy}>
+          <Text>复制</Text>
         </TouchableOpacity>
         {cookies?.find((cookie) => cookie.id === props.item.cookie) && (
-          <TouchableOpacity onPress={onDelete}>
-            <View style={styles.actionModalItem}>
-              <Text>删除</Text>
-            </View>
+          <TouchableOpacity style={styles.actionModalItem} onPress={onDelete}>
+            <Text>删除</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -100,22 +104,36 @@ export default function ActionModal(props: {
 }
 
 const styles = StyleSheet.create({
-  modalWrapper: {
+  actionModal: {
     flexDirection: "column",
     justifyContent: "center",
     alignSelf: "center",
     alignItems: "flex-start",
+    borderRadius: 10,
+    overflow: "hidden",
     width: 300,
-    padding: 6,
-    flex: 1,
+    paddingVertical: 6,
+    paddingHorizontal: 24,
   },
   modal: {
     borderRadius: 10,
     overflow: "hidden",
   },
   actionModalItem: {
-    padding: 10,
-    marginLeft: 20,
-    width: 260,
+    width: "100%",
+    paddingVertical: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  actionHeader: {
+    borderBottomWidth: 1,
+  },
+  actionHeaderContent: {
+    flex: 1,
+  },
+  actionHeaderId: {
+    flexShrink: 0,
+    marginLeft: 12,
   },
 });

@@ -3,4 +3,5 @@ export default {
 Lorem ipsum dolor sitamet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et doloremagna aliqua.
 [ﾟДﾟ≡ﾟДﾟ]
 (〜￣△￣)〜`,
+  defaultContent: "没有文字内容",
 };

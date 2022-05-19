@@ -10,13 +10,16 @@ import {
   tabRefreshingAtom,
 } from "@/atoms/index";
 import Modal from "@/components/Modal";
-import { Text, View } from "@/components/Themed";
+import { Text, useThemeColor, View } from "@/components/Themed";
+import Texts from "@/constants/Texts";
+import { normalizeHtml } from "@/utils/format";
 
 export default function ActionModal(props: { item: Post }) {
   const [visible, setVisible] = useAtom(showHomeActionModalAtom);
   const [blackListPosts, setBlackListPosts] = useAtom(blackListPostsAtom);
   const [blackListCookies, setBlackListCookies] = useAtom(blackListCookiesAtom);
   const [, setTabRefreshing] = useAtom(tabRefreshingAtom);
+  const borderColor = useThemeColor({}, "border");
   const close = () => {
     setVisible(false);
   };
@@ -54,15 +57,17 @@ export default function ActionModal(props: { item: Post }) {
   return (
     <Modal isVisible={visible} onBackdropPress={close}>
       <View style={styles.actionModal}>
-        <TouchableOpacity onPress={onBlockPost}>
-          <View style={styles.actionModalItem}>
-            <Text>屏蔽串</Text>
-          </View>
+        <View
+          style={[styles.actionModalItem, styles.actionHeader, { borderBottomColor: borderColor }]}>
+          <Text numberOfLines={1}>{normalizeHtml(props.item.content) || Texts.defaultContent}</Text>
+        </View>
+        <TouchableOpacity style={styles.actionModalItem} onPress={onBlockPost}>
+          <Text>屏蔽串</Text>
+          <Text>Po.{props.item.id}</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onBlockCookie}>
-          <View style={styles.actionModalItem}>
-            <Text>屏蔽饼干</Text>
-          </View>
+        <TouchableOpacity style={styles.actionModalItem} onPress={onBlockCookie}>
+          <Text>屏蔽饼干</Text>
+          <Text>{props.item.cookie}</Text>
         </TouchableOpacity>
       </View>
     </Modal>
@@ -78,11 +83,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: "hidden",
     width: 300,
-    padding: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 24,
   },
   actionModalItem: {
-    padding: 10,
-    marginLeft: 20,
-    width: 260,
+    width: "100%",
+    paddingVertical: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  actionHeader: {
+    borderBottomWidth: 1,
   },
 });
