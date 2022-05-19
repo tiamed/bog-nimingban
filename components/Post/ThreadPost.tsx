@@ -82,7 +82,8 @@ export default function ThreadPost(props: {
   return (
     <PressableWrapper>
       <TouchableRipple
-        delayLongPress={800}
+        delayPressIn={130}
+        delayLongPress={600}
         rippleColor={tintBackgroundColor}
         underlayColor={tintBackgroundColor}
         onPress={props.onPress?.bind(null, props.data) || OnPress}

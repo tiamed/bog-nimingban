@@ -92,17 +92,18 @@ function Quote(props: { data: string; level: number }) {
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
   const [loadingText, setLoadingText] = useState("");
   const quoteId = Number(data.replace(/>>Po\./g, ""));
+  const replyWidth =
+    width -
+    2 -
+    Layout.postHorizontalPadding * 2 -
+    (props.level - 1) * (Layout.postHorizontalPaddingSecondary * 2 + 2);
+
   const { animatedHeight, onPress, onLayout, state } = useCollapsible({ duration: 200 });
   const memoizedReplyPost = useMemo(
     () => (
       <ReplyPostWithoutData
         id={quoteId}
-        width={
-          width -
-          2 -
-          Layout.postHorizontalPadding * 2 -
-          (props.level - 1) * (Layout.postHorizontalPaddingSecondary * 2 + 2)
-        }
+        width={replyWidth}
         level={props.level + 1}
         onLoaded={() => {
           setTimeout(() => {

@@ -64,6 +64,7 @@ export default function ReplyPost(props: {
 
   return (
     <TouchableRipple
+      delayPressIn={130}
       rippleColor={props.hideFeedBack ? "transparent" : tintBackgroundColor}
       underlayColor={props.hideFeedBack ? "transparent" : tintBackgroundColor}
       onPress={props.onPress}
