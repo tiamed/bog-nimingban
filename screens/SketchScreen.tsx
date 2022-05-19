@@ -38,8 +38,15 @@ export default function SketchScreen({ route, navigation }: RootStackScreenProps
   useEffect(() => {
     if (isCapturing) {
       const hideTools = `
-      document.querySelector('.FixedSideContainer').style.display = 'none';
-      document.querySelector('.App-bottom-bar').style.display = 'none';`;
+      function hideElement(query) {
+        const element = document.querySelector(query);
+        if (element) {
+          element.style.display = 'none';
+        }
+      }
+      const elements = ['.FixedSideContainer', '.App-bottom-bar', 'footer'];
+      elements.forEach(hideElement);
+      `;
 
       webRef.current?.injectJavaScript(hideTools);
     }
