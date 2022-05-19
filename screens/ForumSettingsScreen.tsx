@@ -39,6 +39,12 @@ export default function ForumSettingsScreen({
     });
   }, [order, visibility, setForums]);
 
+  useEffect(() => {
+    if (!order.length && forums.length) {
+      setOrder(forums.map((f) => f.id));
+    }
+  }, [forums, order]);
+
   return (
     <View style={styles.container}>
       <GestureHandlerRootView>
