@@ -23,6 +23,12 @@ export default function AboutScreen({ route, navigation }: RootStackScreenProps<
         }}
       />
       <AboutItem
+        title="加载语录"
+        onPress={() => {
+          Linking.openURL("https://github.com/tiamed/bog-slang");
+        }}
+      />
+      <AboutItem
         title="安卓安装包 (br65)"
         onPress={() => {
           Linking.openURL("https://wwz.lanzouf.com/b01v7e4ng");

@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useContext } from "react";
 import { ActivityIndicator, TouchableOpacity, View } from "react-native";
 
+import { LoadingsContext } from "@/Provider";
 import { Text, useThemeColor } from "@/components/Themed";
-import Loadings from "@/constants/Loadings";
 
 export default function renderFooter({
   loading = false,
@@ -17,6 +17,7 @@ export default function renderFooter({
   loadMore?: () => void;
 }) {
   const [randomIndex, setRadomIndex] = useState(0);
+  const loadings = useContext(LoadingsContext);
   const onPress = useCallback(() => {
     if (!loading && typeof loadMore === "function") {
       loadMore();
@@ -24,14 +25,14 @@ export default function renderFooter({
   }, [loadMore]);
   const LoadingText = useMemo(() => {
     if (loading) {
-      return Loadings[randomIndex];
+      return loadings[randomIndex];
     } else {
       if (empty) return "暂无数据";
       return hasNoMore ? "已经没有更多了" : "下拉加载更多";
     }
   }, [loading, hasNoMore, empty, randomIndex]);
   useEffect(() => {
-    setRadomIndex((Loadings.length * Math.random()) | 0);
+    setRadomIndex((loadings.length * Math.random()) | 0);
   }, []);
   return (
     <TouchableOpacity onPress={onPress}>

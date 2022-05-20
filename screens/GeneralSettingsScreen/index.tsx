@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 
 import BackupModal, { showBackupModalAtom } from "./BackupModal";
 import BlackListForumsItem from "./BlackListForumsItem";
+import LoadingsItem from "./LoadingsItem";
 
 import { noImageModeAtom, shouldMemorizePostFilteredAtom, vibrateAtom } from "@/atoms";
 import JumpToSettings from "@/components/JumpToSettings";
@@ -32,8 +33,9 @@ export default function GeneralSettingsScreen() {
         desc="首页长按串进行屏蔽，将隐藏对应的主题串"
         navigateTo="BlackListUser"
       />
-      <JumpToSettings title="版块管理" desc="版块排序和隐藏" navigateTo="ForumSettings" />
       <BlackListForumsItem />
+      <JumpToSettings title="版块管理" desc="版块排序和隐藏" navigateTo="ForumSettings" />
+      <LoadingsItem />
       <SettingItem title="备份设置" desc="导出导入备份" onPress={() => setShowBackupModal(true)} />
       <BackupModal />
     </View>

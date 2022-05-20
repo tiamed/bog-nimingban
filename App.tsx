@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
+import AssetsProvider from "./Provider/Assets";
 import { getToastConfig } from "./components/Themed";
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
@@ -21,17 +22,19 @@ export default function App() {
     return (
       <ThemeProvider>
         <LayoutProvider>
-          <SafeAreaProvider>
-            <Navigation colorScheme={colorScheme} />
-            <StatusBar style={colorScheme === "light" ? "dark" : "light"} />
-            <Toast
-              position="bottom"
-              bottomOffset={100}
-              visibilityTime={2500}
-              config={getToastConfig(colorScheme)}
-            />
-            <CheckFavoriteUpdate />
-          </SafeAreaProvider>
+          <AssetsProvider>
+            <SafeAreaProvider>
+              <Navigation colorScheme={colorScheme} />
+              <StatusBar style={colorScheme === "light" ? "dark" : "light"} />
+              <Toast
+                position="bottom"
+                bottomOffset={100}
+                visibilityTime={2500}
+                config={getToastConfig(colorScheme)}
+              />
+              <CheckFavoriteUpdate />
+            </SafeAreaProvider>
+          </AssetsProvider>
         </LayoutProvider>
       </ThemeProvider>
     );

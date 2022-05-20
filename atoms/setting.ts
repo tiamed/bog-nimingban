@@ -15,3 +15,5 @@ export const noImageModeAtom = atomWithAsyncStorage("noImageMode", "off");
 export const forumsOrderAtom = atomWithAsyncStorage("forumsOrder", []);
 
 export const forumsVisibilityAtom = atomWithAsyncStorage("forumsVisibility", {});
+
+export const loadingsUrlAtom = atomWithAsyncStorage("loadingsUrl", "");
