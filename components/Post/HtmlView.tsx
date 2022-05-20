@@ -136,7 +136,7 @@ function Quote(props: { data: string; level: number }) {
           flexDirection: "row",
           minWidth: "100%",
         }}>
-        <QuoteReferene>
+        <QuoteReference>
           <Text
             lightColor="#666666"
             darkColor="#999999"
@@ -150,7 +150,7 @@ function Quote(props: { data: string; level: number }) {
             }}>
             {data}
           </Text>
-        </QuoteReferene>
+        </QuoteReference>
         <Text
           style={{
             fontSize: BASE_SIZE * 0.8,
@@ -177,7 +177,7 @@ function Quote(props: { data: string; level: number }) {
     </View>
   );
 
-  function QuoteReferene(props: { children: any }) {
+  function QuoteReference(props: { children: any }) {
     return expandable ? (
       <Pressable
         hitSlop={{
