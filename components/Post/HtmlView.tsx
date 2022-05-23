@@ -70,11 +70,7 @@ export default function HtmlView(props: { content: string; level?: number }) {
     }
 
     if (node.name === "b") {
-      return (
-        <PureText key={index} style={{ fontWeight: "bold" }}>
-          {decode(node.children[0].data || "")}
-        </PureText>
-      );
+      return <Dice key={index}>{decode(node.children[0].data || "")}</Dice>;
     }
 
     if (node.name === "br" && node?.next?.name === "br") {
@@ -243,6 +239,12 @@ function PureText(props: { children: any; style?: TextStyle }) {
       {children}
     </Text>
   );
+}
+
+function Dice(props: { children: any }) {
+  const { children } = props;
+
+  return <PureText style={{ fontWeight: "bold" }}>{children}</PureText>;
 }
 
 function EmptyLine() {
