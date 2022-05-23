@@ -1,7 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom } from "jotai";
+import { useState } from "react";
 import { InteractionManager, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useDebouncedCallback } from "use-debounce";
 
 import { Octicon } from "./Icon";
 import { ScrollView, Text, useThemeColor } from "./Themed";
@@ -10,6 +12,7 @@ import { threadAtom } from "@/atoms";
 import useForums from "@/hooks/useForums";
 
 export default function DrawerContent(props: any) {
+  const [handle, setHandle] = useState<any>(null);
   const forums = useForums();
   const [thread, setThread] = useAtom(threadAtom);
   const textColor = useThemeColor({ light: "#404040", dark: "#bfbfbf" }, "text");
@@ -17,6 +20,25 @@ export default function DrawerContent(props: any) {
   const tintBackgroundColor = useThemeColor({}, "tintBackground");
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+
+  const onPress = useDebouncedCallback(
+    (forum) => {
+      if (handle) {
+        handle.cancel();
+      }
+      if (thread === forum.id) return;
+      props.navigation.toggleDrawer(false);
+      const interactionHandle = InteractionManager.runAfterInteractions(() => {
+        setThread(forum.id);
+      });
+      setHandle(interactionHandle);
+    },
+    1000,
+    {
+      leading: true,
+      trailing: false,
+    }
+  );
 
   return (
     <View style={{ marginTop: insets.top, flex: 1 }}>
@@ -40,12 +62,7 @@ export default function DrawerContent(props: any) {
                 styles.item,
                 { backgroundColor: forum.id === thread ? tintBackgroundColor : "transparent" },
               ]}
-              onPress={() => {
-                props.navigation.closeDrawer();
-                InteractionManager.runAfterInteractions(() => {
-                  setThread(forum.id);
-                });
-              }}>
+              onPress={onPress.bind(null, forum)}>
               <Text
                 style={[styles.itemLabel, { color: forum.id === thread ? tintColor : textColor }]}>
                 {forum.name}
