@@ -1,5 +1,5 @@
-import { atomWithAsyncStorage } from "./lib";
+import { atomWithAsyncStorageChunked } from "./lib";
 
-export const historyAtom = atomWithAsyncStorage("history", [], true);
+export const historyAtom = atomWithAsyncStorageChunked("history", [], true);
 
-export const replyHistoryAtom = atomWithAsyncStorage("replyHistory", []);
+export const replyHistoryAtom = atomWithAsyncStorageChunked("replyHistory", []);

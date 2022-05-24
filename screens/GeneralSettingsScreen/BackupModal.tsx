@@ -12,15 +12,11 @@ import { Cookie } from "../ProfileScreen/common";
 
 import Modal from "@/components/Modal";
 import { Button, Text, View, TextInput } from "@/components/Themed";
+import { getItemChunked, setItemChunked } from "@/utils/chunkedAsyncStorage";
 
-const BACKUP_KEYS = [
-  "cookies",
-  "favorite",
-  "favoriteTags",
-  "history",
-  "replyHistory",
-  "blackListPosts",
-];
+const BACKUP_KEYS = ["cookies", "favoriteTags", "blackListPosts", "blackListCookies"];
+
+const CHUNKED_BACKUP_KEYS = ["history", "replyHistory", "favorite"];
 
 export const showBackupModalAtom = atom(false);
 
@@ -41,9 +37,13 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
       const promises = BACKUP_KEYS.map(async (key) => {
         return [key, JSON.parse((await AsyncStorage.getItem(key)) || "[]")];
       });
+      const chunkedPromises = CHUNKED_BACKUP_KEYS.map(async (key) => {
+        return [key, await getItemChunked(key)];
+      });
       const backup = await Promise.all(promises);
+      const chunkedBackup = await Promise.all(chunkedPromises);
       const path = (FileSystem.documentDirectory as string) + getFileName();
-      await FileSystem.writeAsStringAsync(path, JSON.stringify(backup));
+      await FileSystem.writeAsStringAsync(path, JSON.stringify(backup.concat(chunkedBackup)));
       await Sharing.shareAsync(path);
     } catch (error) {
       Toast.show({ type: "error", text1: (error as Error).message });
@@ -98,7 +98,12 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
     try {
       const backup = JSON.parse(await FileSystem.readAsStringAsync(uri));
       const promises = backup.map(async ([key, value]: [key: string, value: any]) => {
-        await AsyncStorage.setItem(key, JSON.stringify(value));
+        if (BACKUP_KEYS.includes(key)) {
+          await AsyncStorage.setItem(key, JSON.stringify(value));
+        }
+        if (CHUNKED_BACKUP_KEYS.includes(key)) {
+          await setItemChunked(key, value);
+        }
       });
       await Promise.all(promises);
       setImported(backup);

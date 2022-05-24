@@ -11,8 +11,9 @@ export async function setItemChunked(key: string, array: any[], chunkSize = 500)
   );
 }
 
-export async function getItemChunked(key: string) {
+export async function getItemChunked(itemKey: string) {
   const keys = await AsyncStorage.getAllKeys();
-  const strings = await AsyncStorage.multiGet(keys.filter((key) => /history\d+/.test(key)));
+  const regex = new RegExp(`^${itemKey}[0-9]+$`);
+  const strings = await AsyncStorage.multiGet(keys.filter((key) => regex.test(key)));
   return strings.map(([key, value]) => JSON.parse(value || "[]")).flat();
 }
