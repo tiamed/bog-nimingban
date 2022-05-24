@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.36](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.35...v1.0.0-alpha.36) (2022-05-24)
+
+
+### Features
+
+* custom loading text ([865f09b](https://github.com/tiamed/bog-nimingban/commit/865f09bbe5caba4e259668fa97806d2e057f225c))
+* **preview:** loading indicator, webview image ([07355e4](https://github.com/tiamed/bog-nimingban/commit/07355e4fa85ae9d5e8c536f85bbefb9ae20d5e0d))
+
+
+### Bug Fixes
+
+* **forum setting:** order init ([604c3d2](https://github.com/tiamed/bog-nimingban/commit/604c3d22a54e11cda2320c7db84bcef1470e2a11))
+* split large data into chunks ([46f0e00](https://github.com/tiamed/bog-nimingban/commit/46f0e00282eedbe1305e67d5b9cf01d4a6012386))
+
 ## [1.0.0-alpha.35](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.34...v1.0.0-alpha.35) (2022-05-18)
 
 
