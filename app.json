@@ -16,9 +16,7 @@
       "fallbackToCacheTimeout": 60000,
       "checkAutomatically": "ON_ERROR_RECOVERY"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "fun.tiamed"
@@ -50,13 +48,19 @@
           "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
           "isAccessMediaLocationEnabled": "true"
         }
-      ]
+      ],
+      [
+        "./plugins/withGradleProperties",
+        {
+          "AsyncStorage_db_size_in_MB": "500",
+          "AsyncStorage_useNextStorage": "true"
+        }
+      ],
+      ["./plugins/withKotlinGradle", "1.6.10"]
     ],
     "githubUrl": "https://github.com/tiamed/bog-nimingban",
     "packagerOpts": {
-      "sourceExts": [
-        "cjs"
-      ]
+      "sourceExts": ["cjs"]
     }
   }
 }
