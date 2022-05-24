@@ -52,11 +52,9 @@
       [
         "./plugins/withGradleProperties",
         {
-          "AsyncStorage_db_size_in_MB": "500",
-          "AsyncStorage_useNextStorage": "true"
+          "AsyncStorage_db_size_in_MB": "500"
         }
-      ],
-      ["./plugins/withKotlinGradle", "1.6.10"]
+      ]
     ],
     "githubUrl": "https://github.com/tiamed/bog-nimingban",
     "packagerOpts": {
