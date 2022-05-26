@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   TextInput as DefaultTextInput,
 } from "react-native";
-import { SuccessToast, InfoToast, ErrorToast } from "react-native-toast-message";
+import { SuccessToast, InfoToast, ErrorToast, BaseToast } from "react-native-toast-message";
 
 import Colors from "../constants/Colors";
 
@@ -126,9 +126,16 @@ export function getToastConfig(theme: "light" | "dark") {
     info: (props: any) => (
       <InfoToast
         {...props}
-        style={{ backgroundColor, borderLeftColor: "gray" }}
+        style={{
+          backgroundColor,
+          borderLeftColor: "gray",
+          height: "auto",
+          minHeight: 60,
+          paddingVertical: 10,
+        }}
         text1Style={{ color: textColor }}
         text2Style={{ color: textColor }}
+        text1NumberOfLines={40}
       />
     ),
     error: (props: any) => (
