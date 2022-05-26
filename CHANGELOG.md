@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.37](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.36...v1.0.0-alpha.37) (2022-05-26)
+
+
+### Features
+
+* upgrade expo sdk ([ff16f69](https://github.com/tiamed/bog-nimingban/commit/ff16f696dbb768c5b4a210414c602d60dad0eec0))
+
+
+### Bug Fixes
+
+* help rows ([edfab28](https://github.com/tiamed/bog-nimingban/commit/edfab28ba6e12d54544abcfae806c16f4312ff75))
+
 ## [1.0.0-alpha.36](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.35...v1.0.0-alpha.36) (2022-05-24)
 
 
