@@ -11,8 +11,8 @@ bog 岛第三方客户端
 
 
 <div style="display: flex; flex-direction: row">
-  <img src="https://user-images.githubusercontent.com/20151080/163120630-f8f33f2e-fbb1-4561-90e3-cd37abc9c7ca.jpg" alt="dark theme" style="width: 120px" />
-  <img src="https://user-images.githubusercontent.com/20151080/163120658-e1ccef2d-b77b-4a8c-8675-de7d39fd620e.jpg" alt="light theme" style="width: 120px" />
+  <img src="https://user-images.githubusercontent.com/20151080/170465538-73c859d6-f1d1-4945-97af-b1b2901dbf32.jpg" alt="dark theme" style="width: 120px" />
+  <img src="https://user-images.githubusercontent.com/20151080/170465595-9915d3df-6276-41ff-83d1-91b84c183651.jpg" alt="light theme" style="width: 120px" />
 </div>
 
 
@@ -57,6 +57,17 @@ bog 岛第三方客户端
 - 图片分享
 - 加载语录
 - 定制显示：字体大小、行距、最大行数、夜间模式、图片位置、图片缩放、串内图片数...
+
+## Q&A
+
+- Q: 怎么设置加载语录？
+- A: 加载语录设置见[bog-slang](https://github.com/tiamed/bog-slang)，需要手动更新
+---
+- Q: 热更新之后出现闪退怎么办？
+- A: 一般是更新了sdk，需要手动安装安装包进行更新
+---
+- Q: 预览长图时模糊？
+- A: 框架的[限制](https://github.com/facebook/fresco/issues/2397)，点击左侧第一个按钮切换渲染模式
 
 ## 其他第三方客户端
 
