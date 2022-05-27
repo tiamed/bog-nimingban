@@ -1,19 +1,17 @@
-import { useSetAtom } from "jotai";
 import { StyleSheet } from "react-native";
 
-import BackupModal, { showBackupModalAtom } from "./BackupModal";
+import { checkUpdateIntervalAtom } from "../../atoms/setting";
+import BackupItem from "./BackupItem";
 import BlackListForumsItem from "./BlackListForumsItem";
 import LoadingsItem from "./LoadingsItem";
 
 import { noImageModeAtom, shouldMemorizePostFilteredAtom, vibrateAtom } from "@/atoms";
 import JumpToSettings from "@/components/JumpToSettings";
-import SettingItem from "@/components/SettingItem";
 import SettingPicker from "@/components/SettingPicker";
 import SettingSwitch from "@/components/SettingSwitch";
 import { View } from "@/components/Themed";
 
 export default function GeneralSettingsScreen() {
-  const setShowBackupModal = useSetAtom(showBackupModalAtom);
   return (
     <View style={styles.container}>
       <SettingSwitch title="振动反馈" atom={vibrateAtom} />
@@ -27,6 +25,19 @@ export default function GeneralSettingsScreen() {
         ]}
         atom={noImageModeAtom}
       />
+      <SettingPicker
+        title="自动检查更新间隔"
+        options={[
+          { label: "30分钟", value: 30 * 60 * 1000 },
+          { label: "1小时", value: 60 * 60 * 1000 },
+          { label: "6小时", value: 6 * 60 * 60 * 1000 },
+          { label: "12小时", value: 12 * 60 * 60 * 1000 },
+          { label: "1天", value: 24 * 60 * 60 * 1000 },
+          { label: "3天", value: 3 * 24 * 60 * 60 * 1000 },
+          { label: "7天", value: 7 * 24 * 60 * 60 * 1000 },
+        ]}
+        atom={checkUpdateIntervalAtom}
+      />
       <JumpToSettings title="屏蔽串设置" desc="首页长按串进行屏蔽" navigateTo="BlackList" />
       <JumpToSettings
         title="屏蔽饼干设置"
@@ -36,8 +47,7 @@ export default function GeneralSettingsScreen() {
       <BlackListForumsItem />
       <JumpToSettings title="版块管理" desc="版块排序和隐藏" navigateTo="ForumSettings" />
       <LoadingsItem />
-      <SettingItem title="备份设置" desc="导出导入备份" onPress={() => setShowBackupModal(true)} />
-      <BackupModal />
+      <BackupItem />
     </View>
   );
 }

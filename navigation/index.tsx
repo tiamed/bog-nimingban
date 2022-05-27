@@ -53,6 +53,8 @@ import ReplyModalScreen from "@/screens/ReplyModalScreen";
 import SearchModalScreen from "@/screens/SearchModalScreen";
 import SearchScreen from "@/screens/SearchScreen";
 import SketchScreen from "@/screens/SketchScreen";
+import CheckFavoriteUpdate from "@/tasks/CheckFavoriteUpdate";
+import CheckVersionUpdate from "@/tasks/CheckVersionUpdate";
 import {
   HistoryTabParamList,
   RootStackParamList,
@@ -74,6 +76,8 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
       linking={LinkingConfiguration}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <RootNavigator />
+      <CheckFavoriteUpdate />
+      <CheckVersionUpdate />
     </NavigationContainer>
   );
 }

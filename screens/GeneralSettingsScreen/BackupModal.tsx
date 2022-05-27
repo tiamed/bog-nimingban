@@ -20,7 +20,7 @@ const CHUNKED_BACKUP_KEYS = ["history", "replyHistory", "favorite"];
 
 export const showBackupModalAtom = atom(false);
 
-export default function AddCookieModal(props: { cookie?: Cookie }) {
+export default function BackupModal(props: { cookie?: Cookie }) {
   const [visible, setVisible] = useAtom(showBackupModalAtom);
   const [imported, setImported] = useState({});
   const [url, setUrl] = useState("");

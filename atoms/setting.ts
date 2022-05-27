@@ -17,3 +17,10 @@ export const forumsOrderAtom = atomWithAsyncStorage("forumsOrder", []);
 export const forumsVisibilityAtom = atomWithAsyncStorage("forumsVisibility", {});
 
 export const loadingsUrlAtom = atomWithAsyncStorage("loadingsUrl", "");
+
+export const checkUpdateIntervalAtom = atomWithAsyncStorage(
+  "checkUpdateInterval",
+  6 * 60 * 60 * 1000
+);
+
+export const lastCheckUpdateAtom = atomWithAsyncStorage("lastCheckUpdate", 0, true);

@@ -1,5 +1,8 @@
+import Constants from "expo-constants";
+import { useContext } from "react";
 import { Linking, StyleSheet, TouchableHighlight } from "react-native";
 
+import { SizeContext } from "@/Provider";
 import { View, Text, useThemeColor } from "@/components/Themed";
 import { manualUpdate } from "@/tasks/checkAppUpdate";
 import { RootStackScreenProps } from "@/types";
@@ -46,17 +49,29 @@ export default function AboutScreen({ route, navigation }: RootStackScreenProps<
           Linking.openURL("https://afdian.net/@tiamed");
         }}
       />
-      <AboutItem title="检查更新" onPress={manualUpdate} />
+      <AboutItem
+        title="检查更新"
+        desc={`当前版本：${Constants.manifest?.version}`}
+        onPress={() => {
+          manualUpdate();
+        }}
+      />
     </View>
   );
 }
 
-function AboutItem(props: { title: string; onPress?: () => void }) {
+function AboutItem(props: { title: string; desc?: string; onPress?: () => void }) {
   const underlayColor = useThemeColor({}, "inactive");
   const tintColor = useThemeColor({}, "tint");
+  const BASE_SIZE = useContext(SizeContext);
   return (
-    <TouchableHighlight underlayColor={underlayColor} style={styles.item} onPress={props.onPress}>
-      <Text style={{ color: tintColor }}>{props.title}</Text>
+    <TouchableHighlight underlayColor={underlayColor} onPress={props.onPress}>
+      <View style={styles.item}>
+        <Text style={{ color: tintColor }}>{props.title}</Text>
+        {props.desc && (
+          <Text style={{ color: underlayColor, fontSize: BASE_SIZE * 0.8 }}>{props.desc}</Text>
+        )}
+      </View>
     </TouchableHighlight>
   );
 }
@@ -67,7 +82,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   item: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "flex-start",
     paddingHorizontal: 20,

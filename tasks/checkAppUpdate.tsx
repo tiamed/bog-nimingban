@@ -26,12 +26,33 @@ async function checkUpdateAvailability() {
   }
 }
 
-export async function manualUpdate() {
+function confirmUpdateAsync(): Promise<boolean> {
+  return new Promise((resolve) => {
+    Alert.alert("更新提示", "发现新版本，确认更新吗？", [
+      {
+        text: "取消",
+        onPress: () => resolve(false),
+      },
+      {
+        text: "确认",
+        onPress: () => resolve(true),
+      },
+    ]);
+  });
+}
+
+export async function manualUpdate(needConfirm?: boolean) {
   const isAvailable = await checkUpdateAvailability();
   if (!isAvailable) {
-    Toast.show({ type: "info", text1: "暂无更新" });
+    if (!needConfirm) {
+      Toast.show({ type: "info", text1: "暂无更新" });
+    }
     return;
   } else {
+    if (needConfirm) {
+      const confirmed = await confirmUpdateAsync();
+      if (!confirmed) return;
+    }
     Toast.show({ type: "info", text1: "正在更新...", autoHide: false });
   }
   const { manifest, isNew } = await Updates.fetchUpdateAsync();
