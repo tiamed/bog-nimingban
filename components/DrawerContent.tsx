@@ -69,6 +69,7 @@ export default function DrawerContent(props: any) {
               </Text>
             </TouchableOpacity>
           ))}
+        <View style={styles.placeholder} />
       </ScrollView>
     </View>
   );
@@ -100,5 +101,8 @@ const styles = StyleSheet.create({
   itemLabel: {
     fontSize: 14,
     lineHeight: 16,
+  },
+  placeholder: {
+    height: 20,
   },
 });
