@@ -17,3 +17,9 @@ export async function getItemChunked(itemKey: string) {
   const strings = await AsyncStorage.multiGet(keys.filter((key) => regex.test(key)));
   return strings.map(([key, value]) => JSON.parse(value || "[]")).flat();
 }
+
+export async function removeItemChunked(itemKey: string) {
+  const keys = await AsyncStorage.getAllKeys();
+  const regex = new RegExp(`^${itemKey}[0-9]+$`);
+  await AsyncStorage.multiRemove(keys.filter((key) => regex.test(key)));
+}

@@ -12,7 +12,7 @@ import { Cookie } from "../ProfileScreen/common";
 
 import Modal from "@/components/Modal";
 import { Button, Text, View, TextInput } from "@/components/Themed";
-import { getItemChunked, setItemChunked } from "@/utils/chunkedAsyncStorage";
+import { getItemChunked, removeItemChunked, setItemChunked } from "@/utils/chunkedAsyncStorage";
 
 const BACKUP_KEYS = ["cookies", "favoriteTags", "blackListPosts", "blackListCookies"];
 
@@ -102,6 +102,7 @@ export default function BackupModal(props: { cookie?: Cookie }) {
           await AsyncStorage.setItem(key, JSON.stringify(value));
         }
         if (CHUNKED_BACKUP_KEYS.includes(key)) {
+          await removeItemChunked(key);
           await setItemChunked(key, value);
         }
       });
