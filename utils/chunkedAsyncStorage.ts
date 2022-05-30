@@ -6,6 +6,7 @@ const chunk = (arr: any[], size: number) =>
   );
 
 export async function setItemChunked(key: string, array: any[], chunkSize = 500) {
+  if (array.length === 0) return;
   await AsyncStorage.multiSet(
     chunk(array, chunkSize).map((chunk, index) => [`${key}${index}`, JSON.stringify(chunk)])
   );
