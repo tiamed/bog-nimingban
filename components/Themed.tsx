@@ -141,9 +141,16 @@ export function getToastConfig(theme: "light" | "dark") {
     error: (props: any) => (
       <ErrorToast
         {...props}
-        style={{ backgroundColor, borderLeftColor: "red" }}
+        style={{
+          backgroundColor,
+          borderLeftColor: "red",
+          height: "auto",
+          minHeight: 60,
+          paddingVertical: 10,
+        }}
         text1Style={{ color: textColor }}
         text2Style={{ color: textColor }}
+        text1NumberOfLines={40}
       />
     ),
   };
