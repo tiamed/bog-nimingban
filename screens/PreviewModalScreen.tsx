@@ -18,6 +18,8 @@ import { parseImageUrl } from "@/components/Post/ImageView";
 import { useThemeColor } from "@/components/Themed";
 import Urls from "@/constants/Urls";
 
+const brokenImageUri = Image.resolveAssetSource(require("@/assets/images/image-broken-2x.png")).uri;
+
 export default function PreviewModalScreen() {
   const navigation = useNavigation();
   const [previews] = useAtom(previewsAtom);
@@ -97,6 +99,11 @@ export default function PreviewModalScreen() {
             </>
           )
         }
+        failImageSource={{
+          url: brokenImageUri,
+          width: 400,
+          height: 300,
+        }}
       />
       <FloatingAction
         color={isLoading ? inactiveColor : activeColor}
