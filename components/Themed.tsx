@@ -12,11 +12,11 @@ import {
   TouchableOpacity,
   TextInput as DefaultTextInput,
 } from "react-native";
-import { SuccessToast, InfoToast, ErrorToast, BaseToast } from "react-native-toast-message";
-
-import Colors from "../constants/Colors";
+import { SuccessToast, InfoToast, ErrorToast } from "react-native-toast-message";
 
 import { ColorSchemeContext, FontFamilyContext, SizeContext } from "@/Provider";
+import Colors from "@/constants/Colors";
+import Layout from "@/constants/Layout";
 import useColor from "@/hooks/useColor";
 
 export function useThemeColor(
@@ -118,9 +118,16 @@ export function getToastConfig(theme: "light" | "dark") {
     success: (props: any) => (
       <SuccessToast
         {...props}
-        style={{ backgroundColor, borderLeftColor: "green" }}
+        style={{
+          backgroundColor,
+          borderLeftColor: "green",
+          height: "auto",
+          minHeight: 60,
+          paddingVertical: 10,
+        }}
         text1Style={{ color: textColor }}
         text2Style={{ color: textColor }}
+        text1NumberOfLines={Layout.toastMaxLine}
       />
     ),
     info: (props: any) => (
@@ -135,7 +142,7 @@ export function getToastConfig(theme: "light" | "dark") {
         }}
         text1Style={{ color: textColor }}
         text2Style={{ color: textColor }}
-        text1NumberOfLines={40}
+        text1NumberOfLines={Layout.toastMaxLine}
       />
     ),
     error: (props: any) => (
@@ -150,7 +157,7 @@ export function getToastConfig(theme: "light" | "dark") {
         }}
         text1Style={{ color: textColor }}
         text2Style={{ color: textColor }}
-        text1NumberOfLines={40}
+        text1NumberOfLines={Layout.toastMaxLine}
       />
     ),
   };

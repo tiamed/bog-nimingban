@@ -11,4 +11,5 @@ export default {
   isSmallDevice: width < 375,
   postHorizontalPadding: 16,
   postHorizontalPaddingSecondary: 4,
+  toastMaxLine: 20,
 };
