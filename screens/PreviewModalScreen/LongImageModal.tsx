@@ -40,13 +40,11 @@ export default function LongImageModal(props: {
         startInLoadingState={false}
         onLoad={() => setShow(true)}
       />
-      <View style={styles.indicatorContainer}>
-        <ActivityIndicator
-          color={tintColor}
-          size="large"
-          style={{ display: !show ? "flex" : "none" }}
-        />
-      </View>
+      {!show && (
+        <View style={styles.indicatorContainer}>
+          <ActivityIndicator color={tintColor} size="large" />
+        </View>
+      )}
       <FloatingAction
         color={tintColor}
         overrideWithAction
