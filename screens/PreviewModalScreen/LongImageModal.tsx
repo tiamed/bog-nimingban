@@ -1,5 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
 import { FloatingAction } from "react-native-floating-action";
 import WebView from "react-native-webview";
 
@@ -11,10 +12,41 @@ export default function LongImageModal(props: {
   uri: string;
   onDismiss: () => void;
 }) {
+  const [show, setShow] = useState(false);
   const tintColor = useThemeColor({}, "tint");
+  const INJECTED_JAVASCRIPT =
+    Platform.OS === "ios"
+      ? `
+  setTimeout(() => {
+    document.body.style.display = 'flex';
+    document.body.style.backgroundColor = 'black';
+  }, 0)
+  `
+      : "";
+
+  useEffect(() => {
+    if (!props.visible) {
+      setShow(false);
+    }
+  }, [props.visible]);
+
   return (
-    <Modal isVisible={props.visible} onBackdropPress={props.onDismiss}>
-      <WebView source={{ uri: props.uri }} />
+    <Modal isVisible={props.visible} onBackdropPress={props.onDismiss} style={styles.modal}>
+      <WebView
+        source={{ uri: props.uri }}
+        containerStyle={styles.container}
+        style={{ display: show ? "flex" : "none", backgroundColor: "transparent" }}
+        injectedJavaScriptBeforeContentLoaded={INJECTED_JAVASCRIPT}
+        startInLoadingState={false}
+        onLoad={() => setShow(true)}
+      />
+      <View style={styles.indicatorContainer}>
+        <ActivityIndicator
+          color={tintColor}
+          size="large"
+          style={{ display: !show ? "flex" : "none" }}
+        />
+      </View>
       <FloatingAction
         color={tintColor}
         overrideWithAction
@@ -30,3 +62,23 @@ export default function LongImageModal(props: {
     </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  modal: {
+    margin: 0,
+    justifyContent: "center",
+    position: "relative",
+  },
+  container: {
+    backgroundColor: "black",
+  },
+  indicatorContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
