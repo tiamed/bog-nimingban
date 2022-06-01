@@ -11,7 +11,8 @@ import { FloatingAction } from "react-native-floating-action";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { IImageInfo } from "react-native-image-zoom-viewer/built/image-viewer.type";
 import Toast from "react-native-toast-message";
-import WebView from "react-native-webview";
+
+import LongImageModal from "./LongImageModal";
 
 import { previewIndexAtom, previewsAtom } from "@/atoms";
 import { parseImageUrl } from "@/components/Post/ImageView";
@@ -27,7 +28,7 @@ export default function PreviewModalScreen() {
   const [status, requestPermission] = MediaLibrary.usePermissions();
   const [isLoading, setIsLoading] = useState(false);
   const [index, setIndex] = useState(previewIndex);
-  const [isWebview, setIsWebview] = useState(false);
+  const [isLongImage, setIsLongImage] = useState(false);
   const activeColor = useThemeColor({}, "active");
   const inactiveColor = useThemeColor({}, "inactive");
 
@@ -78,9 +79,6 @@ export default function PreviewModalScreen() {
         onClick={() => navigation.goBack()}
         saveToLocalByLongPress={false}
         onChange={(index) => setIndex(index!)}
-        renderImage={({ source, ...props }) =>
-          isWebview ? <WebView source={source} /> : <Image source={source} {...props} />
-        }
         loadingRender={() =>
           previews?.[index] && (
             <>
@@ -111,22 +109,12 @@ export default function PreviewModalScreen() {
         distanceToEdge={{ horizontal: 190, vertical: 30 }}
         actions={[
           {
-            icon: (
-              <MaterialCommunityIcons
-                name={isWebview ? "web" : "web-off"}
-                color="white"
-                size={20}
-              />
-            ),
+            icon: <MaterialCommunityIcons name="web" color="white" size={20} />,
             name: "share",
           },
         ]}
         onPressItem={() => {
-          Toast.show({
-            type: "info",
-            text1: isWebview ? "已切换默认渲染模式" : "已切换webview渲染模式",
-          });
-          setIsWebview(!isWebview);
+          setIsLongImage(true);
         }}
       />
       <FloatingAction
@@ -152,6 +140,13 @@ export default function PreviewModalScreen() {
           },
         ]}
         onPressItem={saveImage}
+      />
+      <LongImageModal
+        visible={isLongImage}
+        uri={previews[index].url}
+        onDismiss={() => {
+          setIsLongImage(false);
+        }}
       />
     </>
   );
