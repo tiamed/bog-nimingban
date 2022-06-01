@@ -33,6 +33,7 @@ import { useThemeColor } from "@/components/Themed";
 import AboutScreen from "@/screens/AboutScreen";
 import BlackListScreen from "@/screens/BlackListScreen";
 import BlackListUserScreen from "@/screens/BlackListUserScreen";
+import BlackListWordScreen from "@/screens/BlackListWordScreen";
 import BrowseHistoryScreen from "@/screens/BrowseHistoryScreen";
 import FavoriteScreen from "@/screens/FavoriteScreen";
 import FooterLayoutScreen from "@/screens/FooterLayoutScreen";
@@ -175,6 +176,11 @@ function RootNavigator() {
         name="BlackListUser"
         component={BlackListUserScreen}
         options={{ title: "屏蔽饼干设置" }}
+      />
+      <Stack.Screen
+        name="BlackListWord"
+        component={BlackListWordScreen}
+        options={{ title: "屏蔽词设置" }}
       />
       <Stack.Screen
         name="FooterLayout"

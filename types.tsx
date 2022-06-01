@@ -33,6 +33,7 @@ export type RootStackParamList = {
   GeneralSettings: undefined;
   BlackList: undefined;
   BlackListUser: undefined;
+  BlackListWord: undefined;
   ForumSettings: undefined;
   About: undefined;
   FooterLayout: undefined;

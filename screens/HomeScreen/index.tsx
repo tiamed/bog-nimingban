@@ -18,6 +18,7 @@ import {
   blackListForumsAtom,
   blackListCookiesAtom,
   expandableAtom,
+  blackListWordsAtom,
 } from "@/atoms";
 import ThreadPost from "@/components/Post/ThreadPost";
 import { View } from "@/components/Themed";
@@ -34,6 +35,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
   const [blackListPosts] = useAtom(blackListPostsAtom);
   const [blackListCookies] = useAtom(blackListCookiesAtom);
   const [blackListForums] = useAtom(blackListForumsAtom);
+  const [blackListWords] = useAtom(blackListWordsAtom);
   const [showThreadReply] = useAtom(showThreadReplyAtom);
 
   const [posts, setPosts] = useState<Post[]>([]);
@@ -128,14 +130,22 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
 
   useEffect(() => {
     let filtered = posts;
-    if (blackListPosts?.length) {
-      filtered = filtered.filter((post) => !blackListPosts.includes(post.id));
+    if (blackListForums?.length && thread === 0) {
+      filtered = filtered.filter((post) => !blackListForums.includes(post.forum));
     }
     if (blackListCookies?.length) {
       filtered = filtered.filter((post) => !blackListCookies.includes(post.cookie));
     }
-    if (blackListForums?.length && thread === 0) {
-      filtered = filtered.filter((post) => !blackListForums.includes(post.forum));
+    if (blackListPosts?.length) {
+      filtered = filtered.filter((post) => !blackListPosts.includes(post.id));
+    }
+    if (blackListWords?.length) {
+      filtered = filtered.filter(
+        (post) =>
+          !blackListWords.some((word: string) =>
+            [post.title, post.name, post.content].some((content) => RegExp(word, "i").test(content))
+          )
+      );
     }
     setFilteredPosts(filtered);
   }, [posts]);

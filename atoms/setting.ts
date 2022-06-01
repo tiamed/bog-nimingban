@@ -6,6 +6,8 @@ export const blackListCookiesAtom = atomWithAsyncStorage("blackListCookies", [])
 
 export const blackListForumsAtom = atomWithAsyncStorage("blackListForums", []);
 
+export const blackListWordsAtom = atomWithAsyncStorage("blackListWords", []);
+
 export const canCheckUpdateAtom = atomWithAsyncStorage("canCheckUpdate", false);
 
 export const vibrateAtom = atomWithAsyncStorage("vibrate", true);

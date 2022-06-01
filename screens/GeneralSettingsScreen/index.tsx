@@ -44,6 +44,11 @@ export default function GeneralSettingsScreen() {
         desc="首页长按串进行屏蔽，将隐藏对应的主题串"
         navigateTo="BlackListUser"
       />
+      <JumpToSettings
+        title="屏蔽词设置"
+        desc="隐藏对应的主题串，支持正则"
+        navigateTo="BlackListWord"
+      />
       <BlackListForumsItem />
       <JumpToSettings title="版块管理" desc="版块排序和隐藏" navigateTo="ForumSettings" />
       <LoadingsItem />
