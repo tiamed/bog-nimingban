@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "bog-nimingban",
+    "name": "粉岛",
     "slug": "bog-nimingban",
     "version": "1.0.0-alpha.37",
     "orientation": "portrait",
@@ -16,9 +16,7 @@
       "fallbackToCacheTimeout": 60000,
       "checkAutomatically": "ON_ERROR_RECOVERY"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "fun.tiamed"
@@ -41,7 +39,7 @@
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
-    "description": "BOG岛匿名版",
+    "description": "BOG岛第三方客户端",
     "plugins": [
       [
         "expo-media-library",
@@ -60,9 +58,7 @@
     ],
     "githubUrl": "https://github.com/tiamed/bog-nimingban",
     "packagerOpts": {
-      "sourceExts": [
-        "cjs"
-      ]
+      "sourceExts": ["cjs"]
     }
   }
 }
