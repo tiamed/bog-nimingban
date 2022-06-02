@@ -32,6 +32,7 @@ import SettingPicker from "@/components/SettingPicker";
 import SettingSlider from "@/components/SettingSlider";
 import SettingSwitch from "@/components/SettingSwitch";
 import { ScrollView, View, Text, useThemeColor } from "@/components/Themed";
+import Fonts from "@/constants/Fonts";
 import Texts from "@/constants/Texts";
 import { RootStackScreenProps } from "@/types";
 
@@ -72,6 +73,7 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
             { label: "noto-sans", value: "noto-sans" },
             { label: "noto-serif", value: "noto-serif" },
             { label: "space-mono", value: "space-mono" },
+            ...Fonts?.map((font) => ({ label: font, value: font })),
           ]}
         />
         <SettingSlider title="文字亮度" atom={textColorAlphaAtom} min={0.5} max={1} />
