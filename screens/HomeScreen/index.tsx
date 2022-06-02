@@ -130,7 +130,9 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
 
   useEffect(() => {
     if (route.params?.thread !== undefined) {
-      setThread(route.params.thread);
+      setTimeout(() => {
+        setThread(route.params.thread);
+      }, 200);
     }
   }, [route.params?.thread]);
 
