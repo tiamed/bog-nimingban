@@ -111,7 +111,6 @@ const fonts = Platform.select({
     "ChalkboardSE-Light",
     "ChalkboardSE-Regular",
     "Chalkduster",
-    "Chalkduster",
     "Cochin",
     "Cochin-Bold",
     "Cochin-BoldItalic",
