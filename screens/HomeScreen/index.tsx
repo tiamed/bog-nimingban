@@ -25,9 +25,9 @@ import { View } from "@/components/Themed";
 import { useForumsIdMap } from "@/hooks/useForums";
 import { RootTabScreenProps } from "@/types";
 
-export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Home">) {
+export default function HomeScreen({ route, navigation }: RootTabScreenProps<"HomeMain">) {
   const forumsIdMap = useForumsIdMap();
-  const [thread] = useAtom(threadAtom);
+  const [thread, setThread] = useAtom(threadAtom);
   const [tabRefreshing, setTabRefreshing] = useAtom(tabRefreshingAtom);
   const [maxLine] = useAtom(maxLineAtom);
   const [expandable] = useAtom(expandableAtom);
@@ -127,6 +127,12 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
   useEffect(() => {
     updateTitle();
   }, [forumsIdMap, thread]);
+
+  useEffect(() => {
+    if (route.params?.thread !== undefined) {
+      setThread(route.params.thread);
+    }
+  }, [route.params?.thread]);
 
   useEffect(() => {
     let filtered = posts;

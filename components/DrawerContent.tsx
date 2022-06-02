@@ -1,7 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom } from "jotai";
-import { useState } from "react";
-import { InteractionManager, StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -12,9 +11,8 @@ import { threadAtom } from "@/atoms";
 import useForums from "@/hooks/useForums";
 
 export default function DrawerContent(props: any) {
-  const [handle, setHandle] = useState<any>(null);
   const forums = useForums();
-  const [thread, setThread] = useAtom(threadAtom);
+  const [thread] = useAtom(threadAtom);
   const textColor = useThemeColor({ light: "#404040", dark: "#bfbfbf" }, "text");
   const tintColor = useThemeColor({}, "tint");
   const tintBackgroundColor = useThemeColor({}, "tintBackground");
@@ -23,15 +21,10 @@ export default function DrawerContent(props: any) {
 
   const onPress = useDebouncedCallback(
     (forum) => {
-      if (handle) {
-        handle.cancel();
-      }
       if (thread === forum.id) return;
-      props.navigation.toggleDrawer(false);
-      const interactionHandle = InteractionManager.runAfterInteractions(() => {
-        setThread(forum.id);
+      props.navigation.navigate("HomeMain", {
+        thread: forum.id,
       });
-      setHandle(interactionHandle);
     },
     1000,
     {

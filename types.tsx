@@ -55,6 +55,9 @@ export type RootTabParamList = {
   Favorite: undefined;
   History: undefined;
   Profile: undefined;
+  HomeMain: {
+    thread?: number;
+  };
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

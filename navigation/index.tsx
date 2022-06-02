@@ -409,7 +409,7 @@ function DrawerNavigator() {
   const textColor = useThemeColor({}, "text");
   return (
     <Drawer.Navigator
-      initialRouteName="Main"
+      initialRouteName="HomeMain"
       drawerContent={(props) => DrawerContent(props)}
       screenOptions={{
         headerTintColor: textColor,
@@ -417,7 +417,7 @@ function DrawerNavigator() {
         headerTitleStyle,
       }}>
       <Drawer.Screen
-        name="Main"
+        name="HomeMain"
         component={HomeScreen}
         options={{
           swipeEdgeWidth: width * 0.75,
