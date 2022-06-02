@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.38](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.37...v1.0.0-alpha.38) (2022-06-02)
+
+
+### Features
+
+* add system fonts ([90fa1fd](https://github.com/tiamed/bog-nimingban/commit/90fa1fd450c534773a9d5bceb7767d1a351f3a8f))
+* auto update ([35438f1](https://github.com/tiamed/bog-nimingban/commit/35438f1933e2c1f92aadc9ff588dcb56ec8f3caa))
+* blacklist word ([df747a2](https://github.com/tiamed/bog-nimingban/commit/df747a2fa7f5c2414c93420994cf4c98f8d69ad2))
+* **preview:** fallback image ([af4ab63](https://github.com/tiamed/bog-nimingban/commit/af4ab63400ef9d9c4747f7c09e272bff6134914d))
+
+
+### Bug Fixes
+
+* backup chuncked data override ([b53f241](https://github.com/tiamed/bog-nimingban/commit/b53f2411a810f16fd2b3bc575af44d7d2a8befaa))
+* chunked multi set ([89e23f3](https://github.com/tiamed/bog-nimingban/commit/89e23f3b0699c72105279b8c6cd82d6fbca98d36))
+* drawer navigation lag ([8c9a9ae](https://github.com/tiamed/bog-nimingban/commit/8c9a9aeb1391a653a8e49871b7c1741def73b476))
+* error toast maxLine ([e2221ed](https://github.com/tiamed/bog-nimingban/commit/e2221edc7be61b1477f238ac8295606261aa46c2))
+* long image ([c93031b](https://github.com/tiamed/bog-nimingban/commit/c93031b8b10e8f21fba0531cffd879283af0cdbf))
+* long image scroll ([e13a6f4](https://github.com/tiamed/bog-nimingban/commit/e13a6f4f9807a16f0c429cac9b5fe2f6ef7884a0))
+
 ## [1.0.0-alpha.37](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.36...v1.0.0-alpha.37) (2022-05-26)
 
 
