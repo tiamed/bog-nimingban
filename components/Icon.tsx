@@ -1,8 +1,14 @@
-import { FontAwesome, Ionicons, Octicons } from "@expo/vector-icons";
+import { createIconSetFromIcoMoon, FontAwesome, Ionicons, Octicons } from "@expo/vector-icons";
 import { useContext } from "react";
 import { StyleProp, TextStyle } from "react-native";
 
 import { SizeContext } from "@/Provider";
+
+const BogIcons = createIconSetFromIcoMoon(
+  require("@/assets/icomoon/selection.json"),
+  "BogIcons",
+  "icomoon.ttf"
+);
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -44,4 +50,14 @@ export function TabBarIcon(props: {
 }) {
   const BASE_SIZE = useContext(SizeContext);
   return <Octicons size={BASE_SIZE * 1.4} style={{ marginBottom: 0 }} {...props} />;
+}
+
+export function BogIcon(props: {
+  name: React.ComponentProps<typeof BogIcons>["name"];
+  color?: string;
+  size?: number;
+  style?: StyleProp<TextStyle>;
+}) {
+  const BASE_SIZE = useContext(SizeContext);
+  return <BogIcons size={BASE_SIZE * 1.25} {...props} />;
 }

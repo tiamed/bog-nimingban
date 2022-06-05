@@ -15,6 +15,7 @@ export default function useCachedResources() {
         // Load fonts
         await Font.loadAsync({
           ...FontAwesome.font,
+          BogIcons: require("@/assets/icomoon/icomoon.ttf"),
           "space-mono": require("@/assets/fonts/SpaceMono-Regular.ttf"),
           "noto-sans": require("@/assets/fonts/NotoSans-Regular.ttf"),
           "noto-serif": require("@/assets/fonts/NotoSerif-Regular.ttf"),

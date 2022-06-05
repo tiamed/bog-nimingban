@@ -9,6 +9,7 @@ import HTMLView from "react-native-htmlview";
 import { useCollapsible, AnimatedSection } from "reanimated-collapsible-helpers";
 
 import { ExpandableContext } from "../../Provider/Layout";
+import { BogIcon } from "../Icon";
 import ReplyPostWithoutData from "./ReplyPostWithoutData";
 
 import { SizeContext } from "@/Provider";
@@ -63,7 +64,7 @@ export default function HtmlView(props: { content: string; level?: number }) {
       }
 
       return (
-        <PureText key={index} style={parseStyle(node.parent?.attribs?.style)}>
+        <PureText key={index} style={parseStyle(node.parent?.attribs)}>
           {decode(node.data)}
         </PureText>
       );
@@ -243,8 +244,16 @@ function PureText(props: { children: any; style?: TextStyle }) {
 
 function Dice(props: { children: any }) {
   const { children } = props;
+  const BASE_SIZE = useContext(SizeContext);
+  const textColor = useThemeColor({}, "text");
 
-  return <PureText style={{ fontWeight: "bold" }}>{children}</PureText>;
+  return (
+    <PureText style={{ fontWeight: "bold", alignItems: "center" }}>
+      <BogIcon name="roll" color={textColor} size={BASE_SIZE * 0.85} />
+      &nbsp;
+      {children}
+    </PureText>
+  );
 }
 
 function EmptyLine() {
@@ -259,10 +268,15 @@ function EmptyLine() {
   );
 }
 
-function parseStyle(style?: string) {
-  if (style) {
-    const styles = style.split(";");
-    const colorString = /color:/i.test(styles[0]) ? styles[0].split(":")[1] : "";
+function parseStyle(props?: { style?: string; color?: string }) {
+  if (props?.style || props?.color) {
+    let colorString = "";
+    if (props.style) {
+      const styles = props.style.split(";");
+      colorString = /color:/i.test(styles[0]) ? styles[0].split(":")[1] : "";
+    } else if (props.color) {
+      colorString = props.color;
+    }
     if (colorString) {
       try {
         const color = Color(colorString.trim()).hex();
