@@ -1,6 +1,8 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Updates from "expo-updates";
 import { useAtom, useSetAtom } from "jotai";
 import { useContext, useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity } from "react-native";
 
 import ColorPickerModal from "./ColorPickerModal";
 
@@ -28,11 +30,13 @@ import {
 } from "@/atoms";
 import Icon from "@/components/Icon";
 import JumpToSettings from "@/components/JumpToSettings";
+import SettingItem from "@/components/SettingItem";
 import SettingPicker from "@/components/SettingPicker";
 import SettingSlider from "@/components/SettingSlider";
 import SettingSwitch from "@/components/SettingSwitch";
 import { ScrollView, View, Text, useThemeColor } from "@/components/Themed";
 import Fonts from "@/constants/Fonts";
+import Layout from "@/constants/Layout";
 import Texts from "@/constants/Texts";
 import { RootStackScreenProps } from "@/types";
 
@@ -124,7 +128,7 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
           options={[
             ...[...Array(8)].map((_, i) => ({
               label: `${i + 1}`,
-              value: `${100 / (i + 1) - 1}%`,
+              value: `${Number.parseFloat((100 / (i + 1)).toFixed(4)) - 1}%`,
             })),
           ]}
         />
@@ -156,6 +160,21 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
           <Icon name="tint" color={highlightColor} />
         </TouchableOpacity>
         <ColorPickerModal atom={currentAtom} />
+        <SettingItem
+          title="恢复默认显示设置"
+          onPress={() => {
+            Alert.alert("恢复默认显示设置", "将恢复默认显示设置，并重启应用", [
+              { text: "取消" },
+              {
+                text: "确定",
+                onPress: () => {
+                  AsyncStorage.multiRemove(Layout.settingKeys);
+                  Updates.reloadAsync();
+                },
+              },
+            ]);
+          }}
+        />
       </View>
     </ScrollView>
   );
