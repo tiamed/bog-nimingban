@@ -32,7 +32,7 @@ import Icon from "@/components/Icon";
 import Overlay from "@/components/Overlay";
 import Picker from "@/components/Picker";
 import ImageView from "@/components/Post/ImageView";
-import { Button, Text, useThemeColor, View, TextInput } from "@/components/Themed";
+import { Text, useThemeColor, View, TextInput } from "@/components/Themed";
 import Errors from "@/constants/Errors";
 import useForums from "@/hooks/useForums";
 import { ReplyHistory } from "@/screens/ReplyHistoryScreen";
@@ -261,21 +261,28 @@ export default function ReplyModalScreen({
           </View>
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity
-              style={{ marginRight: 10 }}
+              style={{ marginRight: 20 }}
+              hitSlop={{ left: 20, right: 20, top: 20, bottom: 20 }}
               onPress={() => {
                 const current = forums.find((x) => x.id === forumId);
                 Toast.show({ type: "info", text1: current?.info });
               }}>
-              <Icon name="question-circle-o" color={tintColor} />
+              <Icon name="question" family="Octicons" color={tintColor} />
             </TouchableOpacity>
-            <Button
-              title="全屏"
-              style={{ marginRight: 10 }}
+            <TouchableOpacity
+              style={{ marginRight: 20 }}
+              hitSlop={{ left: 20, right: 20, top: 20, bottom: 20 }}
               onPress={() => {
                 setFullscreenInput(!fullscreenInput);
-              }}
-            />
-            <Button title="关闭" onPress={close} />
+              }}>
+              <Icon name="screen-full" family="Octicons" color={tintColor} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ marginRight: 10 }}
+              hitSlop={{ left: 20, right: 20, top: 20, bottom: 20 }}
+              onPress={close}>
+              <Icon name="x" family="Octicons" color={tintColor} />
+            </TouchableOpacity>
           </View>
         </View>
         {showPrefixInput && (
@@ -332,53 +339,52 @@ export default function ReplyModalScreen({
                 ?.map((forum: any) => ({ label: forum.name, value: forum.id }))}
             />
           )}
-          {cookies?.length ? (
-            <Picker
-              selectedValue={cookieCode}
-              onValueChange={(val: string) => setCookieCode(val)}
-              options={[
-                { key: "", label: "请选择", value: "" },
-                ...cookies
-                  ?.filter((cookie: any) => cookie.id)
-                  ?.map((cookie: any) => ({
-                    key: cookie.id,
-                    label: `${cookie.master ? "影" : "主"}·${cookie.name}`,
-                    value: cookie.code,
-                  })),
-              ]}
-            />
-          ) : (
-            <Text style={{ ...styles.picker, padding: 10 }}>没有可用的饼干</Text>
-          )}
+          <Picker
+            selectedValue={cookieCode}
+            onValueChange={(val: string) => setCookieCode(val)}
+            placeholder="请选择饼干"
+            emptyText="没有可用的饼干"
+            options={[
+              ...cookies
+                ?.filter((cookie: any) => cookie.id)
+                ?.map((cookie: any) => ({
+                  key: cookie.id,
+                  label: `${cookie.master ? "影" : "主"}·${cookie.name}`,
+                  value: cookie.code,
+                })),
+            ]}
+          />
         </View>
-        <View style={{ flexDirection: "row", marginBottom: 10, flexWrap: "wrap" }}>
-          {images.map((image) => (
-            <View key={image.url} style={styles.imageList}>
-              <ImageView
-                data={image}
-                onPress={() => {}}
-                style={{
-                  borderColor: tintColor,
-                  ...styles.imageWrapper,
-                }}
-                imageStyle={styles.image}
-                path="image_pre"
-              />
-              <TouchableOpacity
-                onPress={() => {
-                  setImages(images.filter((item) => item !== image));
-                }}>
-                <Icon name="times-circle" color={tintColor} />
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
+        {images.length > 0 && (
+          <View style={{ flexDirection: "row", marginBottom: 10, flexWrap: "wrap" }}>
+            {images.map((image) => (
+              <View key={image.url} style={styles.imageList}>
+                <ImageView
+                  data={image}
+                  onPress={() => {}}
+                  style={{
+                    borderColor: tintColor,
+                    ...styles.imageWrapper,
+                  }}
+                  imageStyle={styles.image}
+                  path="image_pre"
+                />
+                <TouchableOpacity
+                  onPress={() => {
+                    setImages(images.filter((item) => item !== image));
+                  }}>
+                  <Icon name="times-circle" color={tintColor} />
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        )}
         <View style={{ paddingBottom: insets.bottom }}>
           <View style={{ ...styles.footerWrapper }}>
             <Footer
               items={[
                 {
-                  icon: showKeyboard ? "caret-down" : "caret-up",
+                  icon: showKeyboard ? "chevron-down" : "chevron-up",
                   onPress: () => {
                     if (showKeyboard) {
                       Keyboard.dismiss();
@@ -392,20 +398,22 @@ export default function ReplyModalScreen({
                   },
                 },
                 {
-                  icon: "paint-brush",
+                  icon: "paintbrush",
                   onPress: () => {
                     navigation.navigate("Sketch");
                   },
                 },
-                { icon: "smile-o", onPress: addEmoji },
+                { icon: "smiley", onPress: addEmoji },
                 { icon: "image", onPress: addImage },
                 {
-                  icon: "dot-circle-o",
+                  icon: "roll",
+                  family: "BogIcons",
                   onPress: useDebouncedCallback(addDice, 500, { leading: true, trailing: false }),
                 },
                 {
-                  icon: "send",
+                  icon: "paper-airplane",
                   onPress: useDebouncedCallback(submit, 1000, { leading: true, trailing: false }),
+                  inverted: true,
                 },
               ]}
             />

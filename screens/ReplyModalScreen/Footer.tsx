@@ -1,12 +1,13 @@
-import { FontAwesome } from "@expo/vector-icons";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 import Icon from "@/components/Icon";
 import { useThemeColor, View } from "@/components/Themed";
 
 interface FooterItem {
-  icon: React.ComponentProps<typeof FontAwesome>["name"];
+  icon: React.ComponentProps<typeof Icon>["name"];
+  family?: React.ComponentProps<typeof Icon>["family"];
   onPress: () => void;
+  inverted?: boolean;
 }
 
 export default function Footer(props: { items: FooterItem[] }) {
@@ -18,13 +19,13 @@ export default function Footer(props: { items: FooterItem[] }) {
           flex: 6 - props.items.length,
         }}
       />
-      {props.items?.map(({ icon, onPress }) => (
+      {props.items?.map(({ icon, family, onPress, inverted }) => (
         <TouchableOpacity
           key={icon}
           onPress={onPress}
-          style={styles.icon}
+          style={[styles.icon, inverted && { backgroundColor: tintColor, borderRadius: 60 }]}
           hitSlop={{ left: 0, right: 0, top: 10, bottom: 10 }}>
-          <Icon color={tintColor} name={icon} />
+          <Icon color={inverted ? "white" : tintColor} name={icon} family={family || "Octicons"} />
         </TouchableOpacity>
       ))}
     </>
@@ -35,5 +36,7 @@ const styles = StyleSheet.create({
   icon: {
     flex: 1,
     alignItems: "center",
+    paddingVertical: 8,
+    marginHorizontal: 4,
   },
 });

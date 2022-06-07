@@ -61,6 +61,7 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
         <SettingSwitch title="展示回复时逆序" atom={threadReplyReverseAtom} />
         <Text
           style={{
+            width: "100%",
             lineHeight: LINE_HEIGHT,
             borderColor: tintColor,
             borderWidth: 1,
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    paddingRight: 20,
+    paddingRight: Layout.settingItemPaddingRight,
     alignItems: "center",
   },
   itemLabel: {

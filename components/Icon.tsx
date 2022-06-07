@@ -14,13 +14,60 @@ const BogIcons = createIconSetFromIcoMoon(
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
 export default function Icon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
+  name:
+    | React.ComponentProps<typeof FontAwesome>["name"]
+    | React.ComponentProps<typeof Ionicons>["name"]
+    | React.ComponentProps<typeof Octicons>["name"]
+    | React.ComponentProps<typeof BogIcons>["name"];
+  family?: "FontAwesome" | "Ionicons" | "Octicons" | "BogIcons";
   color: string;
   size?: number;
   style?: StyleProp<TextStyle>;
 }) {
   const BASE_SIZE = useContext(SizeContext);
-  return <FontAwesome size={BASE_SIZE * 1.25} {...props} />;
+  const { family = "FontAwesome", name, ...otherProps } = props;
+  switch (family) {
+    case "FontAwesome":
+      return (
+        <FontAwesome
+          name={name as React.ComponentProps<typeof FontAwesome>["name"]}
+          size={BASE_SIZE * 1.25}
+          {...otherProps}
+        />
+      );
+    case "Ionicons":
+      return (
+        <Ionicons
+          name={name as React.ComponentProps<typeof Ionicons>["name"]}
+          size={BASE_SIZE * 1.25}
+          {...otherProps}
+        />
+      );
+    case "Octicons":
+      return (
+        <Octicons
+          name={name as React.ComponentProps<typeof Octicons>["name"]}
+          size={BASE_SIZE * 1.25}
+          {...otherProps}
+        />
+      );
+    case "BogIcons":
+      return (
+        <BogIcons
+          name={name as React.ComponentProps<typeof BogIcons>["name"]}
+          size={BASE_SIZE * 1.25}
+          {...otherProps}
+        />
+      );
+    default:
+      return (
+        <FontAwesome
+          name={name as React.ComponentProps<typeof FontAwesome>["name"]}
+          size={BASE_SIZE * 1.25}
+          {...otherProps}
+        />
+      );
+  }
 }
 
 export function Ionicon(props: {

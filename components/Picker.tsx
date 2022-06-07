@@ -1,22 +1,28 @@
 import { Picker as DefaultPicker } from "@react-native-picker/picker";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
 
+import { Octicon } from "./Icon";
 import { useThemeColor, Text, Button, View } from "./Themed";
 
 import Modal from "@/components/Modal";
+import Layout from "@/constants/Layout";
 
 export default function Picker(props: {
   selectedValue: any;
   options: any[];
+  placeholder?: string;
+  emptyText?: string;
   onValueChange: ((itemValue: any, itemIndex: number) => void) | undefined;
 }) {
   const { selectedValue, options } = props;
   const tintColor = useThemeColor({}, "tint");
+  const inactiveColor = useThemeColor({}, "inactive");
   const backgroundColor = useThemeColor({}, "background");
   const [visible, setVisible] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState("");
+  const pickerRef = useRef<DefaultPicker<any>>(null);
   const close = () => {
     setVisible(false);
   };
@@ -42,14 +48,24 @@ export default function Picker(props: {
     };
   });
 
-  if (Platform.OS === "ios") {
-    return (
-      <>
-        <TouchableOpacity
-          style={[styles.item, { borderColor: tintColor }]}
-          onPress={() => setVisible(true)}>
-          <Text style={{ color: tintColor }}>{selectedLabel}</Text>
-        </TouchableOpacity>
+  return (
+    <>
+      <TouchableOpacity
+        style={styles.item}
+        disabled={!options.length}
+        onPress={() => {
+          if (Platform.OS === "ios") {
+            setVisible(true);
+          } else {
+            pickerRef.current?.focus();
+          }
+        }}>
+        <Text style={{ color: options.length ? tintColor : inactiveColor }}>
+          {options.length ? selectedLabel || props.placeholder : props.emptyText}
+        </Text>
+        <Octicon name="triangle-down" color={options.length ? tintColor : inactiveColor} />
+      </TouchableOpacity>
+      {Platform.OS === "ios" ? (
         <Modal isVisible={visible} onBackdropPress={close} style={styles.modalWrapper}>
           <View style={styles.modal}>
             <View style={styles.header}>
@@ -78,29 +94,22 @@ export default function Picker(props: {
             </DefaultPicker>
           </View>
         </Modal>
-      </>
-    );
-  }
-  return (
-    <DefaultPicker
-      style={{
-        ...styles.picker,
-        color: tintColor,
-        backgroundColor,
-      }}
-      itemStyle={{
-        color: tintColor,
-      }}
-      selectedValue={selectedValue}
-      onValueChange={onValueChange}>
-      {options?.map((option: any) => (
-        <DefaultPicker.Item
-          key={option.id || option.value}
-          label={option.label}
-          value={option.value}
-        />
-      ))}
-    </DefaultPicker>
+      ) : (
+        <DefaultPicker
+          ref={pickerRef}
+          style={{ display: "none" }}
+          selectedValue={selectedValue}
+          onValueChange={onValueChange}>
+          {options?.map((option: any) => (
+            <DefaultPicker.Item
+              key={option.id || option.value}
+              label={option.label}
+              value={option.value}
+            />
+          ))}
+        </DefaultPicker>
+      )}
+    </>
   );
 }
 
@@ -109,11 +118,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   item: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     flex: 1,
-    padding: 10,
-    marginHorizontal: 5,
-    borderRadius: 10,
-    borderWidth: 1,
+    paddingVertical: 10,
+    paddingRight: Layout.settingItemPaddingRight,
   },
   button: {
     paddingHorizontal: 5,
