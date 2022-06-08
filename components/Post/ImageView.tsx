@@ -1,6 +1,8 @@
 import CachedImage from "expo-cached-image";
 import { useAtom } from "jotai";
-import { StyleProp, TouchableOpacity } from "react-native";
+import { ActivityIndicator, StyleProp, TouchableOpacity } from "react-native";
+
+import { useThemeColor } from "../Themed";
 
 import { Image } from "@/api";
 import { thumbnailResizeAtom } from "@/atoms";
@@ -16,6 +18,7 @@ export default function ImageView(props: {
 }) {
   const [thumbnailResize] = useAtom(thumbnailResizeAtom);
   const showImage = useShowImage();
+  const tintColor = useThemeColor({}, "tint");
   return (
     <TouchableOpacity onPress={props.onPress} style={props.style}>
       {showImage ? (
@@ -24,6 +27,16 @@ export default function ImageView(props: {
           cacheKey={`${props.data.url}-thumb-${props.path || ""}`}
           resizeMode={thumbnailResize}
           style={props.imageStyle}
+          placeholderContent={
+            <ActivityIndicator
+              color={tintColor}
+              size="small"
+              style={{
+                flex: 1,
+                justifyContent: "center",
+              }}
+            />
+          }
         />
       ) : null}
     </TouchableOpacity>
