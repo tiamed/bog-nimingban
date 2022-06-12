@@ -84,6 +84,7 @@ export default function HtmlView(props: { content: string; level?: number }) {
 
 function Quote(props: { data: string; level: number }) {
   const { data } = props;
+  const quoteReferenceColor = useThemeColor({}, "quoteReference");
   const BASE_SIZE = useContext(SizeContext);
   const expandable = useContext(ExpandableContext);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
@@ -140,7 +141,7 @@ function Quote(props: { data: string; level: number }) {
             style={{
               fontSize: BASE_SIZE * 0.8,
               lineHeight: LINE_HEIGHT - 4,
-              backgroundColor: "#eee",
+              backgroundColor: quoteReferenceColor,
               width: "auto",
               borderRadius: 2,
               overflow: "hidden",

@@ -18,8 +18,8 @@ export default {
     tabInactive: "#8e8e8e",
     tint: tintColorLight,
     tintBackground: "#fff",
-    badge: "#ee240e",
     overlay: "rgba(255, 255, 255, 0.95)",
+    quoteReference: "#eee",
   },
   dark: {
     text: "#fff",
@@ -37,7 +37,7 @@ export default {
     tabIconSelected: tintColorDark,
     tabInactive: "#7c7c7c",
     tint: tintColorDark,
-    badge: "#ee240e",
     overlay: "rgba(0, 0, 0, 0.95)",
+    quoteReference: "#eee",
   },
 };

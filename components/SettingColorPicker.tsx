@@ -1,11 +1,15 @@
+import Color from "color";
 import { useAtom } from "jotai";
-import { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import ColorPicker from "react-native-wheel-color-picker";
 
-import { showColorPickerModalAtom } from "@/atoms";
+import Icon from "./Icon";
+
+import { SizeContext } from "@/Provider";
 import Modal from "@/components/Modal";
-import { Button, TextInput, View } from "@/components/Themed";
+import { Button, Text, TextInput, View } from "@/components/Themed";
+import Layout from "@/constants/Layout";
 
 const PALETTE = [
   "#FC4C5D",
@@ -22,13 +26,52 @@ const PALETTE = [
   "#ce93d8",
 ];
 
-export default function ColorPickerModal(props: { atom: any }) {
-  const [visible, setVisible] = useAtom(showColorPickerModalAtom);
+export default function SettingColorPicker(props: {
+  title: string;
+  atom: any;
+  onValidate?: (color: string) => boolean;
+  inverted?: boolean;
+  palette?: string[];
+}) {
+  const [color] = useAtom<string>(props.atom);
+  const BASE_SIZE = useContext(SizeContext);
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <>
+      <TouchableOpacity
+        style={[styles.item, { height: BASE_SIZE * 4 }]}
+        onPress={() => {
+          setVisible(true);
+        }}>
+        <Text style={{ ...styles.itemLabel }}>{props.title}</Text>
+        <Icon name="tint" color={props.inverted ? Color(color).negate().hex() : color} />
+      </TouchableOpacity>
+      <ColorPickerModal
+        atom={props.atom}
+        visible={visible}
+        onDismiss={() => {
+          setVisible(false);
+        }}
+        onValidate={props.onValidate}
+        palette={props.palette}
+      />
+    </>
+  );
+}
+
+function ColorPickerModal(props: {
+  atom: any;
+  visible: boolean;
+  onDismiss: () => void;
+  onValidate?: (color: string) => boolean;
+  palette?: string[];
+}) {
   const [color, setColor] = useAtom(props.atom);
   const [hex, setHex] = useState(color);
   const [selectedColor, setSelectedColor] = useState(color);
   const close = () => {
-    setVisible(false);
+    props.onDismiss();
   };
   useEffect(() => {
     setSelectedColor(color);
@@ -39,7 +82,7 @@ export default function ColorPickerModal(props: { atom: any }) {
     }
   }, [selectedColor]);
   return (
-    <Modal isVisible={visible} onBackdropPress={close} avoidKeyboard>
+    <Modal isVisible={props.visible} onBackdropPress={close} avoidKeyboard>
       <View style={styles.modal}>
         <ColorPicker
           color={selectedColor as string}
@@ -51,7 +94,7 @@ export default function ColorPickerModal(props: { atom: any }) {
           noSnap
           row
           swatches
-          palette={PALETTE}
+          palette={props.palette || PALETTE}
         />
         <View style={styles.footer}>
           <TextInput
@@ -69,6 +112,9 @@ export default function ColorPickerModal(props: { atom: any }) {
             title="确定"
             style={styles.footerButton}
             onPress={() => {
+              if (!props.onValidate?.(selectedColor as string)) {
+                return;
+              }
               setColor(selectedColor);
               close();
             }}
@@ -80,6 +126,16 @@ export default function ColorPickerModal(props: { atom: any }) {
 }
 
 const styles = StyleSheet.create({
+  item: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    paddingRight: Layout.settingItemPaddingRight,
+    alignItems: "center",
+  },
+  itemLabel: {
+    minWidth: "20%",
+  },
   modal: {
     flexDirection: "column",
     justifyContent: "center",

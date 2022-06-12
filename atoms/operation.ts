@@ -12,8 +12,6 @@ export const tabRefreshingAtom = atom(false);
 
 export const showHomeActionModalAtom = atom(false);
 
-export const showColorPickerModalAtom = atom(false);
-
 export const postIdRefreshingAtom = atom(-1);
 
 export const historyTabAtom = atomWithAsyncStorage("historyTab", 0);

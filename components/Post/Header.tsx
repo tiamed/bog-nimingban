@@ -21,7 +21,6 @@ export default function Header(props: {
   const tintColor = useThemeColor({}, "tint");
   const highlightColor = useThemeColor({}, "highlight");
   const highlighBackgroundColor = useThemeColor({}, "highlightBackground");
-  const badgeColor = useThemeColor({}, "badge");
   const accurate = useContext(AccurateTimeFormatContext);
 
   return (

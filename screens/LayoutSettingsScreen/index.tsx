@@ -1,18 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import color from "color";
 import * as Updates from "expo-updates";
-import { useAtom, useSetAtom } from "jotai";
-import { useContext, useState } from "react";
-import { Alert, StyleSheet, TouchableOpacity } from "react-native";
+import { useAtom } from "jotai";
+import { Alert, StyleSheet } from "react-native";
+import Toast from "react-native-toast-message";
 
-import ColorPickerModal from "./ColorPickerModal";
-
-import { SizeContext } from "@/Provider";
 import {
   colorSchemeAtom,
   imageWidthAtom,
   lineHeightTimesAtom,
   maxLineAtom,
-  showColorPickerModalAtom,
   sizeAtom,
   threadDirectionAtom,
   thumbnailResizeAtom,
@@ -27,9 +24,11 @@ import {
   bottomGapAtom,
   lineHeightAtom,
   showTabBarLabelAtom,
+  backgroundColorDarkAtom,
+  backgroundColorLightAtom,
 } from "@/atoms";
-import Icon from "@/components/Icon";
 import JumpToSettings from "@/components/JumpToSettings";
+import SettingColorPicker from "@/components/SettingColorPicker";
 import SettingItem from "@/components/SettingItem";
 import SettingPicker from "@/components/SettingPicker";
 import SettingSlider from "@/components/SettingSlider";
@@ -38,15 +37,17 @@ import { ScrollView, View, Text, useThemeColor } from "@/components/Themed";
 import Fonts from "@/constants/Fonts";
 import Layout from "@/constants/Layout";
 import Texts from "@/constants/Texts";
+import Theme from "@/constants/Theme";
+import useColorScheme from "@/hooks/useColorScheme";
 import { RootStackScreenProps } from "@/types";
 
 export default function ProfileScreen({ navigation }: RootStackScreenProps<"LayoutSettings">) {
-  const setColorPickerModalVisible = useSetAtom(showColorPickerModalAtom);
   const tintColor = useThemeColor({}, "tint");
-  const highlightColor = useThemeColor({}, "highlight");
-  const [currentAtom, setCurrentAtom] = useState(tintColorAtom);
-  const BASE_SIZE = useContext(SizeContext);
+  const textColor = useThemeColor({}, "text");
+  const colorScheme = useColorScheme();
+  const [textColorAlpha] = useAtom(textColorAlphaAtom);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
+
   return (
     <ScrollView style={{ flex: 1, flexDirection: "column" }}>
       <View style={styles.container}>
@@ -142,25 +143,24 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
           ]}
         />
 
-        <TouchableOpacity
-          style={[styles.item, { height: BASE_SIZE * 4 }]}
-          onPress={() => {
-            setCurrentAtom(tintColorAtom);
-            setColorPickerModalVisible(true);
-          }}>
-          <Text style={{ ...styles.itemLabel }}>主题色</Text>
-          <Icon name="tint" color={tintColor} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.item, { height: BASE_SIZE * 4 }]}
-          onPress={() => {
-            setCurrentAtom(highlightColorAtom);
-            setColorPickerModalVisible(true);
-          }}>
-          <Text style={{ ...styles.itemLabel }}>强调色</Text>
-          <Icon name="tint" color={highlightColor} />
-        </TouchableOpacity>
-        <ColorPickerModal atom={currentAtom} />
+        <SettingColorPicker title="主题色" atom={tintColorAtom} />
+        <SettingColorPicker title="强调色" atom={highlightColorAtom} />
+        <SettingColorPicker
+          title="背景色"
+          atom={colorScheme === "light" ? backgroundColorLightAtom : backgroundColorDarkAtom}
+          onValidate={(c) => {
+            const difference = Math.abs(
+              color(c).luminosity() - textColorAlpha * color(textColor).luminosity()
+            );
+            if (difference < 0.3) {
+              Toast.show({ type: "error", text1: "色差太小了" });
+              return false;
+            }
+            return true;
+          }}
+          palette={[]}
+          inverted
+        />
         <SettingItem
           title="恢复默认显示设置"
           onPress={() => {
@@ -169,7 +169,7 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
               {
                 text: "确定",
                 onPress: () => {
-                  AsyncStorage.multiRemove(Layout.settingKeys);
+                  AsyncStorage.multiRemove([...Layout.settingKeys, ...Theme.settingKeys]);
                   Updates.reloadAsync();
                 },
               },
@@ -188,15 +188,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingTop: 15,
     paddingBottom: 50,
-  },
-  item: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    paddingRight: Layout.settingItemPaddingRight,
-    alignItems: "center",
-  },
-  itemLabel: {
-    minWidth: "20%",
   },
 });
