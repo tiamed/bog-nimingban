@@ -100,6 +100,7 @@ export default function Picker(props: {
           style={{ display: "none" }}
           selectedValue={selectedValue}
           onValueChange={onValueChange}>
+          <DefaultPicker.Item label={props.placeholder || "请选择"} value="" enabled={false} />
           {options?.map((option: any) => (
             <DefaultPicker.Item
               key={option.id || option.value}
