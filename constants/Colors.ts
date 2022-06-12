@@ -20,7 +20,7 @@ export default {
     tintBackground: "#fff",
     overlay: "rgba(255, 255, 255, 0.95)",
     quoteReference: "#eee",
-    card: "#000000",
+    card: "#fff",
   },
   dark: {
     text: "#fff",

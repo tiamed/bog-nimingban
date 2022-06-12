@@ -12,6 +12,6 @@ export const backgroundColorLightAtom = atomWithAsyncStorage("backgroundColorLig
 
 export const backgroundColorDarkAtom = atomWithAsyncStorage("backgroundColorDark", "#000");
 
-export const cardColorLightAtom = atomWithAsyncStorage("cardColorLight", "#121212");
+export const cardColorLightAtom = atomWithAsyncStorage("cardColorLight", "#fff");
 
-export const cardColorDarkAtom = atomWithAsyncStorage("cardColorDark", "#000");
+export const cardColorDarkAtom = atomWithAsyncStorage("cardColorDark", "#121212");
