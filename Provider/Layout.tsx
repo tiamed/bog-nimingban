@@ -16,7 +16,7 @@ export const ThreadReplyReverseContext = createContext(false);
 export const GroupSearchResultContext = createContext(false);
 
 export const ThreadPostConfigContext = createContext({
-  expandable: false,
+  expandable: true,
   clickable: true,
 });
 
