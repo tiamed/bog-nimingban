@@ -53,3 +53,5 @@ export const shouldMemorizePostFilteredAtom = atomWithAsyncStorage(
   "shouldMemorizePostFiltered",
   false
 );
+
+export const clickableAtom = atomWithAsyncStorage("clickable", true);

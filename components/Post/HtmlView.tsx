@@ -8,11 +8,11 @@ import { Dimensions, Linking, Pressable, TextStyle, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { useCollapsible, AnimatedSection } from "reanimated-collapsible-helpers";
 
-import { ExpandableContext } from "../../Provider/Layout";
 import { BogIcon } from "../Icon";
 import ReplyPostWithoutData from "./ReplyPostWithoutData";
 
 import { SizeContext } from "@/Provider";
+import { ThreadPostConfigContext } from "@/Provider/Layout";
 import { lineHeightAtom } from "@/atoms";
 import { Text, useThemeColor } from "@/components/Themed";
 import Layout from "@/constants/Layout";
@@ -86,7 +86,7 @@ function Quote(props: { data: string; level: number }) {
   const { data } = props;
   const quoteReferenceColor = useThemeColor({}, "quoteReference");
   const BASE_SIZE = useContext(SizeContext);
-  const expandable = useContext(ExpandableContext);
+  const { expandable } = useContext(ThreadPostConfigContext);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
   const [loadingText, setLoadingText] = useState("");
   const quoteId = Number(data.replace(/>>Po\./g, ""));
@@ -201,6 +201,7 @@ function Quote(props: { data: string; level: number }) {
 function Link(props: { href: string; text?: string; onPress?: () => void }) {
   const { href, text, onPress } = props;
   const BASE_SIZE = useContext(SizeContext);
+  const { clickable } = useContext(ThreadPostConfigContext);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
   const highlight = useThemeColor({}, "highlight");
   const defaultOnPress = () => {
@@ -208,7 +209,7 @@ function Link(props: { href: string; text?: string; onPress?: () => void }) {
   };
 
   return (
-    <Pressable onPress={onPress || defaultOnPress}>
+    <Pressable onPress={onPress || defaultOnPress} disabled={!clickable}>
       <Text
         style={{
           fontSize: BASE_SIZE,

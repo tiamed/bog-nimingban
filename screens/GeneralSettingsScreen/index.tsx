@@ -5,7 +5,12 @@ import BackupItem from "./BackupItem";
 import BlackListForumsItem from "./BlackListForumsItem";
 import LoadingsItem from "./LoadingsItem";
 
-import { noImageModeAtom, shouldMemorizePostFilteredAtom, vibrateAtom } from "@/atoms";
+import {
+  noImageModeAtom,
+  shouldMemorizePostFilteredAtom,
+  clickableAtom,
+  vibrateAtom,
+} from "@/atoms";
 import JumpToSettings from "@/components/JumpToSettings";
 import SettingPicker from "@/components/SettingPicker";
 import SettingSwitch from "@/components/SettingSwitch";
@@ -16,6 +21,7 @@ export default function GeneralSettingsScreen() {
     <View style={styles.container}>
       <SettingSwitch title="振动反馈" atom={vibrateAtom} />
       <SettingSwitch title="记住只看po" atom={shouldMemorizePostFilteredAtom} />
+      <SettingSwitch title="串外链接启用点击" atom={clickableAtom} />
       <SettingPicker
         title="无图模式"
         options={[

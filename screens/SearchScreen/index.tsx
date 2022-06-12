@@ -5,7 +5,7 @@ import { useIsMounted } from "usehooks-ts";
 
 import SearchFloatingAction from "./SearchFloatingAction";
 
-import { ExpandableContext, GroupSearchResultContext } from "@/Provider";
+import { ThreadPostConfigContext, GroupSearchResultContext } from "@/Provider";
 import { getSearchResults, Reply, Image, Post } from "@/api";
 import {
   maxLineAtom,
@@ -13,6 +13,7 @@ import {
   previewsAtom,
   searchForumFilterAtom,
   expandableAtom,
+  clickableAtom,
 } from "@/atoms";
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
@@ -37,6 +38,7 @@ export default function SearchScreen({ route, navigation }: RootStackScreenProps
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewUrl = useSetAtom(previewUrlAtom);
   const [expandable] = useAtom(expandableAtom);
+  const [clickable] = useAtom(clickableAtom);
   const listRef = useRef<any>(null);
   const isMounted = useIsMounted();
   const groupSearchResults = useContext(GroupSearchResultContext);
@@ -179,7 +181,7 @@ export default function SearchScreen({ route, navigation }: RootStackScreenProps
   }, [searchForumFilter, posts]);
 
   return (
-    <ExpandableContext.Provider value={expandable}>
+    <ThreadPostConfigContext.Provider value={{ expandable, clickable }}>
       <View style={styles.container}>
         {groupSearchResults ? (
           <FlatList
@@ -220,7 +222,7 @@ export default function SearchScreen({ route, navigation }: RootStackScreenProps
         )}
       </View>
       <SearchFloatingAction />
-    </ExpandableContext.Provider>
+    </ThreadPostConfigContext.Provider>
   );
 }
 

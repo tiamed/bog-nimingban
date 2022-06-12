@@ -6,7 +6,7 @@ import ActionModal from "./ActionModal";
 import HomeFloatingAction from "./HomeFloatingAction";
 import renderFooter from "./renderFooter";
 
-import { ExpandableContext } from "@/Provider";
+import { ThreadPostConfigContext } from "@/Provider";
 import { Post, getPostsByForum } from "@/api";
 import {
   threadAtom,
@@ -19,6 +19,7 @@ import {
   blackListCookiesAtom,
   expandableAtom,
   blackListWordsAtom,
+  clickableAtom,
 } from "@/atoms";
 import ThreadPost from "@/components/Post/ThreadPost";
 import { View } from "@/components/Themed";
@@ -31,6 +32,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
   const [tabRefreshing, setTabRefreshing] = useAtom(tabRefreshingAtom);
   const [maxLine] = useAtom(maxLineAtom);
   const [expandable] = useAtom(expandableAtom);
+  const [clickable] = useAtom(clickableAtom);
   const setShowHomeActionModal = useSetAtom(showHomeActionModalAtom);
   const [blackListPosts] = useAtom(blackListPostsAtom);
   const [blackListCookies] = useAtom(blackListCookiesAtom);
@@ -159,7 +161,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
   }, [posts]);
 
   return (
-    <ExpandableContext.Provider value={expandable}>
+    <ThreadPostConfigContext.Provider value={{ expandable, clickable }}>
       <View style={styles.container}>
         <FlatList
           ref={listRef}
@@ -180,7 +182,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
         <HomeFloatingAction />
         <ActionModal item={focusItem} />
       </View>
-    </ExpandableContext.Provider>
+    </ThreadPostConfigContext.Provider>
   );
 }
 

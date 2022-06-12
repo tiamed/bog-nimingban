@@ -5,9 +5,10 @@ import { StyleSheet, FlatList, FlatListProps } from "react-native";
 import renderFooter from "../HomeScreen/renderFooter";
 import FavoriteFloatingAction from "./FavoriteFloatingAction";
 
-import { ExpandableContext } from "@/Provider";
+import { ThreadPostConfigContext } from "@/Provider";
 import { Post } from "@/api";
 import {
+  clickableAtom,
   expandableAtom,
   favoriteAtom,
   favoriteFilterAtom,
@@ -33,6 +34,7 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
   const [filteredFavorite, setFilteredFavorite] = useState<UserFavorite[]>([]);
   const [maxLine] = useAtom(maxLineAtom);
   const [expandable] = useAtom(expandableAtom);
+  const [clickable] = useAtom(clickableAtom);
   const [favoriteFilter] = useAtom(favoriteFilterAtom);
   const renderItem: FlatListProps<UserFavorite>["renderItem"] = ({ item }) =>
     item && (
@@ -96,7 +98,7 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
   }, [filteredFavorite]);
 
   return (
-    <ExpandableContext.Provider value={expandable}>
+    <ThreadPostConfigContext.Provider value={{ expandable, clickable }}>
       <View style={styles.container}>
         <FlatList
           data={filteredFavorite}
@@ -121,7 +123,7 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
           onDismiss={() => setShowTagModal(false)}
         />
       </View>
-    </ExpandableContext.Provider>
+    </ThreadPostConfigContext.Provider>
   );
 }
 

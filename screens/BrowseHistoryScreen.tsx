@@ -5,9 +5,9 @@ import { StyleSheet, FlatList, FlatListProps } from "react-native";
 
 import renderFooter from "./HomeScreen/renderFooter";
 
-import { ExpandableContext } from "@/Provider";
+import { ThreadPostConfigContext } from "@/Provider";
 import { Post } from "@/api";
-import { expandableAtom, historyAtom, maxLineAtom } from "@/atoms";
+import { clickableAtom, expandableAtom, historyAtom, maxLineAtom } from "@/atoms";
 import HistoryFloatingAction from "@/components/HistoryFloatingAction";
 import ThreadPost from "@/components/Post/ThreadPost";
 import { View } from "@/components/Themed";
@@ -28,6 +28,7 @@ export default function BrowseHistoryScreen() {
   const [maxLine] = useAtom(maxLineAtom);
   const [range, setRange] = useAtom(rangeAtom);
   const [expandable] = useAtom(expandableAtom);
+  const [clickable] = useAtom(clickableAtom);
 
   const updateHistory = () => {
     setFilteredHistory(
@@ -47,7 +48,7 @@ export default function BrowseHistoryScreen() {
   }, [range, history]);
 
   return (
-    <ExpandableContext.Provider value={expandable}>
+    <ThreadPostConfigContext.Provider value={{ expandable, clickable }}>
       <View style={styles.container}>
         <FlatList
           data={filteredHistory}
@@ -69,7 +70,7 @@ export default function BrowseHistoryScreen() {
           }}
         />
       </View>
-    </ExpandableContext.Provider>
+    </ThreadPostConfigContext.Provider>
   );
 }
 
