@@ -160,7 +160,7 @@ export default function ThreadPost(props: {
                       navigation.navigate("PreviewModal");
                     }}
                     maxHeight={LINE_HEIGHT * (props.maxLine || 999)}
-                    level={1}
+                    level={2}
                     hideFeedBack
                   />
                 )
