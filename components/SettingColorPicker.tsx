@@ -112,7 +112,7 @@ function ColorPickerModal(props: {
             title="确定"
             style={styles.footerButton}
             onPress={() => {
-              if (!props.onValidate?.(selectedColor as string)) {
+              if (props.onValidate?.(selectedColor as string) === false) {
                 return;
               }
               setColor(selectedColor);
@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: "row",
     alignSelf: "flex-end",
+    alignItems: "center",
     paddingVertical: 10,
     marginTop: 20,
   },
@@ -156,5 +157,9 @@ const styles = StyleSheet.create({
   },
   input: {
     minWidth: 60,
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    borderRadius: 5,
+    fontWeight: "bold",
   },
 });
