@@ -1,18 +1,24 @@
+import { useTheme } from "@react-navigation/native";
 import { useAtom } from "jotai";
 import { Pressable, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 
 import { canCheckUpdateAtom, orderAtom } from "@/atoms";
 import { Ionicon } from "@/components/Icon";
-import { useThemeColor } from "@/components/Themed";
+import { useContrastColor, useThemeColor } from "@/components/Themed";
+import Colors from "@/constants/Colors";
 import usePostFiltered from "@/hooks/usePostFiltered";
 
 export default function HeaderRight(props: { id: number }) {
   const [order, setOrder] = useAtom(orderAtom);
   const [canCheckUpdate, setCanCheckUpdate] = useAtom(canCheckUpdateAtom);
 
+  const { colors } = useTheme();
   const activeColor = useThemeColor({}, "active");
-  const inactiveColor = useThemeColor({}, "inactive");
+  const inactiveColor = useContrastColor(
+    [Colors.light.inactive, Colors.dark.inactive],
+    colors.card
+  );
   const { result: postFiltered, toggle } = usePostFiltered(Number(props.id));
 
   return (

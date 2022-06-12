@@ -6,5 +6,7 @@ export default {
     "textColorAlpha",
     "backgroundColorLight",
     "backgroundColorDark",
+    "cardColorLight",
+    "cardColorDark",
   ],
 };

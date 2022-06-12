@@ -36,7 +36,8 @@ import {
 } from "@/atoms";
 import DrawerContent from "@/components/DrawerContent";
 import { TabBarIcon } from "@/components/Icon";
-import { useThemeColor } from "@/components/Themed";
+import { useContrastColor, useThemeColor } from "@/components/Themed";
+import Colors from "@/constants/Colors";
 import AboutScreen from "@/screens/AboutScreen";
 import BlackListScreen from "@/screens/BlackListScreen";
 import BlackListUserScreen from "@/screens/BlackListUserScreen";
@@ -79,8 +80,12 @@ const headerTitleStyle = Platform.select({
 });
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
-  const [cardColorLight] = useAtom(cardColorLightAtom);
-  const [cardColorDark] = useAtom(cardColorDarkAtom);
+  const [cardColorLight] = useAtom<string>(cardColorLightAtom);
+  const [cardColorDark] = useAtom<string>(cardColorDarkAtom);
+  const textColor = useContrastColor(
+    ["#e5e5e7", "#1c1c1e"],
+    colorScheme === "dark" ? cardColorDark : cardColorLight
+  );
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
@@ -88,11 +93,11 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
         colorScheme === "dark"
           ? {
               ...DarkTheme,
-              colors: { ...DarkTheme.colors, card: cardColorDark },
+              colors: { ...DarkTheme.colors, card: cardColorDark, text: textColor },
             }
           : {
               ...DefaultTheme,
-              colors: { ...DefaultTheme.colors, card: cardColorLight },
+              colors: { ...DefaultTheme.colors, card: cardColorLight, text: textColor },
             }
       }>
       <RootNavigator />
@@ -261,8 +266,11 @@ const HistoryTab = createMaterialTopTabNavigator<HistoryTabParamList>();
 function HistoryTabNavigator() {
   const setHistoryTab = useSetAtom(historyTabAtom);
   const activeColor = useThemeColor({}, "active");
-  const inactiveColor = useThemeColor({}, "tabInactive");
   const { colors } = useTheme();
+  const inactiveColor = useContrastColor(
+    [Colors.light.inactive, Colors.dark.inactive],
+    colors.card
+  );
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const index = useNavigationState(
@@ -425,13 +433,13 @@ function BottomTabNavigator() {
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigator() {
-  const textColor = useThemeColor({}, "text");
+  const { colors } = useTheme();
   return (
     <Drawer.Navigator
       initialRouteName="HomeMain"
       drawerContent={(props) => DrawerContent(props)}
       screenOptions={{
-        headerTintColor: textColor,
+        headerTintColor: colors.text,
         headerTitleAlign: "center",
         headerTitleStyle,
       }}>

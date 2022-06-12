@@ -1,19 +1,21 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import { useAtom } from "jotai";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDebouncedCallback } from "use-debounce";
 
 import { Octicon } from "./Icon";
-import { ScrollView, Text, useThemeColor } from "./Themed";
+import { ScrollView, Text, useContrastColor, useThemeColor } from "./Themed";
 
 import { threadAtom } from "@/atoms";
 import useForums from "@/hooks/useForums";
 
 export default function DrawerContent(props: any) {
   const forums = useForums();
+  const { colors } = useTheme();
   const [thread] = useAtom(threadAtom);
   const textColor = useThemeColor({ light: "#404040", dark: "#bfbfbf" }, "text");
+  const headerTextColor = useContrastColor(["#404040", "#bfbfbf"], colors.card);
   const tintColor = useThemeColor({}, "tint");
   const tintBackgroundColor = useThemeColor({}, "tintBackground");
   const navigation = useNavigation();
@@ -36,13 +38,13 @@ export default function DrawerContent(props: any) {
   return (
     <View style={{ marginTop: insets.top, flex: 1 }}>
       <View style={styles.header}>
-        <Text style={[styles.headerLabel, { color: textColor }]}>所有板块</Text>
+        <Text style={[styles.headerLabel, { color: headerTextColor }]}>所有板块</Text>
         <TouchableOpacity
           style={styles.headerIcon}
           onPress={() => {
             navigation.navigate("ForumSettings");
           }}>
-          <Octicon name="gear" color={textColor} size={22} />
+          <Octicon name="gear" color={headerTextColor} size={22} />
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.list}>

@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import color from "color";
+import Color from "color";
 import * as Updates from "expo-updates";
 import { useAtom } from "jotai";
 import { Alert, StyleSheet } from "react-native";
@@ -152,7 +152,7 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
           atom={colorScheme === "light" ? backgroundColorLightAtom : backgroundColorDarkAtom}
           onValidate={(c) => {
             const difference = Math.abs(
-              color(c).luminosity() - textColorAlpha * color(textColor).luminosity()
+              Color(c).luminosity() - textColorAlpha * Color(textColor).luminosity()
             );
             if (difference < 0.3) {
               Toast.show({ type: "error", text1: "色差太小了" });

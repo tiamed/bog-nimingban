@@ -3,6 +3,7 @@
  * https://docs.expo.io/guides/color-schemes/
  */
 
+import Color from "color";
 import { forwardRef, useContext } from "react";
 import {
   Text as DefaultText,
@@ -18,6 +19,7 @@ import { ColorSchemeContext, FontFamilyContext, SizeContext } from "@/Provider";
 import Colors from "@/constants/Colors";
 import Layout from "@/constants/Layout";
 import useColor from "@/hooks/useColor";
+import { reduceWhich } from "@/utils/helper";
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -32,6 +34,15 @@ export function useThemeColor(
   } else {
     return colors[theme as "light" | "dark"][colorName];
   }
+}
+
+export function useContrastColor(candidates: string[], color: string) {
+  const against = Color(color);
+
+  return reduceWhich(
+    candidates,
+    (a: string, b: string) => against.contrast(Color(b)) - against.contrast(Color(a))
+  );
 }
 
 type ThemeProps = {
