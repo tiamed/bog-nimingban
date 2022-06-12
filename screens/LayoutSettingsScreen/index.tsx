@@ -26,6 +26,8 @@ import {
   showTabBarLabelAtom,
   backgroundColorDarkAtom,
   backgroundColorLightAtom,
+  cardColorLightAtom,
+  cardColorDarkAtom,
 } from "@/atoms";
 import JumpToSettings from "@/components/JumpToSettings";
 import SettingColorPicker from "@/components/SettingColorPicker";
@@ -160,6 +162,11 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
           }}
           palette={[]}
           inverted
+        />
+        <SettingColorPicker
+          title="导航栏颜色"
+          atom={colorScheme === "light" ? cardColorLightAtom : cardColorDarkAtom}
+          palette={[]}
         />
         <SettingItem
           title="恢复默认显示设置"

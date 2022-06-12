@@ -26,7 +26,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import LinkingConfiguration from "./LinkingConfiguration";
 
-import { historyTabAtom, showTabBarLabelAtom, sizeAtom, tabRefreshingAtom } from "@/atoms";
+import {
+  cardColorDarkAtom,
+  cardColorLightAtom,
+  historyTabAtom,
+  showTabBarLabelAtom,
+  sizeAtom,
+  tabRefreshingAtom,
+} from "@/atoms";
 import DrawerContent from "@/components/DrawerContent";
 import { TabBarIcon } from "@/components/Icon";
 import { useThemeColor } from "@/components/Themed";
@@ -72,10 +79,22 @@ const headerTitleStyle = Platform.select({
 });
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+  const [cardColorLight] = useAtom(cardColorLightAtom);
+  const [cardColorDark] = useAtom(cardColorDarkAtom);
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      theme={
+        colorScheme === "dark"
+          ? {
+              ...DarkTheme,
+              colors: { ...DarkTheme.colors, card: cardColorDark },
+            }
+          : {
+              ...DefaultTheme,
+              colors: { ...DefaultTheme.colors, card: cardColorLight },
+            }
+      }>
       <RootNavigator />
       <CheckFavoriteUpdate />
       <CheckVersionUpdate />
