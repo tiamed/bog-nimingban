@@ -36,8 +36,7 @@ import {
 } from "@/atoms";
 import DrawerContent from "@/components/DrawerContent";
 import { TabBarIcon } from "@/components/Icon";
-import { useContrastColor, useFirstContrastColor, useThemeColor } from "@/components/Themed";
-import Colors from "@/constants/Colors";
+import { getContrastColor, useThemeColor } from "@/components/Themed";
 import AboutScreen from "@/screens/AboutScreen";
 import BlackListScreen from "@/screens/BlackListScreen";
 import BlackListUserScreen from "@/screens/BlackListUserScreen";
@@ -82,15 +81,11 @@ const headerTitleStyle = Platform.select({
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const [cardColorLight] = useAtom<string>(cardColorLightAtom);
   const [cardColorDark] = useAtom<string>(cardColorDarkAtom);
-  const tintColor = useThemeColor({}, "tint");
-  const textColor = useContrastColor(
+  const textColor = getContrastColor(
     ["#e5e5e7", "#1c1c1e"],
     colorScheme === "dark" ? cardColorDark : cardColorLight
   );
-  const primaryColor = useFirstContrastColor(
-    [tintColor, "#fff", "#000"],
-    colorScheme === "dark" ? cardColorDark : cardColorLight
-  );
+
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
@@ -102,7 +97,6 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
                 ...DarkTheme.colors,
                 card: cardColorDark,
                 text: textColor,
-                primary: primaryColor,
               },
             }
           : {
@@ -111,7 +105,6 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
                 ...DefaultTheme.colors,
                 card: cardColorLight,
                 text: textColor,
-                primary: primaryColor,
               },
             }
       }>
@@ -283,10 +276,8 @@ const HistoryTab = createMaterialTopTabNavigator<HistoryTabParamList>();
 function HistoryTabNavigator() {
   const setHistoryTab = useSetAtom(historyTabAtom);
   const { colors } = useTheme();
-  const inactiveColor = useContrastColor(
-    [Colors.light.inactive, Colors.dark.inactive],
-    colors.card
-  );
+  const cardActiveColor = useThemeColor({}, "cardActive");
+  const cardInactiveColor = useThemeColor({}, "cardInactive");
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const index = useNavigationState(
@@ -326,7 +317,7 @@ function HistoryTabNavigator() {
           },
         }),
         tabBarIndicatorStyle: {
-          backgroundColor: colors.primary,
+          backgroundColor: cardActiveColor,
           width: indicatorWidth,
           height: 4,
           borderRadius: 60,
@@ -336,9 +327,9 @@ function HistoryTabNavigator() {
         tabBarStyle: {
           shadowColor: "transparent",
         },
-        tabBarPressColor: colors.primary,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: inactiveColor,
+        tabBarPressColor: cardActiveColor,
+        tabBarActiveTintColor: cardActiveColor,
+        tabBarInactiveTintColor: cardInactiveColor,
         swipeEnabled: true,
       }}>
       <HistoryTab.Screen
@@ -362,7 +353,7 @@ function HistoryTabNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-  const { colors } = useTheme();
+  const cardActiveColor = useThemeColor({}, "cardActive");
   const insets = useSafeAreaInsets();
   const setTabRefreshing = useSetAtom(tabRefreshingAtom);
   const [BASE_SIZE] = useAtom(sizeAtom);
@@ -374,7 +365,7 @@ function BottomTabNavigator() {
       screenOptions={{
         headerTitleAlign: "center",
         headerTitleStyle,
-        tabBarActiveTintColor: colors.primary,
+        tabBarActiveTintColor: cardActiveColor,
         tabBarAllowFontScaling: false,
         tabBarLabelPosition: "below-icon",
         tabBarStyle: {

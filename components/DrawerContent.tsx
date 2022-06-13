@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDebouncedCallback } from "use-debounce";
 
 import { Octicon } from "./Icon";
-import { ScrollView, Text, useContrastColor, useThemeColor } from "./Themed";
+import { ScrollView, Text, getContrastColor, useThemeColor } from "./Themed";
 
 import { threadAtom } from "@/atoms";
 import useForums from "@/hooks/useForums";
@@ -15,7 +15,7 @@ export default function DrawerContent(props: any) {
   const { colors } = useTheme();
   const [thread] = useAtom(threadAtom);
   const textColor = useThemeColor({ light: "#404040", dark: "#bfbfbf" }, "text");
-  const headerTextColor = useContrastColor(["#404040", "#bfbfbf"], colors.card);
+  const headerTextColor = getContrastColor(["#404040", "#bfbfbf"], colors.card);
   const tintColor = useThemeColor({}, "tint");
   const tintBackgroundColor = useThemeColor({}, "tintBackground");
   const navigation = useNavigation();

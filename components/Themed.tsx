@@ -36,8 +36,9 @@ export function useThemeColor(
   }
 }
 
-export function useContrastColor(candidates: string[], color: string) {
+export function getContrastColor(candidates: string[], color: string) {
   const against = Color(color);
+  console.log("🚀 ~ file: Themed.tsx ~ line 41 ~ useContrastColor ~ against", candidates, color);
 
   return reduceWhich(
     candidates,
@@ -45,7 +46,7 @@ export function useContrastColor(candidates: string[], color: string) {
   );
 }
 
-export function useFirstContrastColor(candidates: string[], color: string, contrast: number = 2) {
+export function getFirstContrastColor(candidates: string[], color: string, contrast: number = 2) {
   const against = Color(color);
   return candidates.find((c) => against.contrast(Color(c)) >= contrast) || color;
 }

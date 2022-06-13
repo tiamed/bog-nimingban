@@ -21,6 +21,8 @@ export default {
     overlay: "rgba(255, 255, 255, 0.95)",
     quoteReference: "#eee",
     card: "#fff",
+    cardActive: tintColorLight,
+    cardInactive: "#ccc",
   },
   dark: {
     text: "#fff",
@@ -41,5 +43,7 @@ export default {
     overlay: "rgba(0, 0, 0, 0.95)",
     quoteReference: "#eee",
     card: "#121212",
+    cardActive: tintColorDark,
+    cardInactive: "#444",
   },
 };

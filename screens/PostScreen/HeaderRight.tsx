@@ -1,24 +1,18 @@
-import { useTheme } from "@react-navigation/native";
 import { useAtom } from "jotai";
 import { Pressable, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 
 import { canCheckUpdateAtom, orderAtom } from "@/atoms";
 import { Ionicon } from "@/components/Icon";
-import { useContrastColor } from "@/components/Themed";
-import Colors from "@/constants/Colors";
+import { useThemeColor } from "@/components/Themed";
 import usePostFiltered from "@/hooks/usePostFiltered";
 
 export default function HeaderRight(props: { id: number }) {
   const [order, setOrder] = useAtom(orderAtom);
   const [canCheckUpdate, setCanCheckUpdate] = useAtom(canCheckUpdateAtom);
 
-  const { colors } = useTheme();
-  const activeColor = colors.primary;
-  const inactiveColor = useContrastColor(
-    [Colors.light.inactive, Colors.dark.inactive],
-    colors.card
-  );
+  const cardActiveColor = useThemeColor({}, "cardActive");
+  const cardInactiveColor = useThemeColor({}, "cardInactive");
   const { result: postFiltered, toggle } = usePostFiltered(Number(props.id));
 
   return (
@@ -32,17 +26,17 @@ export default function HeaderRight(props: { id: number }) {
           });
           setCanCheckUpdate(!canCheckUpdate);
         }}>
-        <Ionicon name="timer" color={canCheckUpdate ? activeColor : inactiveColor} />
+        <Ionicon name="timer" color={canCheckUpdate ? cardActiveColor : cardInactiveColor} />
       </Pressable>
       <Pressable
         style={styles.item}
         onPress={() => {
           setOrder(Number(!order));
         }}>
-        <Ionicon name={order ? "caret-down" : "caret-up"} color={activeColor} />
+        <Ionicon name={order ? "caret-down" : "caret-up"} color={cardActiveColor} />
       </Pressable>
       <Pressable style={styles.item} onPress={toggle}>
-        <Ionicon name="filter" color={postFiltered ? activeColor : inactiveColor} />
+        <Ionicon name="filter" color={postFiltered ? cardActiveColor : cardInactiveColor} />
       </Pressable>
     </>
   );

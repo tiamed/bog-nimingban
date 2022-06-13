@@ -7,7 +7,7 @@ import WebView from "react-native-webview";
 
 import { sketchUriAtom } from "@/atoms";
 import Icon from "@/components/Icon";
-import { View } from "@/components/Themed";
+import { useThemeColor, View } from "@/components/Themed";
 import { RootStackScreenProps } from "@/types";
 
 export default function SketchScreen({ route, navigation }: RootStackScreenProps<"About">) {
@@ -16,7 +16,7 @@ export default function SketchScreen({ route, navigation }: RootStackScreenProps
   const webRef = useRef<WebView>(null);
 
   const setSketchUri = useSetAtom(sketchUriAtom);
-  const { colors } = useTheme();
+  const cardActiveColor = useThemeColor({}, "cardActive");
 
   const onPress = useCallback(async () => {
     setIsCapturing(true);
@@ -60,7 +60,7 @@ export default function SketchScreen({ route, navigation }: RootStackScreenProps
     navigation.setOptions({
       headerRight: () => (
         <Pressable onPress={onPress}>
-          <Icon name="check" color={colors.primary} />
+          <Icon name="check" color={cardActiveColor} />
         </Pressable>
       ),
     });
