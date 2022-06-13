@@ -36,7 +36,7 @@ import {
 } from "@/atoms";
 import DrawerContent from "@/components/DrawerContent";
 import { TabBarIcon } from "@/components/Icon";
-import { useContrastColor, useThemeColor } from "@/components/Themed";
+import { useContrastColor, useFirstContrastColor, useThemeColor } from "@/components/Themed";
 import Colors from "@/constants/Colors";
 import AboutScreen from "@/screens/AboutScreen";
 import BlackListScreen from "@/screens/BlackListScreen";
@@ -82,8 +82,13 @@ const headerTitleStyle = Platform.select({
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const [cardColorLight] = useAtom<string>(cardColorLightAtom);
   const [cardColorDark] = useAtom<string>(cardColorDarkAtom);
+  const tintColor = useThemeColor({}, "tint");
   const textColor = useContrastColor(
     ["#e5e5e7", "#1c1c1e"],
+    colorScheme === "dark" ? cardColorDark : cardColorLight
+  );
+  const primaryColor = useFirstContrastColor(
+    [tintColor, "#fff", "#000"],
     colorScheme === "dark" ? cardColorDark : cardColorLight
   );
   return (
@@ -93,11 +98,21 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
         colorScheme === "dark"
           ? {
               ...DarkTheme,
-              colors: { ...DarkTheme.colors, card: cardColorDark, text: textColor },
+              colors: {
+                ...DarkTheme.colors,
+                card: cardColorDark,
+                text: textColor,
+                primary: primaryColor,
+              },
             }
           : {
               ...DefaultTheme,
-              colors: { ...DefaultTheme.colors, card: cardColorLight, text: textColor },
+              colors: {
+                ...DefaultTheme.colors,
+                card: cardColorLight,
+                text: textColor,
+                primary: primaryColor,
+              },
             }
       }>
       <RootNavigator />
@@ -117,6 +132,7 @@ function RootNavigator() {
   const appState = useRef(AppState.currentState);
   const navigation = useNavigation<StackNavigationProp<any>>();
   const [clipboardText, setClipboardText] = useState("");
+  const { colors } = useTheme();
 
   const showNavigateConfirm = (threadId: string) => {
     Alert.alert("检测到串号，是否跳转Po." + threadId, "", [
@@ -162,6 +178,7 @@ function RootNavigator() {
         animation: "fade_from_bottom",
         headerBackTitle: "返回",
         headerTitleAlign: "center",
+        headerTintColor: colors.text,
         headerTitleStyle,
       }}>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
@@ -265,7 +282,6 @@ const HistoryTab = createMaterialTopTabNavigator<HistoryTabParamList>();
 
 function HistoryTabNavigator() {
   const setHistoryTab = useSetAtom(historyTabAtom);
-  const activeColor = useThemeColor({}, "active");
   const { colors } = useTheme();
   const inactiveColor = useContrastColor(
     [Colors.light.inactive, Colors.dark.inactive],
@@ -310,7 +326,7 @@ function HistoryTabNavigator() {
           },
         }),
         tabBarIndicatorStyle: {
-          backgroundColor: activeColor,
+          backgroundColor: colors.primary,
           width: indicatorWidth,
           height: 4,
           borderRadius: 60,
@@ -320,8 +336,8 @@ function HistoryTabNavigator() {
         tabBarStyle: {
           shadowColor: "transparent",
         },
-        tabBarPressColor: activeColor,
-        tabBarActiveTintColor: activeColor,
+        tabBarPressColor: colors.primary,
+        tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: inactiveColor,
         swipeEnabled: true,
       }}>
@@ -346,7 +362,7 @@ function HistoryTabNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-  const tintColor = useThemeColor({}, "tint");
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const setTabRefreshing = useSetAtom(tabRefreshingAtom);
   const [BASE_SIZE] = useAtom(sizeAtom);
@@ -358,7 +374,7 @@ function BottomTabNavigator() {
       screenOptions={{
         headerTitleAlign: "center",
         headerTitleStyle,
-        tabBarActiveTintColor: tintColor,
+        tabBarActiveTintColor: colors.primary,
         tabBarAllowFontScaling: false,
         tabBarLabelPosition: "below-icon",
         tabBarStyle: {

@@ -5,7 +5,7 @@ import Toast from "react-native-toast-message";
 
 import { canCheckUpdateAtom, orderAtom } from "@/atoms";
 import { Ionicon } from "@/components/Icon";
-import { useContrastColor, useThemeColor } from "@/components/Themed";
+import { useContrastColor } from "@/components/Themed";
 import Colors from "@/constants/Colors";
 import usePostFiltered from "@/hooks/usePostFiltered";
 
@@ -14,7 +14,7 @@ export default function HeaderRight(props: { id: number }) {
   const [canCheckUpdate, setCanCheckUpdate] = useAtom(canCheckUpdateAtom);
 
   const { colors } = useTheme();
-  const activeColor = useThemeColor({}, "active");
+  const activeColor = colors.primary;
   const inactiveColor = useContrastColor(
     [Colors.light.inactive, Colors.dark.inactive],
     colors.card

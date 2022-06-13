@@ -45,6 +45,11 @@ export function useContrastColor(candidates: string[], color: string) {
   );
 }
 
+export function useFirstContrastColor(candidates: string[], color: string, contrast: number = 2) {
+  const against = Color(color);
+  return candidates.find((c) => against.contrast(Color(c)) >= contrast) || color;
+}
+
 type ThemeProps = {
   lightColor?: string;
   darkColor?: string;
