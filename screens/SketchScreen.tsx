@@ -1,6 +1,5 @@
 import { useTheme } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
-import * as MediaLibrary from "expo-media-library";
 import { useSetAtom } from "jotai";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable } from "react-native";
@@ -31,7 +30,6 @@ export default function SketchScreen({ route, navigation }: RootStackScreenProps
       encoding: FileSystem.EncodingType.Base64,
     });
 
-    await MediaLibrary.saveToLibraryAsync(filename);
     setSketchUri(filename);
     setIsCapturing(false);
     navigation.goBack();
@@ -49,11 +47,9 @@ export default function SketchScreen({ route, navigation }: RootStackScreenProps
       const elements = ['.FixedSideContainer', '.App-bottom-bar', 'footer'];
       elements.forEach(hideElement);
 
-      setTimeout(() => {
-        const canvas = document.querySelector('canvas');
-        const image = canvas.toDataURL("image/png");
-        window.ReactNativeWebView.postMessage(image);
-      }, 200);
+      const canvas = document.querySelector('canvas');
+      const image = canvas.toDataURL("image/png");
+      window.ReactNativeWebView.postMessage(image);
       `;
 
       webRef.current?.injectJavaScript(hideTools);
