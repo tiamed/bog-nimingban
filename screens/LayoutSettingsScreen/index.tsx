@@ -28,6 +28,7 @@ import {
   backgroundColorLightAtom,
   cardColorLightAtom,
   cardColorDarkAtom,
+  emoticonPickerHeightAtom,
 } from "@/atoms";
 import JumpToSettings from "@/components/JumpToSettings";
 import SettingColorPicker from "@/components/SettingColorPicker";
@@ -42,6 +43,8 @@ import Texts from "@/constants/Texts";
 import Theme from "@/constants/Theme";
 import useColorScheme from "@/hooks/useColorScheme";
 import { RootStackScreenProps } from "@/types";
+
+const height = Layout.window.height;
 
 export default function ProfileScreen({ navigation }: RootStackScreenProps<"LayoutSettings">) {
   const tintColor = useThemeColor({}, "tint");
@@ -88,6 +91,13 @@ export default function ProfileScreen({ navigation }: RootStackScreenProps<"Layo
         <SettingSlider title="字体大小" atom={sizeAtom} min={12} max={20} step={1} />
         <SettingSlider title="主题串间距" atom={bottomGapAtom} min={1} max={16} />
         <SettingSlider title="行距" atom={lineHeightTimesAtom} min={1.2} max={1.6} step={0.1} />
+        <SettingSlider
+          title="颜文字选择器高度"
+          atom={emoticonPickerHeightAtom}
+          min={200}
+          max={height * 0.5}
+          step={20}
+        />
         <SettingPicker
           title="行数"
           atom={maxLineAtom}

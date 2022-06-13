@@ -55,3 +55,5 @@ export const shouldMemorizePostFilteredAtom = atomWithAsyncStorage(
 );
 
 export const clickableAtom = atomWithAsyncStorage("clickable", true);
+
+export const emoticonPickerHeightAtom = atomWithAsyncStorage("emoticonPickerHeight", 200);
