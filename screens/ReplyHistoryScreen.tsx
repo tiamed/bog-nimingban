@@ -12,6 +12,7 @@ import HistoryFloatingAction from "@/components/HistoryFloatingAction";
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
 import { View } from "@/components/Themed";
+import useHaptics from "@/hooks/useHaptics";
 
 const rangeAtom = atom({
   start: startOfDay(sub(new Date(), { days: 7 })).getTime(),
@@ -29,6 +30,7 @@ export default function ReplyHistoryScreen() {
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewUrl = useSetAtom(previewUrlAtom);
   const navigation = useNavigation();
+  const haptics = useHaptics();
 
   const updateHistory = () => {
     setFilteredHistory(
@@ -50,6 +52,9 @@ export default function ReplyHistoryScreen() {
             id: res || id,
             title: `Po.${res || id}`,
           });
+        }}
+        onLongPress={() => {
+          haptics.heavy();
         }}
         onImagePress={(image: Image) => {
           setPreviews(

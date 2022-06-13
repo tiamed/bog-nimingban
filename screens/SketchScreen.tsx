@@ -1,3 +1,5 @@
+import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
 import { useSetAtom } from "jotai";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dimensions, Pressable } from "react-native";
@@ -22,18 +24,21 @@ export default function SketchScreen({ route, navigation }: RootStackScreenProps
 
   const onPress = useCallback(async () => {
     setIsCapturing(true);
-    await new Promise((end) => setTimeout(end, 200));
-    const result = await captureRef(viewRef, {
-      result: "tmpfile",
-      height,
-      width,
-      quality: 1,
-      format: "png",
+  }, [viewRef]);
+
+  const onMessage = async (event: any) => {
+    const base64Code = event.nativeEvent.data.split("data:image/png;base64,")[1];
+
+    const filename = FileSystem.documentDirectory + `Sketch_${Date.now()}.png`;
+    await FileSystem.writeAsStringAsync(filename, base64Code, {
+      encoding: FileSystem.EncodingType.Base64,
     });
-    setSketchUri(result);
+
+    await MediaLibrary.saveToLibraryAsync(filename);
+    setSketchUri(filename);
     setIsCapturing(false);
     navigation.goBack();
-  }, [viewRef]);
+  };
 
   useEffect(() => {
     if (isCapturing) {
@@ -46,6 +51,12 @@ export default function SketchScreen({ route, navigation }: RootStackScreenProps
       }
       const elements = ['.FixedSideContainer', '.App-bottom-bar', 'footer'];
       elements.forEach(hideElement);
+
+      setTimeout(() => {
+        const canvas = document.querySelector('canvas');
+        const image = canvas.toDataURL("image/png");
+        window.ReactNativeWebView.postMessage(image);
+      }, 200);
       `;
 
       webRef.current?.injectJavaScript(hideTools);
@@ -64,11 +75,7 @@ export default function SketchScreen({ route, navigation }: RootStackScreenProps
 
   return (
     <View ref={viewRef} collapsable={false} style={{ flex: 1 }}>
-      <WebView
-        ref={webRef}
-        source={{ uri: "https://excalidraw.com/" }}
-        androidHardwareAccelerationDisabled
-      />
+      <WebView ref={webRef} source={{ uri: "https://excalidraw.com/" }} onMessage={onMessage} />
     </View>
   );
 }
