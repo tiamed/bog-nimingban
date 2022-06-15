@@ -38,7 +38,6 @@ export function useThemeColor(
 
 export function getContrastColor(candidates: string[], color: string) {
   const against = Color(color);
-  console.log("🚀 ~ file: Themed.tsx ~ line 41 ~ useContrastColor ~ against", candidates, color);
 
   return reduceWhich(
     candidates,

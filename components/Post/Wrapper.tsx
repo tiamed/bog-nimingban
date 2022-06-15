@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
-import { Dimensions, View } from "react-native";
+import { View } from "react-native";
 
-import { bottomGapAtom } from "@/atoms";
+import { bottomGapAtom, responsiveWidthAtom } from "@/atoms";
 import { useThemeColor } from "@/components/Themed";
 import Layout from "@/constants/Layout";
 
@@ -13,11 +13,12 @@ export default function Wrapper(props: {
 }) {
   const borderColor = useThemeColor({}, "border");
   const [bottomGap] = useAtom(bottomGapAtom);
+  const [responsiveWidth] = useAtom(responsiveWidthAtom);
 
   return (
     <View
       style={{
-        width: props.width || Dimensions.get("window").width,
+        width: props.width || responsiveWidth,
         borderBottomColor: borderColor,
         alignSelf: "center",
         flexDirection: "column",

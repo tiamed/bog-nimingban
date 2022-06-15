@@ -4,7 +4,7 @@ import Color from "color";
 import { decode } from "html-entities";
 import { useAtom } from "jotai";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Dimensions, Linking, Pressable, TextStyle, View } from "react-native";
+import { Linking, Pressable, TextStyle, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { useCollapsible, AnimatedSection } from "reanimated-collapsible-helpers";
 
@@ -13,12 +13,10 @@ import ReplyPostWithoutData from "./ReplyPostWithoutData";
 
 import { SizeContext } from "@/Provider";
 import { ThreadPostConfigContext } from "@/Provider/Layout";
-import { lineHeightAtom } from "@/atoms";
+import { lineHeightAtom, responsiveWidthAtom } from "@/atoms";
 import { Text, useThemeColor } from "@/components/Themed";
 import Layout from "@/constants/Layout";
 import Urls from "@/constants/Urls";
-
-const width = Dimensions.get("window").width;
 
 export default function HtmlView(props: { content: string; level?: number }) {
   const navigation = useNavigation<StackNavigationProp<any>>();
@@ -88,10 +86,11 @@ function Quote(props: { data: string; level: number }) {
   const BASE_SIZE = useContext(SizeContext);
   const { expandable } = useContext(ThreadPostConfigContext);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
+  const [responsiveWidth] = useAtom(responsiveWidthAtom);
   const [loadingText, setLoadingText] = useState("");
   const quoteId = Number(data.replace(/>>Po\./g, ""));
   const replyWidth =
-    width -
+    responsiveWidth -
     2 -
     Layout.postHorizontalPadding * 2 -
     (props.level - 1) * (Layout.postHorizontalPaddingSecondary * 2 + 2);
@@ -176,10 +175,11 @@ function Quote(props: { data: string; level: number }) {
   );
 
   function QuoteReference(props: { children: any }) {
+    const [responsiveWidth] = useAtom(responsiveWidthAtom);
     return expandable ? (
       <Pressable
         hitSlop={{
-          right: width,
+          right: responsiveWidth,
           top: 2,
           bottom: 2,
           left: 2,

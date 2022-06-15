@@ -3,6 +3,8 @@ import { PixelRatio } from "react-native";
 
 import { atomWithAsyncStorage } from "./lib";
 
+import Layout from "@/constants/Layout";
+
 export const sizeAtom = atomWithAsyncStorage("baseSize", 14);
 
 export const lineHeightTimesAtom = atomWithAsyncStorage("lineHeight", 1.4);
@@ -57,3 +59,5 @@ export const shouldMemorizePostFilteredAtom = atomWithAsyncStorage(
 export const clickableAtom = atomWithAsyncStorage("clickable", true);
 
 export const emoticonPickerHeightAtom = atomWithAsyncStorage("emoticonPickerHeight", 200);
+
+export const responsiveWidthAtom = atom(Layout.window.width);

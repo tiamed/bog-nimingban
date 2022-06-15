@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
 import { Fragment, useContext, useMemo } from "react";
-import { Dimensions, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { TapGestureHandler } from "react-native-gesture-handler";
 
 import { useThemeColor } from "../Themed";
@@ -14,11 +14,15 @@ import Wrapper from "./Wrapper";
 
 import { SizeContext, ThreadReplyReverseContext } from "@/Provider";
 import { Post, Image } from "@/api";
-import { lineHeightAtom, previewUrlAtom, previewsAtom, threadDirectionAtom } from "@/atoms";
+import {
+  lineHeightAtom,
+  previewUrlAtom,
+  previewsAtom,
+  threadDirectionAtom,
+  responsiveWidthAtom,
+} from "@/atoms";
 import Layout from "@/constants/Layout";
 import useHaptics from "@/hooks/useHaptics";
-
-const width = Dimensions.get("window").width;
 
 export default function ThreadPost(props: {
   data: Partial<Post>;
@@ -33,6 +37,7 @@ export default function ThreadPost(props: {
   const setPreviewUrl = useSetAtom(previewUrlAtom);
   const [threadDirection] = useAtom(threadDirectionAtom);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
+  const [responsiveWidth] = useAtom(responsiveWidthAtom);
 
   const navigation = useNavigation();
   const haptics = useHaptics();
@@ -143,7 +148,7 @@ export default function ThreadPost(props: {
                   <ReplyPost
                     key={item.id}
                     data={item}
-                    width={width - Layout.postHorizontalPadding * 2}
+                    width={responsiveWidth - Layout.postHorizontalPadding * 2}
                     onPress={() => {
                       navigation.navigate("Post", {
                         id: item.res as number,

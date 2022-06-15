@@ -21,7 +21,7 @@ import * as Clipboard from "expo-clipboard";
 import { useAtom, useSetAtom } from "jotai";
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
-import { Alert, AppState, ColorSchemeName, Dimensions, Platform } from "react-native";
+import { Alert, AppState, ColorSchemeName, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import LinkingConfiguration from "./LinkingConfiguration";
@@ -30,6 +30,7 @@ import {
   cardColorDarkAtom,
   cardColorLightAtom,
   historyTabAtom,
+  responsiveWidthAtom,
   showTabBarLabelAtom,
   sizeAtom,
   tabRefreshingAtom,
@@ -69,8 +70,6 @@ import {
   RootTabParamList,
   RootTabScreenProps,
 } from "@/types";
-
-const width = Dimensions.get("window").width;
 
 const headerTitleStyle = Platform.select({
   android: {
@@ -274,6 +273,7 @@ function RootNavigator() {
 const HistoryTab = createMaterialTopTabNavigator<HistoryTabParamList>();
 
 function HistoryTabNavigator() {
+  const [responsiveWidth] = useAtom(responsiveWidthAtom);
   const setHistoryTab = useSetAtom(historyTabAtom);
   const { colors } = useTheme();
   const cardActiveColor = useThemeColor({}, "cardActive");
@@ -322,7 +322,7 @@ function HistoryTabNavigator() {
           height: 4,
           borderRadius: 60,
           overflow: "hidden",
-          left: width / 4 - indicatorWidth / 2,
+          left: responsiveWidth / 4 - indicatorWidth / 2,
         },
         tabBarStyle: {
           shadowColor: "transparent",
@@ -440,6 +440,7 @@ function BottomTabNavigator() {
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigator() {
+  const [responsiveWidth] = useAtom(responsiveWidthAtom);
   const { colors } = useTheme();
   return (
     <Drawer.Navigator
@@ -454,7 +455,7 @@ function DrawerNavigator() {
         name="HomeMain"
         component={HomeScreen}
         options={{
-          swipeEdgeWidth: width * 0.75,
+          swipeEdgeWidth: responsiveWidth * 0.75,
           title: "",
           drawerIcon: ({ color }) => <TabBarIcon name="three-bars" color={color} />,
         }}

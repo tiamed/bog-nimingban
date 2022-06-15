@@ -1,4 +1,3 @@
-import { useTheme } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
 import { useSetAtom } from "jotai";
 import React, { useCallback, useEffect, useRef, useState } from "react";

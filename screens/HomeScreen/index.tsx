@@ -1,6 +1,6 @@
 import { useAtom, useSetAtom } from "jotai";
 import React, { useState, useEffect, useCallback } from "react";
-import { StyleSheet, FlatList, FlatListProps, Platform } from "react-native";
+import { StyleSheet, FlatList, FlatListProps, Platform, LayoutChangeEvent } from "react-native";
 
 import ActionModal from "./ActionModal";
 import HomeFloatingAction from "./HomeFloatingAction";
@@ -20,6 +20,7 @@ import {
   expandableAtom,
   blackListWordsAtom,
   clickableAtom,
+  responsiveWidthAtom,
 } from "@/atoms";
 import ThreadPost from "@/components/Post/ThreadPost";
 import { View } from "@/components/Themed";
@@ -39,6 +40,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
   const [blackListForums] = useAtom(blackListForumsAtom);
   const [blackListWords] = useAtom(blackListWordsAtom);
   const [showThreadReply] = useAtom(showThreadReplyAtom);
+  const [responsiveWidth, setResponsiveWidth] = useAtom(responsiveWidthAtom);
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
@@ -102,6 +104,12 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
 
   const keyExtractor = (item: Post) => item.id.toString();
 
+  const handleOnLayout = (event: LayoutChangeEvent) => {
+    if (event.nativeEvent.layout.width !== responsiveWidth) {
+      setResponsiveWidth(event.nativeEvent.layout.width);
+    }
+  };
+
   useEffect(() => {
     setHasNoMore(false);
     if (thread !== null) {
@@ -162,7 +170,7 @@ export default function HomeScreen({ route, navigation }: RootTabScreenProps<"Ho
 
   return (
     <ThreadPostConfigContext.Provider value={{ expandable, clickable }}>
-      <View style={styles.container}>
+      <View style={styles.container} onLayout={handleOnLayout}>
         <FlatList
           ref={listRef}
           data={filteredPosts}

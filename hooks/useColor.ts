@@ -1,4 +1,3 @@
-import Color from "color";
 import { useContext } from "react";
 
 import {

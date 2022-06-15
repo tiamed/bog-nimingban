@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import { useAtom } from "jotai";
-import { StyleSheet, TouchableOpacity, Alert, Dimensions } from "react-native";
+import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import Toast from "react-native-toast-message";
 
 import { normalizeHtml } from "../../utils/format";
