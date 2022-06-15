@@ -1,13 +1,20 @@
 import { endOfDay, startOfDay, sub, add } from "date-fns";
-import { atom, useAtom } from "jotai";
+import { atom, useAtom, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { StyleSheet, FlatList, FlatListProps } from "react-native";
 
-import renderFooter from "./HomeScreen/renderFooter";
+import renderFooter from "../HomeScreen/renderFooter";
+import ActionModal from "./ActionModal";
 
 import { ThreadPostConfigContext } from "@/Provider";
 import { Post } from "@/api";
-import { clickableAtom, expandableAtom, historyAtom, maxLineAtom } from "@/atoms";
+import {
+  clickableAtom,
+  expandableAtom,
+  historyAtom,
+  maxLineAtom,
+  showBrowseHistoryActionModalAtom,
+} from "@/atoms";
 import HistoryFloatingAction from "@/components/HistoryFloatingAction";
 import ThreadPost from "@/components/Post/ThreadPost";
 import { View } from "@/components/Themed";
@@ -24,11 +31,13 @@ export interface UserHistory extends Post {
 
 export default function BrowseHistoryScreen() {
   const [filteredHistory, setFilteredHistory] = useState<UserHistory[]>([]);
+  const [focusItem, setFocusItem] = useState<UserHistory>({} as UserHistory);
   const [history] = useAtom<UserHistory[]>(historyAtom);
   const [maxLine] = useAtom(maxLineAtom);
   const [range, setRange] = useAtom(rangeAtom);
   const [expandable] = useAtom(expandableAtom);
   const [clickable] = useAtom(clickableAtom);
+  const setShowBrowseHistoryActionModal = useSetAtom(showBrowseHistoryActionModalAtom);
 
   const updateHistory = () => {
     setFilteredHistory(
@@ -39,7 +48,17 @@ export default function BrowseHistoryScreen() {
   };
 
   const renderItem: FlatListProps<UserHistory>["renderItem"] = ({ item }) =>
-    item && <ThreadPost key={item.id} data={item} maxLine={maxLine} />;
+    item && (
+      <ThreadPost
+        key={item.id}
+        data={item}
+        maxLine={maxLine}
+        onLongPress={() => {
+          setFocusItem(item);
+          setShowBrowseHistoryActionModal(true);
+        }}
+      />
+    );
 
   const keyExtractor = (item: UserHistory) => item?.id.toString();
 
@@ -69,6 +88,7 @@ export default function BrowseHistoryScreen() {
             setRange({ start, end });
           }}
         />
+        <ActionModal item={focusItem} />
       </View>
     </ThreadPostConfigContext.Provider>
   );

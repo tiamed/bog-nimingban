@@ -4,15 +4,21 @@ import { atom, useAtom, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { StyleSheet, FlatList, FlatListProps } from "react-native";
 
-import renderFooter from "./HomeScreen/renderFooter";
+import ActionModal from "./ActionModal";
 
 import { Reply, Image } from "@/api";
-import { previewUrlAtom, previewsAtom, replyHistoryAtom } from "@/atoms";
+import {
+  previewUrlAtom,
+  previewsAtom,
+  replyHistoryAtom,
+  showReplyHistoryActionModalAtom,
+} from "@/atoms";
 import HistoryFloatingAction from "@/components/HistoryFloatingAction";
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
 import { View } from "@/components/Themed";
 import useHaptics from "@/hooks/useHaptics";
+import renderFooter from "@/screens/HomeScreen/renderFooter";
 
 const rangeAtom = atom({
   start: startOfDay(sub(new Date(), { days: 7 })).getTime(),
@@ -26,9 +32,11 @@ export interface ReplyHistory extends Reply {
 export default function ReplyHistoryScreen() {
   const [history] = useAtom<ReplyHistory[]>(replyHistoryAtom);
   const [filteredHistory, setFilteredHistory] = useState<ReplyHistory[]>([]);
+  const [focusItem, setFocusItem] = useState<ReplyHistory>({} as ReplyHistory);
   const [range, setRange] = useAtom(rangeAtom);
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewUrl = useSetAtom(previewUrlAtom);
+  const setShowReplyHistoryActionModalAtom = useSetAtom(showReplyHistoryActionModalAtom);
   const navigation = useNavigation();
   const haptics = useHaptics();
 
@@ -55,6 +63,8 @@ export default function ReplyHistoryScreen() {
         }}
         onLongPress={() => {
           haptics.heavy();
+          setFocusItem(item);
+          setShowReplyHistoryActionModalAtom(true);
         }}
         onImagePress={(image: Image) => {
           setPreviews(
@@ -97,6 +107,7 @@ export default function ReplyHistoryScreen() {
           setRange({ start, end });
         }}
       />
+      <ActionModal item={focusItem} />
     </View>
   );
 }

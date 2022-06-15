@@ -8,7 +8,7 @@ import usePostFiltered from "./usePostFiltered";
 import { Reply, getPostById, Post } from "@/api";
 import { historyAtom, orderAtom } from "@/atoms/index";
 import Errors from "@/constants/Errors";
-import { UserHistory } from "@/screens//BrowseHistoryScreen";
+import { UserHistory } from "@/screens/BrowseHistoryScreen";
 
 interface ReplyWithPage extends Reply {
   currentPage?: number;

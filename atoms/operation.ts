@@ -12,6 +12,10 @@ export const tabRefreshingAtom = atom(false);
 
 export const showHomeActionModalAtom = atom(false);
 
+export const showBrowseHistoryActionModalAtom = atom(false);
+
+export const showReplyHistoryActionModalAtom = atom(false);
+
 export const postIdRefreshingAtom = atom(-1);
 
 export const historyTabAtom = atomWithAsyncStorage("historyTab", 0);

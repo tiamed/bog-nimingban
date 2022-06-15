@@ -38,7 +38,7 @@ export default function ActionModal(props: {
     }, 300);
   };
   const onCopy = () => {
-    Clipboard.setString(normalizeHtml(props.item.content));
+    Clipboard.setStringAsync(normalizeHtml(props.item.content));
     close();
     Toast.show({ type: "success", text1: "已复制到剪贴板" });
   };
