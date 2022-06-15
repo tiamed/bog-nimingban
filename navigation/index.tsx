@@ -326,6 +326,7 @@ function HistoryTabNavigator() {
         },
         tabBarStyle: {
           shadowColor: "transparent",
+          marginBottom: 3,
         },
         tabBarPressColor: cardActiveColor,
         tabBarActiveTintColor: cardActiveColor,
