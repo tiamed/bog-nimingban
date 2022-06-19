@@ -5,4 +5,5 @@ Lorem ipsum dolor sitamet, consectetur adipiscing elit, sed do eiusmod tempor in
 [;´Д\`] (｀・ω・´)
 2090-07-08 12:34:56`,
   defaultContent: "没有文字内容",
+  anonCookie: "BOG",
 };

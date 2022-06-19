@@ -5,9 +5,10 @@ import { View, StyleSheet } from "react-native";
 
 import { Octicon } from "../Icon";
 
-import { AccurateTimeFormatContext, SizeContext } from "@/Provider";
+import { AccurateTimeFormatContext, AnonCookieModeContext, SizeContext } from "@/Provider";
 import { Post } from "@/api";
 import { Text, useThemeColor } from "@/components/Themed";
+import Texts from "@/constants/Texts";
 import { useForumsIdMap } from "@/hooks/useForums";
 import { normalizeHtml } from "@/utils/format";
 export default function Header(props: {
@@ -22,6 +23,7 @@ export default function Header(props: {
   const highlightColor = useThemeColor({}, "highlight");
   const highlighBackgroundColor = useThemeColor({}, "highlightBackground");
   const accurate = useContext(AccurateTimeFormatContext);
+  const anonCookieMode = useContext(AnonCookieModeContext);
 
   return (
     <>
@@ -56,7 +58,7 @@ export default function Header(props: {
               color: props.data.admin ? highlightColor : tintColor,
               fontWeight: props.data.admin ? "bold" : "normal",
             }}>
-            {props.data.cookie}
+            {anonCookieMode ? Texts.anonCookie : props.data.cookie}
           </Text>
         </View>
         <Text style={{ fontSize: BASE_SIZE * 0.8, flex: 1 }}>Po.{props.data.id}</Text>
