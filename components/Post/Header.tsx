@@ -5,10 +5,9 @@ import { View, StyleSheet } from "react-native";
 
 import { Octicon } from "../Icon";
 
-import { AccurateTimeFormatContext, AnonCookieModeContext, SizeContext } from "@/Provider";
+import { LayoutConfigContext, SizeContext } from "@/Provider";
 import { Post } from "@/api";
 import { Text, useThemeColor } from "@/components/Themed";
-import Texts from "@/constants/Texts";
 import { useForumsIdMap } from "@/hooks/useForums";
 import { normalizeHtml } from "@/utils/format";
 export default function Header(props: {
@@ -22,8 +21,7 @@ export default function Header(props: {
   const tintColor = useThemeColor({}, "tint");
   const highlightColor = useThemeColor({}, "highlight");
   const highlighBackgroundColor = useThemeColor({}, "highlightBackground");
-  const accurate = useContext(AccurateTimeFormatContext);
-  const anonCookieMode = useContext(AnonCookieModeContext);
+  const { accurateTimeFormat, anonCookieMode, anonCookieText } = useContext(LayoutConfigContext);
 
   return (
     <>
@@ -58,7 +56,7 @@ export default function Header(props: {
               color: props.data.admin ? highlightColor : tintColor,
               fontWeight: props.data.admin ? "bold" : "normal",
             }}>
-            {anonCookieMode ? Texts.anonCookie : props.data.cookie}
+            {anonCookieMode ? anonCookieText : props.data.cookie}
           </Text>
         </View>
         <Text style={{ fontSize: BASE_SIZE * 0.8, flex: 1 }}>Po.{props.data.id}</Text>
@@ -71,7 +69,7 @@ export default function Header(props: {
             textAlign: "right",
             fontVariant: ["tabular-nums"],
           }}>
-          {renderTime(props.data.root, props.data.time, accurate)}
+          {renderTime(props.data.root, props.data.time, accurateTimeFormat)}
         </Text>
       </View>
       <View

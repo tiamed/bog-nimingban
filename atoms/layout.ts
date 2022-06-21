@@ -4,6 +4,7 @@ import { PixelRatio } from "react-native";
 import { atomWithAsyncStorage } from "./lib";
 
 import Layout from "@/constants/Layout";
+import Texts from "@/constants/Texts";
 
 export const sizeAtom = atomWithAsyncStorage("baseSize", 14);
 
@@ -63,3 +64,5 @@ export const emoticonPickerHeightAtom = atomWithAsyncStorage("emoticonPickerHeig
 export const responsiveWidthAtom = atom(Layout.window.width);
 
 export const anonCookieModeAtom = atomWithAsyncStorage("anonCookieMode", false);
+
+export const anonCookieTextAtom = atomWithAsyncStorage("anonCookieText", Texts.anonCookie);

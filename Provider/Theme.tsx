@@ -16,10 +16,14 @@ import Colors from "@/constants/Colors";
 import useColorScheme from "@/hooks/useColorScheme";
 
 export const ColorSchemeContext = createContext("light");
-export const TintContext = createContext("#FC88B3");
-export const HighlightContext = createContext("#FC4C5D");
-export const TextColorAlphaContext = createContext(1);
-export const BackgroundColorContext = createContext({ light: "#fff", dark: "#000" });
+export const ThemeContext = createContext({
+  tintColor: Colors.light.tint,
+  highlightColor: Colors.light.highlight,
+  backgroundColorLight: Colors.light.background,
+  backgroundColorDark: Colors.dark.background,
+  textColorAlpha: 1,
+});
+
 export const ComputedColorContext = createContext({
   light: {
     highlightBackground: Colors.light.highlightBackground,
@@ -73,18 +77,18 @@ export default function ThemeProvider(props: any) {
 
   return (
     <ColorSchemeContext.Provider value={colorScheme}>
-      <TintContext.Provider value={tint}>
-        <HighlightContext.Provider value={highlight}>
-          <TextColorAlphaContext.Provider value={textColorAlpha}>
-            <BackgroundColorContext.Provider
-              value={{ light: backgroundColorLight, dark: backgroundColorDark }}>
-              <ComputedColorContext.Provider value={computedColor}>
-                {props.children}
-              </ComputedColorContext.Provider>
-            </BackgroundColorContext.Provider>
-          </TextColorAlphaContext.Provider>
-        </HighlightContext.Provider>
-      </TintContext.Provider>
+      <ThemeContext.Provider
+        value={{
+          tintColor: tint,
+          highlightColor: highlight,
+          backgroundColorLight,
+          backgroundColorDark,
+          textColorAlpha,
+        }}>
+        <ComputedColorContext.Provider value={computedColor}>
+          {props.children}
+        </ComputedColorContext.Provider>
+      </ThemeContext.Provider>
     </ColorSchemeContext.Provider>
   );
 }

@@ -12,7 +12,7 @@ import ImageView, { getImageUrl, getThumbnailUrl } from "./ImageView";
 import ReplyPost from "./ReplyPost";
 import Wrapper from "./Wrapper";
 
-import { SizeContext, ThreadReplyReverseContext } from "@/Provider";
+import { SizeContext, LayoutConfigContext } from "@/Provider";
 import { Post, Image } from "@/api";
 import {
   lineHeightAtom,
@@ -44,7 +44,7 @@ export default function ThreadPost(props: {
   const borderColor = useThemeColor({}, "border");
   const replyBackgroundColor = useThemeColor({}, "replyBackground");
   const BASE_SIZE = useContext(SizeContext);
-  const threadReplyReverse = useContext(ThreadReplyReverseContext);
+  const { threadReplyReverse } = useContext(LayoutConfigContext);
 
   const images = useMemo(() => {
     const result: Image[] = [];

@@ -5,7 +5,7 @@ import { useIsMounted } from "usehooks-ts";
 
 import SearchFloatingAction from "./SearchFloatingAction";
 
-import { ThreadPostConfigContext, GroupSearchResultContext } from "@/Provider";
+import { ThreadPostConfigContext, LayoutConfigContext } from "@/Provider";
 import { getSearchResults, Reply, Image, Post } from "@/api";
 import {
   maxLineAtom,
@@ -41,7 +41,7 @@ export default function SearchScreen({ route, navigation }: RootStackScreenProps
   const [clickable] = useAtom(clickableAtom);
   const listRef = useRef<any>(null);
   const isMounted = useIsMounted();
-  const groupSearchResults = useContext(GroupSearchResultContext);
+  const { groupSearchResults } = useContext(LayoutConfigContext);
   const loadData = async (page: number) => {
     if (!isMounted) return;
     setPage(page);

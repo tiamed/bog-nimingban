@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { SuccessToast, InfoToast, ErrorToast } from "react-native-toast-message";
 
-import { ColorSchemeContext, FontFamilyContext, SizeContext } from "@/Provider";
+import { ColorSchemeContext, LayoutConfigContext, SizeContext } from "@/Provider";
 import Colors from "@/constants/Colors";
 import Layout from "@/constants/Layout";
 import useColor from "@/hooks/useColor";
@@ -65,7 +65,7 @@ export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
   const BASE_SIZE = useContext(SizeContext);
-  const fontFamily = useContext(FontFamilyContext);
+  const { fontFamily } = useContext(LayoutConfigContext);
 
   return (
     <DefaultText

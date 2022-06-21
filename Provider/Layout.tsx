@@ -4,6 +4,7 @@ import { createContext } from "react";
 import {
   accurateTimeFormatAtom,
   anonCookieModeAtom,
+  anonCookieTextAtom,
   fontFamilyAtom,
   groupSearchResultsAtom,
   sizeAtom,
@@ -11,11 +12,14 @@ import {
 } from "@/atoms";
 
 export const SizeContext = createContext(14);
-export const AccurateTimeFormatContext = createContext(false);
-export const FontFamilyContext = createContext(undefined);
-export const ThreadReplyReverseContext = createContext(false);
-export const GroupSearchResultContext = createContext(false);
-export const AnonCookieModeContext = createContext(false);
+export const LayoutConfigContext = createContext({
+  accurateTimeFormat: false,
+  fontFamily: undefined,
+  groupSearchResults: false,
+  threadReplyReverse: false,
+  anonCookieMode: false,
+  anonCookieText: "",
+});
 
 export const ThreadPostConfigContext = createContext({
   expandable: true,
@@ -29,20 +33,19 @@ export default function LayoutProvider(props: any) {
   const [threadReplyReverse] = useAtom(threadReplyReverseAtom);
   const [groupSearchResults] = useAtom(groupSearchResultsAtom);
   const [anonCookieMode] = useAtom(anonCookieModeAtom);
+  const [anonCookieText] = useAtom(anonCookieTextAtom);
 
   return (
-    <GroupSearchResultContext.Provider value={groupSearchResults}>
-      <ThreadReplyReverseContext.Provider value={threadReplyReverse}>
-        <FontFamilyContext.Provider value={fontFamily}>
-          <AccurateTimeFormatContext.Provider value={accurate}>
-            <SizeContext.Provider value={size}>
-              <AnonCookieModeContext.Provider value={anonCookieMode}>
-                {props.children}
-              </AnonCookieModeContext.Provider>
-            </SizeContext.Provider>
-          </AccurateTimeFormatContext.Provider>
-        </FontFamilyContext.Provider>
-      </ThreadReplyReverseContext.Provider>
-    </GroupSearchResultContext.Provider>
+    <LayoutConfigContext.Provider
+      value={{
+        accurateTimeFormat: accurate,
+        fontFamily,
+        groupSearchResults,
+        threadReplyReverse,
+        anonCookieMode,
+        anonCookieText,
+      }}>
+      <SizeContext.Provider value={size}>{props.children}</SizeContext.Provider>
+    </LayoutConfigContext.Provider>
   );
 }
