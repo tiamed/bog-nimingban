@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import { checkUpdateIntervalAtom } from "../../atoms/setting";
+import AnonCookieItem from "./AnonCookieItem";
 import BackupItem from "./BackupItem";
 import BlackListForumsItem from "./BlackListForumsItem";
 import LoadingsItem from "./LoadingsItem";
@@ -47,6 +48,7 @@ export default function GeneralSettingsScreen() {
           ]}
           atom={checkUpdateIntervalAtom}
         />
+        <AnonCookieItem />
         <JumpToSettings title="屏蔽串设置" desc="首页长按串进行屏蔽" navigateTo="BlackList" />
         <JumpToSettings
           title="屏蔽饼干设置"
