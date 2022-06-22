@@ -66,3 +66,5 @@ export const responsiveWidthAtom = atom(Layout.window.width);
 export const anonCookieModeAtom = atomWithAsyncStorage("anonCookieMode", false);
 
 export const anonCookieTextAtom = atomWithAsyncStorage("anonCookieText", Texts.anonCookie);
+
+export const nativeImageRendererAtom = atomWithAsyncStorage("nativeImageRenderer", false);

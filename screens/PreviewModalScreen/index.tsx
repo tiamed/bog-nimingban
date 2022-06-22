@@ -14,7 +14,7 @@ import Toast from "react-native-toast-message";
 
 import LongImageModal from "./LongImageModal";
 
-import { previewIndexAtom, previewsAtom } from "@/atoms";
+import { previewIndexAtom, previewsAtom, nativeImageRendererAtom } from "@/atoms";
 import { parseImageUrl } from "@/components/Post/ImageView";
 import { useThemeColor } from "@/components/Themed";
 import Urls from "@/constants/Urls";
@@ -23,6 +23,7 @@ const brokenImageUri = Image.resolveAssetSource(require("@/assets/images/image-b
 
 export default function PreviewModalScreen() {
   const navigation = useNavigation();
+  const [nativeImageRenderer] = useAtom(nativeImageRendererAtom);
   const [previews] = useAtom(previewsAtom);
   const [previewIndex] = useAtom(previewIndexAtom);
   const [status, requestPermission] = MediaLibrary.usePermissions();
@@ -82,15 +83,26 @@ export default function PreviewModalScreen() {
         loadingRender={() =>
           previews?.[index] && (
             <>
-              <CachedImage
-                source={{ uri: previews[index].url?.replace("large", "thumb") }}
-                cacheKey={`${parseImageUrl(previews[index].url)?.url}-thumb-`}
-                resizeMode="contain"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
+              {nativeImageRenderer ? (
+                <CachedImage
+                  source={{ uri: previews[index].url?.replace("large", "thumb") }}
+                  cacheKey={`${parseImageUrl(previews[index].url)?.url}-thumb-`}
+                  resizeMode="contain"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              ) : (
+                <Image
+                  source={{ uri: previews[index].url?.replace("large", "thumb") }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                  resizeMode="contain"
+                />
+              )}
               <View style={styles.indicatorContainer}>
                 <ActivityIndicator color={activeColor} size="large" />
               </View>

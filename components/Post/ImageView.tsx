@@ -1,11 +1,11 @@
 import CachedImage from "expo-cached-image";
 import { useAtom } from "jotai";
-import { ActivityIndicator, StyleProp, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Image as RNImage, StyleProp, TouchableOpacity } from "react-native";
 
 import { useThemeColor } from "../Themed";
 
 import { Image } from "@/api";
-import { thumbnailResizeAtom } from "@/atoms";
+import { nativeImageRendererAtom, thumbnailResizeAtom } from "@/atoms";
 import Urls from "@/constants/Urls";
 import useShowImage from "@/hooks/useShowImage";
 
@@ -17,27 +17,35 @@ export default function ImageView(props: {
   path?: string;
 }) {
   const [thumbnailResize] = useAtom(thumbnailResizeAtom);
+  const [nativeImageRenderer] = useAtom(nativeImageRendererAtom);
   const showImage = useShowImage();
   const tintColor = useThemeColor({}, "tint");
   return (
     <TouchableOpacity onPress={props.onPress} style={props.style}>
       {showImage ? (
-        <CachedImage
-          source={{ uri: getThumbnailUrl(props.data, props.path) }}
-          cacheKey={`${props.data.url}-thumb-${props.path || ""}`}
-          resizeMode={thumbnailResize}
-          style={props.imageStyle}
-          placeholderContent={
-            <ActivityIndicator
-              color={tintColor}
-              size="small"
-              style={{
-                flex: 1,
-                justifyContent: "center",
-              }}
-            />
-          }
-        />
+        nativeImageRenderer ? (
+          <RNImage
+            source={{ uri: getThumbnailUrl(props.data, props.path) }}
+            style={props.imageStyle}
+          />
+        ) : (
+          <CachedImage
+            source={{ uri: getThumbnailUrl(props.data, props.path) }}
+            cacheKey={`${props.data.url}-thumb-${props.path || ""}`}
+            resizeMode={thumbnailResize}
+            style={props.imageStyle}
+            placeholderContent={
+              <ActivityIndicator
+                color={tintColor}
+                size="small"
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                }}
+              />
+            }
+          />
+        )
       ) : null}
     </TouchableOpacity>
   );
