@@ -3,7 +3,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import Color from "color";
 import { decode } from "html-entities";
 import { useAtom } from "jotai";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import parse, { HTMLElement } from "node-html-parser";
+import React, { useContext, useEffect, useMemo, useState, Fragment } from "react";
 import { Linking, Pressable, TextStyle, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { useCollapsible, AnimatedSection } from "reanimated-collapsible-helpers";
@@ -62,9 +63,9 @@ export default function HtmlView(props: { content: string; level?: number }) {
       }
 
       return (
-        <PureText key={index} style={parseStyle(node.parent?.attribs)}>
+        <TextWithHidden key={index} style={parseStyle(node.parent?.attribs)}>
           {decode(node.data)}
-        </PureText>
+        </TextWithHidden>
       );
     }
 
@@ -222,10 +223,24 @@ function Link(props: { href: string; text?: string; onPress?: () => void }) {
   );
 }
 
+function HiddenText(props: { children: any }) {
+  const [isHidden, setIsHidden] = useState(true);
+  const textColor = useThemeColor({}, "text");
+  return (
+    <Text
+      onPress={() => setIsHidden(!isHidden)}
+      style={{
+        opacity: isHidden ? 0 : 1,
+        backgroundColor: isHidden ? textColor : undefined,
+      }}>
+      {props.children}
+    </Text>
+  );
+}
+
 function PureText(props: { children: any; style?: TextStyle }) {
   const { children } = props;
 
-  const BASE_SIZE = useContext(SizeContext);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
 
   return (
@@ -233,7 +248,6 @@ function PureText(props: { children: any; style?: TextStyle }) {
       style={[
         props.style!,
         {
-          fontSize: BASE_SIZE,
           lineHeight: LINE_HEIGHT,
           textAlign: "left",
           minWidth: "100%",
@@ -242,6 +256,36 @@ function PureText(props: { children: any; style?: TextStyle }) {
       {children}
     </Text>
   );
+}
+
+function TextWithHidden(props: { children: any; style?: TextStyle }) {
+  const { children } = props;
+
+  const hiddenRegex = /\[h\](.*?)\[\/h\]/gi;
+
+  if (hiddenRegex.test(children as string)) {
+    const root = parse(
+      children.replace(hiddenRegex, (_: string, match: string) => `<h>${match}</h>`)
+    );
+    const textNodes = root.childNodes.map((node) => ({
+      hidden: (node as unknown as HTMLElement).rawTagName === "h",
+      text: (node as unknown as HTMLElement).textContent,
+    }));
+
+    return (
+      <PureText>
+        {textNodes.map(({ hidden, text }, index) =>
+          hidden ? (
+            <HiddenText key={index}>{text}</HiddenText>
+          ) : (
+            <Fragment key={index}>{text}</Fragment>
+          )
+        )}
+      </PureText>
+    );
+  }
+
+  return <PureText>{children}</PureText>;
 }
 
 function Dice(props: { children: any }) {
