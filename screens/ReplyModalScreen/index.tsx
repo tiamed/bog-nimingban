@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   InteractionManager,
+  Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -19,6 +20,8 @@ import Footer from "./Footer";
 import { SizeContext } from "@/Provider";
 import { addReply, uploadImage, Image, getReply } from "@/api";
 import {
+  autoSavedDraftAtom,
+  canRecoverDraftAtom,
   cookiesAtom,
   draftAtom,
   fullscreenInputAtom,
@@ -56,6 +59,8 @@ export default function ReplyModalScreen({
   const [selection, setSelection] = useAtom(selectionAtom);
   const [cookies] = useAtom(cookiesAtom);
   const [draft, setDraft] = useAtom(draftAtom);
+  const [autoSavedDraft, setAutoSavedDraft] = useAtom(autoSavedDraftAtom);
+  const [canRecoverDraft, setCanRecoverDraft] = useAtom(canRecoverDraftAtom);
   const [cookieCode, setCookieCode] = useAtom(selectedCookieAtom);
   const [replyHistory, setReplyHistory] = useAtom<ReplyHistory[], ReplyHistory[], void>(
     replyHistoryAtom
@@ -233,6 +238,28 @@ export default function ReplyModalScreen({
       });
     }
   }, [sketchUri]);
+
+  useEffect(() => {
+    if (draft) {
+      setAutoSavedDraft(draft);
+    }
+  }, [draft]);
+
+  useEffect(() => {
+    if (autoSavedDraft && !draft && canRecoverDraft) {
+      Alert.alert("提示", "检测到有未保存的草稿，是否要恢复？", [
+        { text: "取消", onPress: () => setAutoSavedDraft("") },
+        {
+          text: "恢复",
+          onPress: () => {
+            insertDraft(autoSavedDraft);
+            setAutoSavedDraft("");
+          },
+        },
+      ]);
+      setCanRecoverDraft(false);
+    }
+  }, [draft, autoSavedDraft]);
 
   return (
     <View style={styles.modal}>

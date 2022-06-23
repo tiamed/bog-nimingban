@@ -50,8 +50,10 @@ function Item(props: { name: string; index: number }) {
   return (
     <View style={styles.item}>
       <Text style={styles.id}>{props.name}</Text>
-      <Button style={styles.action} title="上移" onPress={moveUp} />
-      <Button style={styles.action} title="下移" onPress={moveDown} />
+      <View style={styles.actions}>
+        <Button style={styles.action} title="上移" onPress={moveUp} />
+        <Button style={styles.action} title="下移" onPress={moveDown} />
+      </View>
     </View>
   );
 }
@@ -64,7 +66,7 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: "row",
     alignItems: "flex-start",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
@@ -72,9 +74,11 @@ const styles = StyleSheet.create({
     width: "60%",
     fontSize: 16,
   },
+  actions: {
+    flexDirection: "row",
+  },
   action: {
     marginLeft: 20,
-    fontSize: 16,
   },
   empty: {
     flex: 1,
