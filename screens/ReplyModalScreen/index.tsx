@@ -182,6 +182,7 @@ export default function ReplyModalScreen({
             },
             ...replyHistory,
           ]);
+          setAutoSavedDraft("");
         }
       }
       if (!replyId && newPostId) {
