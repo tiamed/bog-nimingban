@@ -8,13 +8,14 @@ import React, { useContext, useEffect, useMemo, useState, Fragment } from "react
 import { Linking, Pressable, TextStyle, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { useCollapsible, AnimatedSection } from "reanimated-collapsible-helpers";
+import { useIsMounted } from "usehooks-ts";
 
 import { BogIcon } from "../Icon";
 import ReplyPostWithoutData from "./ReplyPostWithoutData";
 
 import { SizeContext } from "@/Provider";
 import { ThreadPostConfigContext } from "@/Provider/Layout";
-import { lineHeightAtom, responsiveWidthAtom } from "@/atoms";
+import { autoExpandAtom, lineHeightAtom, responsiveWidthAtom } from "@/atoms";
 import { Text, useThemeColor } from "@/components/Themed";
 import Layout from "@/constants/Layout";
 import Urls from "@/constants/Urls";
@@ -88,6 +89,7 @@ function Quote(props: { data: string; level: number }) {
   const { expandable } = useContext(ThreadPostConfigContext);
   const [LINE_HEIGHT] = useAtom(lineHeightAtom);
   const [responsiveWidth] = useAtom(responsiveWidthAtom);
+  const [autoExpand] = useAtom(autoExpandAtom);
   const [loadingText, setLoadingText] = useState("");
   const quoteId = Number(data.replace(/>>Po\./g, ""));
   const replyWidth =
@@ -97,28 +99,24 @@ function Quote(props: { data: string; level: number }) {
     (props.level - 1) * (Layout.postHorizontalPaddingSecondary * 2 + 2);
 
   const { animatedHeight, onPress, onLayout, state } = useCollapsible({ duration: 200 });
-  const memoizedReplyPost = useMemo(
-    () => (
-      <ReplyPostWithoutData
-        id={quoteId}
-        width={replyWidth}
-        level={props.level + 1}
-        onLoaded={() => {
-          setTimeout(() => {
-            setLoadingText("");
-          }, 200);
-        }}
-      />
-    ),
-    [quoteId, props.level]
-  );
+  const isMounted = useIsMounted();
+
   useEffect(() => {
     if (state === "expanded") {
       setTimeout(() => {
-        setLoadingText("");
+        if (isMounted()) {
+          setLoadingText("");
+        }
       }, 300);
     }
   }, [state]);
+
+  useEffect(() => {
+    if (autoExpand && props.level < 2) {
+      setLoadingText("加载中...");
+      onPress();
+    }
+  }, [autoExpand]);
 
   return (
     <View
@@ -158,20 +156,35 @@ function Quote(props: { data: string; level: number }) {
           {loadingText}
         </Text>
       </View>
-      <AnimatedSection
-        key={quoteId}
-        animatedHeight={animatedHeight}
-        onLayout={onLayout}
-        state={state}
-        style={{
-          borderWidth: 1,
-          borderColor: "#eee",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}>
-        {state === "expanded" && memoizedReplyPost}
-      </AnimatedSection>
+      {expandable && (
+        <AnimatedSection
+          key={quoteId}
+          animatedHeight={animatedHeight}
+          onLayout={onLayout}
+          state={state}
+          style={{
+            borderWidth: 1,
+            borderColor: "#eee",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}>
+          {(autoExpand || state === "expanded") && (
+            <ReplyPostWithoutData
+              id={quoteId}
+              width={replyWidth}
+              level={props.level + 1}
+              onLoaded={() => {
+                setTimeout(() => {
+                  if (isMounted()) {
+                    setLoadingText("");
+                  }
+                }, 200);
+              }}
+            />
+          )}
+        </AnimatedSection>
+      )}
     </View>
   );
 

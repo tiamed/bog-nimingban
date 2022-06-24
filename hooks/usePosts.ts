@@ -44,7 +44,7 @@ export default function usePosts(id: number) {
 
   const loadData = useCallback(
     async (nextPage: number, jump: boolean = false, updatePosition: boolean = false) => {
-      if (!isMounted) return;
+      if (!isMounted()) return;
       try {
         setIsLoading(true);
         const {
@@ -192,6 +192,7 @@ export default function usePosts(id: number) {
 
   return {
     mainPost,
+    posts,
     filteredPosts,
     isLoading,
     isRefreshing,

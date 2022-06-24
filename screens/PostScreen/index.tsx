@@ -27,6 +27,7 @@ import renderFooter from "@/screens/HomeScreen/renderFooter";
 import { RootStackScreenProps } from "@/types";
 
 export const MainPostContext = createContext({} as Post);
+export const RepliesMapContext = createContext(new Map());
 
 interface ReplyWithPage extends Reply {
   currentPage?: number;
@@ -53,6 +54,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
 
   const {
     mainPost,
+    posts,
     filteredPosts,
     isLoading,
     isRefreshing,
@@ -224,87 +226,89 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
 
   return (
     <MainPostContext.Provider value={mainPost}>
-      <View style={{ ...styles.container, paddingBottom: insets.bottom }}>
-        <FlatList
-          ref={listRef}
-          data={filteredPosts}
-          refreshing={isRefreshing}
-          onRefresh={debouncedRefreshPosts}
-          scrollEventThrottle={16}
-          windowSize={21}
-          maxToRenderPerBatch={maxToRenderPerBatch}
-          onScroll={(e) => {
-            const isScrollUp =
-              Platform.OS === "ios"
-                ? e.nativeEvent.contentOffset.y - lastContentOffset > 0
-                : (e.nativeEvent.velocity?.y as number) > 0;
-            const canHide =
-              e.nativeEvent.contentSize.height > e.nativeEvent.layoutMeasurement.height;
+      <RepliesMapContext.Provider value={new Map(posts.map((post) => [post.id, post]))}>
+        <View style={{ ...styles.container, paddingBottom: insets.bottom }}>
+          <FlatList
+            ref={listRef}
+            data={filteredPosts}
+            refreshing={isRefreshing}
+            onRefresh={debouncedRefreshPosts}
+            scrollEventThrottle={16}
+            windowSize={21}
+            maxToRenderPerBatch={maxToRenderPerBatch}
+            onScroll={(e) => {
+              const isScrollUp =
+                Platform.OS === "ios"
+                  ? e.nativeEvent.contentOffset.y - lastContentOffset > 0
+                  : (e.nativeEvent.velocity?.y as number) > 0;
+              const canHide =
+                e.nativeEvent.contentSize.height > e.nativeEvent.layoutMeasurement.height;
 
-            if (isScrollUp && e.nativeEvent.contentOffset.y > 5 && canHide) {
-              if (isShowFooter) {
-                setIsShowFooter(false);
+              if (isScrollUp && e.nativeEvent.contentOffset.y > 5 && canHide) {
+                if (isShowFooter) {
+                  setIsShowFooter(false);
+                }
+              } else if (
+                e.nativeEvent.contentSize.height -
+                  e.nativeEvent.layoutMeasurement.height -
+                  e.nativeEvent.contentOffset.y >
+                5
+              ) {
+                if (!isShowFooter) {
+                  setIsShowFooter(true);
+                }
               }
-            } else if (
-              e.nativeEvent.contentSize.height -
-                e.nativeEvent.layoutMeasurement.height -
-                e.nativeEvent.contentOffset.y >
-              5
-            ) {
-              if (!isShowFooter) {
-                setIsShowFooter(true);
+              if (Platform.OS === "ios") {
+                setLastContentOffset(e.nativeEvent.contentOffset.y);
               }
+            }}
+            renderItem={renderItemMemoized}
+            onEndReached={() => loadMoreData(false)}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={() =>
+              renderFooter({
+                loading: isLoading,
+                hasNoMore,
+                loadMore: loadMoreData.bind(null, true),
+              })
             }
-            if (Platform.OS === "ios") {
-              setLastContentOffset(e.nativeEvent.contentOffset.y);
-            }
-          }}
-          renderItem={renderItemMemoized}
-          onEndReached={() => loadMoreData(false)}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={() =>
-            renderFooter({
-              loading: isLoading,
-              hasNoMore,
-              loadMore: loadMoreData.bind(null, true),
-            })
-          }
-          ListHeaderComponent={renderMainPostMemoized}
-          viewabilityConfig={viewConfigRef.current}
-          onViewableItemsChanged={onViewRef.current}
-          onScrollToIndexFailed={({ highestMeasuredFrameIndex }) => {
-            listRef.current?.scrollToIndex({ animated: false, index: highestMeasuredFrameIndex });
-            if (filteredPosts.length) {
-              setTimeout(scrollToLastPosition, 300);
-            }
-          }}
-          keyExtractor={keyExtractor}
-        />
+            ListHeaderComponent={renderMainPostMemoized}
+            viewabilityConfig={viewConfigRef.current}
+            onViewableItemsChanged={onViewRef.current}
+            onScrollToIndexFailed={({ highestMeasuredFrameIndex }) => {
+              listRef.current?.scrollToIndex({ animated: false, index: highestMeasuredFrameIndex });
+              if (filteredPosts.length) {
+                setTimeout(scrollToLastPosition, 300);
+              }
+            }}
+            keyExtractor={keyExtractor}
+          />
 
-        <Footer
-          id={route.params.id}
-          mainPost={mainPost}
-          visible={isShowFooter}
-          disabled={isLoading || isRefreshing}
-          openPageModal={() => setShowPageModal(true)}
-        />
+          <Footer
+            id={route.params.id}
+            mainPost={mainPost}
+            visible={isShowFooter}
+            disabled={isLoading || isRefreshing}
+            openPageModal={() => setShowPageModal(true)}
+          />
 
-        <PageModal
-          index={currentPage}
-          total={mainPost?.reply_count}
-          loadData={loadData}
-          visible={showPageModal}
-          onClose={() => setShowPageModal(false)}
-        />
-        <ActionModal
-          visible={showActionModal}
-          onClose={() => setShowActionModal(false)}
-          item={focusItem}
-          postId={mainPost.id}
-          forumId={mainPost.forum}
-        />
-        <CheckUpdate id={mainPost.id} count={mainPost.reply_count} onUpdate={onUpdate} />
-      </View>
+          <PageModal
+            index={currentPage}
+            total={mainPost?.reply_count}
+            loadData={loadData}
+            visible={showPageModal}
+            onClose={() => setShowPageModal(false)}
+          />
+          <ActionModal
+            visible={showActionModal}
+            onClose={() => setShowActionModal(false)}
+            item={focusItem}
+            postId={mainPost.id}
+            forumId={mainPost.forum}
+          />
+          <CheckUpdate id={mainPost.id} count={mainPost.reply_count} onUpdate={onUpdate} />
+        </View>
+      </RepliesMapContext.Provider>
     </MainPostContext.Provider>
   );
 }

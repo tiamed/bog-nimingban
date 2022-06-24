@@ -1,12 +1,13 @@
 import { StyleSheet } from "react-native";
 
-import { checkUpdateIntervalAtom } from "../../atoms/setting";
 import AnonCookieItem from "./AnonCookieItem";
 import BackupItem from "./BackupItem";
 import BlackListForumsItem from "./BlackListForumsItem";
 import LoadingsItem from "./LoadingsItem";
 
 import {
+  autoExpandAtom,
+  checkUpdateIntervalAtom,
   noImageModeAtom,
   shouldMemorizePostFilteredAtom,
   clickableAtom,
@@ -27,6 +28,7 @@ export default function GeneralSettingsScreen() {
         <SettingSwitch title="记住只看po" atom={shouldMemorizePostFilteredAtom} />
         <SettingSwitch title="串外链接启用点击" atom={clickableAtom} />
         <SettingSwitch title="切换预览图渲染模式" atom={nativeImageRendererAtom} />
+        <SettingSwitch title="串引用自动展开" atom={autoExpandAtom} />
         <SettingSwitch title="匿名饼干模式" atom={anonCookieModeAtom} />
         <SettingPicker
           title="无图模式"

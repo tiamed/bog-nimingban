@@ -43,7 +43,7 @@ export default function SearchScreen({ route, navigation }: RootStackScreenProps
   const isMounted = useIsMounted();
   const { groupSearchResults } = useContext(LayoutConfigContext);
   const loadData = async (page: number) => {
-    if (!isMounted) return;
+    if (!isMounted()) return;
     setPage(page);
     try {
       setIsLoading(true);

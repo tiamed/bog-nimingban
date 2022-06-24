@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { useSetAtom } from "jotai";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useIsMounted } from "usehooks-ts";
 
@@ -13,7 +13,7 @@ import { getReply, Post, Reply, Image } from "@/api";
 import { previewUrlAtom, previewsAtom } from "@/atoms";
 import { Text, useThemeColor } from "@/components/Themed";
 import Layout from "@/constants/Layout";
-import { MainPostContext } from "@/screens/PostScreen";
+import { MainPostContext, RepliesMapContext } from "@/screens/PostScreen";
 
 export default function ReplyPostWithoutData(props: {
   id: number;
@@ -29,10 +29,10 @@ export default function ReplyPostWithoutData(props: {
   const navigation = useNavigation<StackNavigationProp<any>>();
   const BASE_SIZE = useContext(SizeContext);
   const mainPost = useContext<Post>(MainPostContext);
+  const replies = useContext<Map<number, Reply>>(RepliesMapContext);
   const isMounted = useIsMounted();
 
-  const loadData = async () => {
-    if (!isMounted) return;
+  const loadData = useCallback(async () => {
     try {
       const {
         data: { info },
@@ -40,18 +40,26 @@ export default function ReplyPostWithoutData(props: {
       if (typeof info === "string") {
         return;
       } else {
-        setData(info);
+        if (isMounted()) {
+          setData(info);
+        }
       }
     } catch (e) {
       console.log(e);
     }
-  };
+  }, [props.id]);
   useEffect(() => {
-    loadData().then(() => {
-      if (props.onLoaded) {
-        props.onLoaded();
-      }
-    });
+    if (!isMounted()) return;
+    const cached = replies.get(props.id);
+    if (cached) {
+      setData(cached);
+    } else {
+      loadData().then(() => {
+        if (props.onLoaded) {
+          props.onLoaded();
+        }
+      });
+    }
   }, [props.id]);
   return (
     <View style={{ flexDirection: "row", width: "100%", backgroundColor }}>

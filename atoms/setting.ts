@@ -26,3 +26,5 @@ export const checkUpdateIntervalAtom = atomWithAsyncStorage(
 );
 
 export const lastCheckUpdateAtom = atomWithAsyncStorage("lastCheckUpdate", 0, true);
+
+export const autoExpandAtom = atomWithAsyncStorage("autoExpand", false);
