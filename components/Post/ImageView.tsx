@@ -27,6 +27,7 @@ export default function ImageView(props: {
           <RNImage
             source={{ uri: getThumbnailUrl(props.data, props.path) }}
             style={props.imageStyle}
+            resizeMode={thumbnailResize}
           />
         ) : (
           <CachedImage
