@@ -1,8 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import { useAtom } from "jotai";
 import React, { useState, useEffect, useMemo } from "react";
-import { StyleSheet, TouchableOpacity, Share, Alert } from "react-native";
+import { StyleSheet, TouchableOpacity, Share, Alert, View } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -13,7 +13,7 @@ import { Post } from "@/api";
 import { favoriteAtom } from "@/atoms/index";
 import { Octicon } from "@/components/Icon";
 import TagModal from "@/components/TagModal";
-import { Text, View, useThemeColor } from "@/components/Themed";
+import { Text, useThemeColor } from "@/components/Themed";
 import Urls from "@/constants/Urls";
 import useHaptics from "@/hooks/useHaptics";
 import { UserFavorite } from "@/screens/FavoriteScreen";
@@ -34,6 +34,7 @@ export default function Footer(props: {
   const navigation = useNavigation();
   const haptics = useHaptics();
   const tintColor = useThemeColor({}, "tint");
+  const { colors } = useTheme();
   const height = useSharedValue(50);
   const insets = useSafeAreaInsets();
   const animatedStyle = useAnimatedStyle(() => {
@@ -198,6 +199,7 @@ export default function Footer(props: {
           style={{
             ...styles.footer,
             borderTopColor: tintColor,
+            backgroundColor: colors.card,
           }}>
           {FooterItems}
         </View>
@@ -213,7 +215,7 @@ function FooterItem(props: {
   longPressHandler?: () => void;
   disabled: boolean;
 }) {
-  const tintColor = useThemeColor({}, "tint");
+  const cardActiveColor = useThemeColor({}, "cardActive");
   const haptics = useHaptics();
 
   return (
@@ -229,8 +231,11 @@ function FooterItem(props: {
       disabled={props.disabled}
       hitSlop={{ left: 20, right: 20, top: 20, bottom: 20 }}>
       <View style={styles.footerItem}>
-        <Octicon name={props.icon} color={tintColor} />
-        <Text lightColor={tintColor} darkColor={tintColor} style={styles.footerItemText}>
+        <Octicon name={props.icon} color={cardActiveColor} />
+        <Text
+          lightColor={cardActiveColor}
+          darkColor={cardActiveColor}
+          style={styles.footerItemText}>
           {props.label}
         </Text>
       </View>

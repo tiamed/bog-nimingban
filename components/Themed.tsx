@@ -110,7 +110,7 @@ export function Button(props: ButtonProps & { color?: string }) {
 
 export const TextInput = forwardRef(function (props: TextInputProps, ref) {
   const { style, lightColor, darkColor, ...otherProps } = props;
-  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, "border");
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, "quoteBackground");
   const textColor = useThemeColor({}, "text");
   const tintColor = useThemeColor({}, "tint");
   const placeholderTextColor = useThemeColor({}, "inactive");

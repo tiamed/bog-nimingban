@@ -15,7 +15,7 @@ export default function BlackListWordScreen({
   const [visible, setVisible] = useState(false);
   const [text, setText] = useState("");
   const [blackListWords, setBlackListWords] = useAtom<string[], string[], void>(blackListWordsAtom);
-  const inactiveColor = useThemeColor({}, "inactive");
+  const cardInactiveColor = useThemeColor({}, "cardInactive");
 
   const renderItem = ({ item }: { item: string }) => <Item key={item} id={item} />;
   const keyExtractor = (item: string) => item.toString();
@@ -27,7 +27,7 @@ export default function BlackListWordScreen({
           onPress={() => {
             setVisible(true);
           }}>
-          <Octicon name="plus-circle" color={inactiveColor} />
+          <Octicon name="plus-circle" color={cardInactiveColor} />
         </TouchableOpacity>
       ),
     });

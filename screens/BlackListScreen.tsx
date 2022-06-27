@@ -34,33 +34,35 @@ function Item(props: { id: number }) {
   return (
     <View style={styles.item}>
       <Text style={styles.id}>{props.id}</Text>
-      <Button
-        style={styles.action}
-        title="查看"
-        onPress={() => {
-          navigation.navigate("Post", {
-            id: props.id,
-            title: `Po.${props.id}`,
-          });
-        }}
-      />
-      <Button
-        style={styles.action}
-        title="移除"
-        onPress={() => {
-          Alert.alert("移除", "确定移除吗？", [
-            {
-              text: "取消",
-            },
-            {
-              text: "确定",
-              onPress: () => {
-                setBlackListPosts(blackListPosts.filter((item) => item !== props.id));
+      <View style={styles.actions}>
+        <Button
+          style={styles.action}
+          title="查看"
+          onPress={() => {
+            navigation.navigate("Post", {
+              id: props.id,
+              title: `Po.${props.id}`,
+            });
+          }}
+        />
+        <Button
+          style={styles.action}
+          title="移除"
+          onPress={() => {
+            Alert.alert("移除", "确定移除吗？", [
+              {
+                text: "取消",
               },
-            },
-          ]);
-        }}
-      />
+              {
+                text: "确定",
+                onPress: () => {
+                  setBlackListPosts(blackListPosts.filter((item) => item !== props.id));
+                },
+              },
+            ]);
+          }}
+        />
+      </View>
     </View>
   );
 }
@@ -73,13 +75,16 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: "row",
     alignItems: "flex-start",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
   id: {
     width: "60%",
     fontSize: 16,
+  },
+  actions: {
+    flexDirection: "row",
   },
   action: {
     marginLeft: 20,

@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   itemLabel: {
     fontSize: 14,
-    lineHeight: 16,
+    lineHeight: 18,
   },
   placeholder: {
     height: 20,

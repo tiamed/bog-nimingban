@@ -70,6 +70,7 @@ export default function ReplyModalScreen({
   const setPostIdRefreshing = useSetAtom(postIdRefreshingAtom);
 
   const tintColor = useThemeColor({}, "tint");
+  const tintBackgroundColor = useThemeColor({}, "tintBackground");
   const backgroundColor = useThemeColor({}, "background");
   const forums = useForums();
   const BASE_SIZE = useContext(SizeContext);
@@ -282,10 +283,21 @@ export default function ReplyModalScreen({
             <TouchableOpacity
               hitSlop={{ left: 5, right: 100, top: 5, bottom: 5 }}
               onPress={() => setShowPrefixInput(!showPrefixInput)}
-              style={{ paddingRight: BASE_SIZE * 0.2 }}>
-              <Icon name="hashtag" color={tintColor} size={BASE_SIZE} />
+              style={{
+                marginRight: BASE_SIZE * 0.2,
+                paddingHorizontal: BASE_SIZE * 0.8,
+                backgroundColor: tintBackgroundColor,
+                borderRadius: BASE_SIZE,
+              }}>
+              <Icon
+                family="Octicons"
+                name={showPrefixInput ? "triangle-down" : "triangle-up"}
+                color={tintColor}
+              />
             </TouchableOpacity>
-            <Text>{replyId ? `回复 >${replyId}` : "发布新串 >"}</Text>
+            <Text style={{ fontWeight: "bold" }}>
+              {replyId ? `回复 Po.${replyId}` : "发布新串"}
+            </Text>
           </View>
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity

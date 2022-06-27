@@ -7,7 +7,7 @@ import Toast from "react-native-toast-message";
 
 import { Forum } from "@/api";
 import { forumsAtom, forumsOrderAtom, forumsVisibilityAtom } from "@/atoms";
-import { Ionicon } from "@/components/Icon";
+import { Octicon } from "@/components/Icon";
 import { View, Text, Button, useThemeColor } from "@/components/Themed";
 import { refreshForums } from "@/hooks/useForums";
 import { RootStackScreenProps } from "@/types";
@@ -19,7 +19,7 @@ export default function ForumSettingsScreen({
   const [forums, setForums] = useAtom<Forum[], Forum[], void>(forumsAtom);
   const [order, setOrder] = useAtom(forumsOrderAtom);
   const [visibility] = useAtom(forumsVisibilityAtom);
-  const inactiveColor = useThemeColor({}, "inactive");
+  const cardInactiveColor = useThemeColor({}, "cardInactive");
   const renderItem = ({ item, drag }: { item: number; drag: () => void; isActive: boolean }) => (
     <Item key={item} data={forums.find((f) => f.id === item)} drag={drag} />
   );
@@ -33,7 +33,7 @@ export default function ForumSettingsScreen({
             refreshForums(order, visibility, setForums);
             Toast.show({ type: "success", text1: "已更新版块索引" });
           }}>
-          <Ionicon name="refresh" color={inactiveColor} />
+          <Octicon name="sync" color={cardInactiveColor} />
         </TouchableOpacity>
       ),
     });
