@@ -21,9 +21,7 @@ export default function SearchFloatingAction() {
 
   useEffect(() => {
     setForumOptions(
-      forums
-        ?.filter((forum) => !forum.hide && forum.id)
-        ?.map(({ id, name }) => ({ label: name, value: id }))
+      forums?.filter((forum) => forum.id !== 0)?.map(({ id, name }) => ({ label: name, value: id }))
     );
   }, [forums]);
 

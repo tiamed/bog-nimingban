@@ -19,6 +19,11 @@ export default function useForums() {
   return forums;
 }
 
+export function useTimelineForums() {
+  const forums = useForums();
+  return forums.filter((forum) => forum.timeline && forum.id !== 0);
+}
+
 export function useReachableForums() {
   const forums = useForums();
   return forums.filter((forum) => !forum.hide && forum.id !== 0);

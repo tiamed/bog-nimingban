@@ -4,11 +4,11 @@ import { useState } from "react";
 import { blackListForumsAtom } from "@/atoms";
 import PickerModal from "@/components/PickerModal";
 import SettingItem from "@/components/SettingItem";
-import { useReachableForums } from "@/hooks/useForums";
+import { useTimelineForums } from "@/hooks/useForums";
 
 export default function BlackListForumsItem() {
   const [visible, setVisible] = useState(false);
-  const forums = useReachableForums();
+  const forums = useTimelineForums();
   const [blackListForums, setBlackListForums] = useAtom(blackListForumsAtom);
   return (
     <>
