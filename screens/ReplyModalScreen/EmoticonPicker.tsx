@@ -1,9 +1,10 @@
 import { useAtom } from "jotai";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { StyleSheet, TouchableOpacity, FlatList, View } from "react-native";
 import { TabView, TabBar } from "react-native-tab-view";
 
-import { emoticonIndexAtom, emoticonPickerHeightAtom } from "@/atoms";
+import { LayoutConfigContext } from "@/Provider";
+import { emoticonIndexAtom } from "@/atoms";
 import { Text, useThemeColor } from "@/components/Themed";
 import useEmoticons from "@/hooks/useEmoticons";
 
@@ -24,8 +25,8 @@ export default function EmoticonPicker(props: {
   const tintColor = useThemeColor({}, "tint");
 
   const [index, setIndex] = useAtom(emoticonIndexAtom);
-  const [emoticonHeight] = useAtom(emoticonPickerHeightAtom);
   const [routes] = useState(ROUTE_CONFIG);
+  const { emoticonPickerHeight } = useContext(LayoutConfigContext);
 
   const renderTabBar = (props: any) => (
     <TabBar
@@ -41,7 +42,7 @@ export default function EmoticonPicker(props: {
     <View
       style={{
         width: "100%",
-        height: props.visible ? emoticonHeight : 0,
+        height: props.visible ? emoticonPickerHeight : 0,
       }}>
       <TabView
         navigationState={{ index, routes }}
