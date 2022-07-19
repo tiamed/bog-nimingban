@@ -33,17 +33,74 @@ interface ReplyWithPage extends Reply {
   currentPage?: number;
 }
 
+function useImages(mainPost: Post, filteredPosts: ReplyWithPage[], firstPage: number) {
+  const setPreviews = useSetAtom(previewsAtom);
+
+  const images = useMemo(() => {
+    const replyImages = filteredPosts.map((x) => x.images || []).flat();
+    if (firstPage === 1) {
+      return [...(mainPost?.images || []), ...replyImages];
+    }
+    return replyImages;
+  }, [filteredPosts]);
+
+  const updatePreviews = () => {
+    if (images.length) {
+      setPreviews(
+        images.map((item) => ({
+          url: getImageUrl(item),
+          originalUrl: getThumbnailUrl(item),
+        }))
+      );
+    }
+  };
+
+  // 更新预览图集合
+  useEffect(() => {
+    updatePreviews();
+  }, [images]);
+
+  useFocusEffect(() => {
+    updatePreviews();
+  });
+
+  return images;
+}
+
+function useRefreshEffect(updater: () => Promise<void>, id: number) {
+  const [postIdRefreshing, setPostIdRefreshing] = useAtom(postIdRefreshingAtom);
+
+  useEffect(() => {
+    if (postIdRefreshing === id) {
+      updater().then(() => {
+        setPostIdRefreshing(-1);
+      });
+    }
+  }, [postIdRefreshing]);
+}
+
+function useMaxToRenderPerBatch(filteredPosts: ReplyWithPage[]) {
+  const [maxToRenderPerBatch, setMaxToRenderPerBatch] = useState(10);
+
+  useEffect(() => {
+    if (filteredPosts?.some((post) => post.content.length > 5000)) {
+      setMaxToRenderPerBatch(1);
+    } else {
+      setMaxToRenderPerBatch(10);
+    }
+  }, [filteredPosts]);
+
+  return maxToRenderPerBatch;
+}
+
 export default function PostScreen({ route, navigation }: RootStackScreenProps<"Post">) {
   const insets = useSafeAreaInsets();
   const [focusItem, setFocusItem] = useState({} as Reply);
   const [isShowFooter, setIsShowFooter] = useState(true);
   const [lastContentOffset, setLastContentOffset] = useState(0);
-  const [maxToRenderPerBatch, setMaxToRenderPerBatch] = useState(10);
   const [showActionModal, setShowActionModal] = useState(false);
   const [showPageModal, setShowPageModal] = useState(false);
 
-  const [postIdRefreshing, setPostIdRefreshing] = useAtom(postIdRefreshingAtom);
-  const setPreviews = useSetAtom(previewsAtom);
   const [order] = useAtom(orderAtom);
 
   const setDraft = useSetAtom(draftAtom);
@@ -79,13 +136,9 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
     trailing: false,
   });
 
-  const images = useMemo(() => {
-    const replyImages = filteredPosts.map((x) => x.images || []).flat();
-    if (firstPage === 1) {
-      return [...(mainPost?.images || []), ...replyImages];
-    }
-    return replyImages;
-  }, [filteredPosts]);
+  const maxToRenderPerBatch = useMaxToRenderPerBatch(filteredPosts);
+
+  useImages(mainPost, filteredPosts, firstPage);
 
   const onViewRef = useRef<FlatListProps<ReplyWithPage>["onViewableItemsChanged"]>(
     ({ viewableItems }) => {
@@ -106,17 +159,6 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
     minimumViewTime: 200,
     waitForInteraction: true,
   });
-
-  const updatePreviews = () => {
-    if (images.length) {
-      setPreviews(
-        images.map((item) => ({
-          url: getImageUrl(item),
-          originalUrl: getThumbnailUrl(item),
-        }))
-      );
-    }
-  };
 
   const scrollToLastPosition = () => {
     if (listRef.current && currentHistory?.position && filteredPosts.length && !lastPosition) {
@@ -174,14 +216,7 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
 
   const keyExtractor = (item: any) => item.id.toString();
 
-  // 更新预览图集合
-  useEffect(() => {
-    updatePreviews();
-  }, [images]);
-
-  useFocusEffect(() => {
-    updatePreviews();
-  });
+  useRefreshEffect(onUpdate, route.params.id);
 
   useEffect(() => {
     if (mainPost.id) {
@@ -203,26 +238,10 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   }, [route.params.id]);
 
   useEffect(() => {
-    if (postIdRefreshing === route.params.id) {
-      onUpdate().then(() => {
-        setPostIdRefreshing(-1);
-      });
-    }
-  }, [postIdRefreshing]);
-
-  useEffect(() => {
     if (!(isLoading || isRefreshing) && filteredPosts.length) {
       scrollToLastPosition();
     }
   }, [filteredPosts, isLoading, isRefreshing]);
-
-  useEffect(() => {
-    if (filteredPosts?.some((post) => post.content.length > 5000)) {
-      setMaxToRenderPerBatch(1);
-    } else {
-      setMaxToRenderPerBatch(10);
-    }
-  }, [filteredPosts]);
 
   return (
     <MainPostContext.Provider value={mainPost}>

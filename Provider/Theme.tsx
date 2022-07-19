@@ -32,6 +32,7 @@ export const ComputedColorContext = createContext({
     replyBackground: Colors.light.replyBackground,
     quoteBackground: Colors.light.quoteBackground,
     quoteReference: Colors.light.quoteReference,
+    card: Colors.light.card,
   },
   dark: {
     highlightBackground: Colors.dark.highlightBackground,
@@ -40,6 +41,7 @@ export const ComputedColorContext = createContext({
     replyBackground: Colors.dark.replyBackground,
     quoteBackground: Colors.dark.quoteBackground,
     quoteReference: Colors.dark.quoteReference,
+    card: Colors.dark.card,
   },
 });
 
@@ -60,6 +62,8 @@ export default function ThemeProvider(props: any) {
       replyBackground: Color(backgroundColorLight).mix(Color("black"), 0.02).string(),
       quoteBackground: Color(backgroundColorLight).mix(Color("black"), 0.04).string(),
       quoteReference: Color(backgroundColorLight).mix(Color("black"), 0.1).string(),
+      card: cardColorLight,
+      cardText: getContrastColor(["#e5e5e7", "#1c1c1e"], cardColorLight),
       cardActive: getFirstContrastColor([tint, "#fff", "#000"], cardColorLight),
       cardInactive: getContrastColor([Colors.light.inactive, Colors.dark.inactive], cardColorLight),
     },
@@ -70,6 +74,8 @@ export default function ThemeProvider(props: any) {
       replyBackground: Color(backgroundColorDark).mix(Color("white"), 0.1).string(),
       quoteBackground: Color(backgroundColorDark).mix(Color("white"), 0.2).string(),
       quoteReference: Color(backgroundColorDark).mix(Color("white"), 0.9).string(),
+      card: cardColorDark,
+      cardText: getContrastColor(["#e5e5e7", "#1c1c1e"], cardColorDark),
       cardActive: getFirstContrastColor([tint, "#fff", "#000"], cardColorDark),
       cardInactive: getContrastColor([Colors.light.inactive, Colors.dark.inactive], cardColorDark),
     },

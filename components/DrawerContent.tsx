@@ -1,4 +1,4 @@
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { useAtom } from "jotai";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -12,10 +12,10 @@ import useForums from "@/hooks/useForums";
 
 export default function DrawerContent(props: any) {
   const forums = useForums();
-  const { colors } = useTheme();
   const [thread] = useAtom(threadAtom);
+  const cardColor = useThemeColor({}, "card");
   const textColor = useThemeColor({ light: "#404040", dark: "#bfbfbf" }, "text");
-  const headerTextColor = getContrastColor(["#404040", "#bfbfbf"], colors.card);
+  const headerTextColor = getContrastColor(["#404040", "#bfbfbf"], cardColor);
   const tintColor = useThemeColor({}, "tint");
   const tintBackgroundColor = useThemeColor({}, "tintBackground");
   const navigation = useNavigation();

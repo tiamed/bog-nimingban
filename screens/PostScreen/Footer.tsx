@@ -1,4 +1,4 @@
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import { useAtom } from "jotai";
 import React, { useState, useEffect, useMemo } from "react";
@@ -34,7 +34,7 @@ export default function Footer(props: {
   const navigation = useNavigation();
   const haptics = useHaptics();
   const tintColor = useThemeColor({}, "tint");
-  const { colors } = useTheme();
+  const cardColor = useThemeColor({}, "card");
   const height = useSharedValue(50);
   const insets = useSafeAreaInsets();
   const animatedStyle = useAnimatedStyle(() => {
@@ -199,11 +199,12 @@ export default function Footer(props: {
           style={{
             ...styles.footer,
             borderTopColor: tintColor,
-            backgroundColor: colors.card,
+            backgroundColor: cardColor,
           }}>
           {FooterItems}
         </View>
       </Animated.View>
+      <View style={[styles.footerBottom, { backgroundColor: cardColor, height: insets.bottom }]} />
     </>
   );
 }
@@ -283,5 +284,11 @@ const styles = StyleSheet.create({
   },
   footerItemText: {
     marginLeft: 10,
+  },
+  footerBottom: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    width: "100%",
   },
 });

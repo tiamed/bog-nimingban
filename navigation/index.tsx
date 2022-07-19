@@ -13,7 +13,6 @@ import {
   DarkTheme,
   useNavigation,
   useNavigationState,
-  useTheme,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -27,8 +26,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import LinkingConfiguration from "./LinkingConfiguration";
 
 import {
-  cardColorDarkAtom,
-  cardColorLightAtom,
   historyTabAtom,
   responsiveWidthAtom,
   showTabBarLabelAtom,
@@ -37,7 +34,7 @@ import {
 } from "@/atoms";
 import DrawerContent from "@/components/DrawerContent";
 import { TabBarIcon } from "@/components/Icon";
-import { getContrastColor, useThemeColor } from "@/components/Themed";
+import { useThemeColor } from "@/components/Themed";
 import AboutScreen from "@/screens/AboutScreen";
 import BlackListScreen from "@/screens/BlackListScreen";
 import BlackListUserScreen from "@/screens/BlackListUserScreen";
@@ -78,35 +75,21 @@ const headerTitleStyle = Platform.select({
 });
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
-  const [cardColorLight] = useAtom<string>(cardColorLightAtom);
-  const [cardColorDark] = useAtom<string>(cardColorDarkAtom);
-  const textColor = getContrastColor(
-    ["#e5e5e7", "#1c1c1e"],
-    colorScheme === "dark" ? cardColorDark : cardColorLight
-  );
+  const cardColor = useThemeColor({}, "card");
+  const cardTextColor = useThemeColor({}, "cardText");
+  const theme = colorScheme === "dark" ? DarkTheme : DefaultTheme;
 
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={
-        colorScheme === "dark"
-          ? {
-              ...DarkTheme,
-              colors: {
-                ...DarkTheme.colors,
-                card: cardColorDark,
-                text: textColor,
-              },
-            }
-          : {
-              ...DefaultTheme,
-              colors: {
-                ...DefaultTheme.colors,
-                card: cardColorLight,
-                text: textColor,
-              },
-            }
-      }>
+      theme={{
+        ...theme,
+        colors: {
+          ...theme.colors,
+          card: cardColor,
+          text: cardTextColor,
+        },
+      }}>
       <RootNavigator />
       <CheckFavoriteUpdate />
       <CheckVersionUpdate />
@@ -124,7 +107,7 @@ function RootNavigator() {
   const appState = useRef(AppState.currentState);
   const navigation = useNavigation<StackNavigationProp<any>>();
   const [clipboardText, setClipboardText] = useState("");
-  const { colors } = useTheme();
+  const cardTextColor = useThemeColor({}, "cardText");
 
   const showNavigateConfirm = (threadId: string) => {
     Alert.alert("检测到串号，是否跳转Po." + threadId, "", [
@@ -170,7 +153,7 @@ function RootNavigator() {
         animation: "fade_from_bottom",
         headerBackTitle: "返回",
         headerTitleAlign: "center",
-        headerTintColor: colors.text,
+        headerTintColor: cardTextColor,
         headerTitleStyle,
       }}>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
@@ -275,7 +258,7 @@ const HistoryTab = createMaterialTopTabNavigator<HistoryTabParamList>();
 function HistoryTabNavigator() {
   const [responsiveWidth] = useAtom(responsiveWidthAtom);
   const setHistoryTab = useSetAtom(historyTabAtom);
-  const { colors } = useTheme();
+  const cardColor = useThemeColor({}, "card");
   const cardActiveColor = useThemeColor({}, "cardActive");
   const cardInactiveColor = useThemeColor({}, "cardInactive");
   const navigation = useNavigation();
@@ -298,7 +281,7 @@ function HistoryTabNavigator() {
       backBehavior="none"
       style={{
         paddingTop: insets.top,
-        backgroundColor: colors.card,
+        backgroundColor: cardColor,
       }}
       screenOptions={{
         tabBarLabelStyle: Platform.select({
@@ -442,13 +425,13 @@ const Drawer = createDrawerNavigator();
 
 function DrawerNavigator() {
   const [responsiveWidth] = useAtom(responsiveWidthAtom);
-  const { colors } = useTheme();
+  const cardTextColor = useThemeColor({}, "cardText");
   return (
     <Drawer.Navigator
       initialRouteName="HomeMain"
       drawerContent={(props) => DrawerContent(props)}
       screenOptions={{
-        headerTintColor: colors.text,
+        headerTintColor: cardTextColor,
         headerTitleAlign: "center",
         headerTitleStyle,
       }}>
