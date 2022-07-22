@@ -63,6 +63,8 @@ export const emoticonPickerHeightAtom = atomWithAsyncStorage("emoticonPickerHeig
 
 export const responsiveWidthAtom = atom(Layout.window.width);
 
+export const emojiCookieModeAtom = atomWithAsyncStorage("emojiCookieMode", false);
+
 export const anonCookieModeAtom = atomWithAsyncStorage("anonCookieMode", false);
 
 export const anonCookieTextAtom = atomWithAsyncStorage("anonCookieText", Texts.anonCookie);

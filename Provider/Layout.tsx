@@ -5,6 +5,7 @@ import {
   accurateTimeFormatAtom,
   anonCookieModeAtom,
   anonCookieTextAtom,
+  emojiCookieModeAtom,
   emoticonPickerHeightAtom,
   fontFamilyAtom,
   groupSearchResultsAtom,
@@ -18,6 +19,7 @@ export const LayoutConfigContext = createContext({
   fontFamily: undefined,
   groupSearchResults: false,
   threadReplyReverse: false,
+  emojiCookieMode: false,
   anonCookieMode: false,
   anonCookieText: "",
   emoticonPickerHeight: 200,
@@ -34,6 +36,7 @@ export default function LayoutProvider(props: any) {
   const [fontFamily] = useAtom(fontFamilyAtom);
   const [threadReplyReverse] = useAtom(threadReplyReverseAtom);
   const [groupSearchResults] = useAtom(groupSearchResultsAtom);
+  const [emojiCookieMode] = useAtom(emojiCookieModeAtom);
   const [anonCookieMode] = useAtom(anonCookieModeAtom);
   const [anonCookieText] = useAtom(anonCookieTextAtom);
   const [emoticonPickerHeight] = useAtom(emoticonPickerHeightAtom);
@@ -45,6 +48,7 @@ export default function LayoutProvider(props: any) {
         fontFamily,
         groupSearchResults,
         threadReplyReverse,
+        emojiCookieMode,
         anonCookieMode,
         anonCookieText,
         emoticonPickerHeight,

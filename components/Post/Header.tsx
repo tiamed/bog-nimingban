@@ -10,6 +10,24 @@ import { Post } from "@/api";
 import { Text, useThemeColor } from "@/components/Themed";
 import { useForumsIdMap } from "@/hooks/useForums";
 import { normalizeHtml } from "@/utils/format";
+
+function getCookieText(
+  post: Partial<Post>,
+  options?: {
+    isAnon?: boolean;
+    isEmoji?: boolean;
+    anonText?: string;
+  }
+) {
+  if (options?.isAnon) {
+    return options.anonText ?? post.cookie;
+  }
+  if (options?.isEmoji) {
+    return post.emoji ?? post.cookie;
+  }
+  return post.cookie;
+}
+
 export default function Header(props: {
   data: Partial<Post>;
   isPo?: boolean;
@@ -21,7 +39,8 @@ export default function Header(props: {
   const tintColor = useThemeColor({}, "tint");
   const highlightColor = useThemeColor({}, "highlight");
   const highlighBackgroundColor = useThemeColor({}, "highlightBackground");
-  const { accurateTimeFormat, anonCookieMode, anonCookieText } = useContext(LayoutConfigContext);
+  const { accurateTimeFormat, emojiCookieMode, anonCookieMode, anonCookieText } =
+    useContext(LayoutConfigContext);
 
   return (
     <>
@@ -56,7 +75,11 @@ export default function Header(props: {
               color: props.data.admin ? highlightColor : tintColor,
               fontWeight: props.data.admin ? "bold" : "normal",
             }}>
-            {anonCookieMode ? anonCookieText : props.data.cookie}
+            {getCookieText(props.data, {
+              isAnon: anonCookieMode,
+              isEmoji: emojiCookieMode,
+              anonText: anonCookieText,
+            })}
           </Text>
         </View>
         <Text style={{ fontSize: BASE_SIZE * 0.8, flex: 1 }}>Po.{props.data.id}</Text>

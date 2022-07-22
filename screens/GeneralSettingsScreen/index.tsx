@@ -13,6 +13,7 @@ import {
   clickableAtom,
   vibrateAtom,
   anonCookieModeAtom,
+  emojiCookieModeAtom,
   nativeImageRendererAtom,
 } from "@/atoms";
 import JumpToSettings from "@/components/JumpToSettings";
@@ -30,6 +31,7 @@ export default function GeneralSettingsScreen() {
         <SettingSwitch title="切换预览图渲染模式" atom={nativeImageRendererAtom} />
         <SettingSwitch title="串引用自动展开" atom={autoExpandAtom} />
         <SettingSwitch title="匿名饼干模式" atom={anonCookieModeAtom} />
+        <SettingSwitch title="emoji饼干模式" atom={emojiCookieModeAtom} />
         <SettingPicker
           title="无图模式"
           options={[

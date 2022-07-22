@@ -41,6 +41,7 @@ export interface Reply {
   time: number; // 发布时间
   name: string; // 昵称，大多数情况下是不填的
   cookie: string; // 饼干
+  emoji: string; // 饼干对应的emoji
   admin: boolean; // 是否为管理员
   content: string; // 内容
   images: Image[]; // 图片列表
