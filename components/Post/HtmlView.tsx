@@ -101,6 +101,10 @@ function Quote(props: { data: string; level: number }) {
   const { animatedHeight, onPress, onLayout, state } = useCollapsible({ duration: 200 });
   const isMounted = useIsMounted();
 
+  const borderBottomRadius = useMemo(() => {
+    return state === "expanded" ? 0 : 2;
+  }, [state]);
+
   useEffect(() => {
     if (state === "expanded") {
       setTimeout(() => {
@@ -139,9 +143,12 @@ function Quote(props: { data: string; level: number }) {
             style={{
               fontSize: BASE_SIZE * 0.8,
               lineHeight: LINE_HEIGHT - 4,
+              paddingHorizontal: 2,
               backgroundColor: quoteReferenceColor,
               width: "auto",
               borderRadius: 2,
+              borderBottomLeftRadius: borderBottomRadius,
+              borderBottomRightRadius: borderBottomRadius,
               overflow: "hidden",
             }}>
             {data}
