@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.39](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.38...v1.0.0-alpha.39) (2022-07-24)
+
+
+### Features
+
+* allow disable link click outside post ([d12ce66](https://github.com/tiamed/bog-nimingban/commit/d12ce66dd87ce679c57c0ab77c943289d4e4c868))
+* anon cookie text ([116d06e](https://github.com/tiamed/bog-nimingban/commit/116d06e10fbe1dce3bd064b9d354460105c8278f))
+* anonymous cookie mode ([f47177a](https://github.com/tiamed/bog-nimingban/commit/f47177a8fe2c2c8b2fbb4cf946625a431d5d6040))
+* auto expand quote ([6f71d13](https://github.com/tiamed/bog-nimingban/commit/6f71d134a90f3cf6e05eac8b2cad67271645304b))
+* auto saved draft ([a820846](https://github.com/tiamed/bog-nimingban/commit/a8208460c285034f5c2b9489df6781ad6118a528))
+* custom background color ([5d357c3](https://github.com/tiamed/bog-nimingban/commit/5d357c35cfd2d2bcfbe7db49152845090bd73fc0))
+* custom navigation color ([6447873](https://github.com/tiamed/bog-nimingban/commit/64478734f1f43ad1ed6d03a5659ba7f8b11d897d))
+* emoji cookie mode ([cc2f120](https://github.com/tiamed/bog-nimingban/commit/cc2f12090f19aedda16a39b37a0b07f67e7b045d))
+* hidden text ([1d516dc](https://github.com/tiamed/bog-nimingban/commit/1d516dcbfe3eac090814bd51e66a03e80c4379dc))
+* history long press actions ([17338db](https://github.com/tiamed/bog-nimingban/commit/17338dbb8aaf6c5deb3bc548e4056e4014f59b3a))
+* **layout:** adjustable emoticon picker height ([b27d076](https://github.com/tiamed/bog-nimingban/commit/b27d07683cac09f767f7d11074423fd0a839ed35))
+* restore default layout ([09308bf](https://github.com/tiamed/bog-nimingban/commit/09308bfaafd10b26ee1f0e2d9da40674af5c08eb))
+* support switching image renderer ([87dd71b](https://github.com/tiamed/bog-nimingban/commit/87dd71bdc0bc7850f24da5acc7153664746c1507))
+
+
+### Bug Fixes
+
+* android sketch caputre blank screen ([7360394](https://github.com/tiamed/bog-nimingban/commit/7360394a44805f5e38343d0b93a14908dbed8c88))
+* clear auto saved draft after posting ([1527e79](https://github.com/tiamed/bog-nimingban/commit/1527e79ccfb1f3f4a44413ba132b8b6dc7227b41))
+* color picker ([a48d6a0](https://github.com/tiamed/bog-nimingban/commit/a48d6a0028c057bd5b1f5cb945708fb330e0f763))
+* default navigation color ([545b7d5](https://github.com/tiamed/bog-nimingban/commit/545b7d538eaeb54f9f3a82a153dc3156e11c2c1c))
+* expandable ([8023cbd](https://github.com/tiamed/bog-nimingban/commit/8023cbd4047c09b08b41bff756671c62040905a1))
+* image resize ([4a4c9f6](https://github.com/tiamed/bog-nimingban/commit/4a4c9f6c9450a4c2876cd785b6aa1df64b1c6932))
+* navigation text color ([b44e011](https://github.com/tiamed/bog-nimingban/commit/b44e0118e4eeab013baba01064d37b2f0f6bc3f2))
+* **picker:** cannot select when only one option ([771864e](https://github.com/tiamed/bog-nimingban/commit/771864e90d803df30ab2cc8b30f8283c99fa2fe8))
+* quote reference radius ([822b734](https://github.com/tiamed/bog-nimingban/commit/822b734ce5f8df8d84adb458719767551b39475b))
+* sketch upload ([70559a5](https://github.com/tiamed/bog-nimingban/commit/70559a5b4475537d0b09e8a43a64b6d6b4360282))
+* split sreen size ([4614714](https://github.com/tiamed/bog-nimingban/commit/4614714dce31217a963f6eefbadc233a48e461b7))
+* statusbar foreground color ([29f53e9](https://github.com/tiamed/bog-nimingban/commit/29f53e939209b1878f231d66abbe4aca369bdfde))
+* thread post quote width ([632bda4](https://github.com/tiamed/bog-nimingban/commit/632bda44f205c172cb19fde98f0e7e0f52cc074e))
+* timeline forums ([d7de768](https://github.com/tiamed/bog-nimingban/commit/d7de7684066ce3a4607eb794bf5541c0aa839168))
+* unstable emoticon picker height ([0f8f076](https://github.com/tiamed/bog-nimingban/commit/0f8f07631ce547de16bf8189d4be686717fb1c18))
+
 ## [1.0.0-alpha.38](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.37...v1.0.0-alpha.38) (2022-06-02)
 
 
