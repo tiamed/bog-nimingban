@@ -121,8 +121,8 @@ export default function PreviewModalScreen() {
         distanceToEdge={{ horizontal: 190, vertical: 30 }}
         actions={[
           {
-            icon: <MaterialCommunityIcons name="web" color="white" size={20} />,
-            name: "share",
+            icon: <MaterialCommunityIcons name="magnify-plus" color="white" size={20} />,
+            name: "magnify",
           },
         ]}
         onPressItem={() => {
