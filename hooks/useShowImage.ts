@@ -29,7 +29,7 @@ export default function useShowImage() {
         setShowImage(true);
         break;
     }
-  });
+  }, [noImageMode]);
 
   return showImage;
 }

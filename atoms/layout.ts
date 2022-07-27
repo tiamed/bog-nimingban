@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { PixelRatio } from "react-native";
+import { PixelRatio, Platform } from "react-native";
 
 import { atomWithAsyncStorage } from "./lib";
 
@@ -69,4 +69,7 @@ export const anonCookieModeAtom = atomWithAsyncStorage("anonCookieMode", false);
 
 export const anonCookieTextAtom = atomWithAsyncStorage("anonCookieText", Texts.anonCookie);
 
-export const nativeImageRendererAtom = atomWithAsyncStorage("nativeImageRenderer", false);
+export const nativeImageRendererAtom = atomWithAsyncStorage(
+  "nativeImageRenderer",
+  Platform.OS === "android"
+);

@@ -17,6 +17,6 @@ export default function useColorScheme(): NonNullable<ColorSchemeName> {
     } else {
       setScheme(systemColorScheme);
     }
-  }, [colorScheme]);
+  }, [colorScheme, systemColorScheme]);
   return scheme as NonNullable<ColorSchemeName>;
 }

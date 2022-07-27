@@ -15,7 +15,7 @@ export default function useForums() {
         refreshForums(order, visibility, setForums);
       }
     }
-  }, [forums]);
+  }, [forums, order, setForums, visibility]);
   return forums;
 }
 

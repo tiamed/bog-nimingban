@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { useAtom, useSetAtom } from "jotai";
-import { useContext, useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { TouchableOpacity, View } from "react-native";
 
 import Icon from "../Icon";
@@ -26,16 +26,19 @@ export default function ImageList(props: {
   const showImage = useShowImage();
   const BASE_SIZE = useContext(SizeContext);
 
-  const onPress = (image: Image) => {
-    const images = props.previews || props.images;
-    setPreviews(
-      images.map((item) => ({
-        url: getImageUrl(item),
-      }))
-    );
-    setPreviewUrl(getImageUrl(image));
-    navigation.navigate("PreviewModal");
-  };
+  const onPress = useCallback(
+    (image: Image) => {
+      const images = props.previews || props.images;
+      setPreviews(
+        images.map((item) => ({
+          url: getImageUrl(item),
+        }))
+      );
+      setPreviewUrl(getImageUrl(image));
+      navigation.navigate("PreviewModal");
+    },
+    [navigation, props.images, props.previews, setPreviewUrl, setPreviews]
+  );
   const memoizedImageView = useMemo(() => {
     return (
       <View
@@ -78,7 +81,16 @@ export default function ImageList(props: {
         )}
       </View>
     );
-  }, [props.images, imageWidth, showImage]);
+  }, [
+    showImage,
+    props.images,
+    props.onPress,
+    onPress,
+    inactiveColor,
+    BASE_SIZE,
+    imageWidth,
+    borderColor,
+  ]);
 
   return memoizedImageView;
 }

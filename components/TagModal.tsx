@@ -251,7 +251,7 @@ function TagItem(props: {
   const haptics = useHaptics();
   const subColor = useMemo(() => {
     return props.highlight ? Color(tintColor).alpha(0.5).toString() : inactiveColor;
-  }, [props.highlight, tintColor]);
+  }, [inactiveColor, props.highlight, tintColor]);
   return (
     <TouchableOpacity
       onPress={() => {
