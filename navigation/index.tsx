@@ -19,7 +19,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import * as Clipboard from "expo-clipboard";
 import { useAtom, useSetAtom } from "jotai";
 import * as React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, AppState, ColorSchemeName, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -104,29 +104,12 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-  const appState = useRef(AppState.currentState);
   const navigation = useNavigation<StackNavigationProp<any>>();
   const [clipboardText, setClipboardText] = useState("");
   const cardTextColor = useThemeColor({}, "cardText");
 
-  const showNavigateConfirm = (threadId: string) => {
-    Alert.alert("检测到串号，是否跳转Po." + threadId, "", [
-      { text: "取消" },
-      {
-        text: "确认",
-        onPress: () => {
-          navigation.navigate("Root");
-          navigation.navigate("Post", {
-            id: Number(threadId),
-            title: `Po.${threadId}`,
-          });
-        },
-      },
-    ]);
-  };
-
   useEffect(() => {
-    AppState.addEventListener("change", (nextAppState) => {
+    const listener = AppState.addEventListener("change", (nextAppState) => {
       if (nextAppState === "active") {
         Clipboard.getStringAsync().then(async (text) => {
           if (text && text !== clipboardText) {
@@ -135,14 +118,29 @@ function RootNavigator() {
         });
       }
     });
-  }, [appState.current]);
+    return () => {
+      listener.remove();
+    };
+  }, [clipboardText]);
 
   useEffect(() => {
     if (clipboardText) {
       const thread = clipboardText.match(/http:\/\/bog\.ac\/t\/([0-9]{0,})/);
       const threadId = thread?.[1];
       if (threadId) {
-        showNavigateConfirm(threadId);
+        Alert.alert("检测到串号，是否跳转Po." + threadId, "", [
+          { text: "取消" },
+          {
+            text: "确认",
+            onPress: () => {
+              navigation.navigate("Root");
+              navigation.navigate("Post", {
+                id: Number(threadId),
+                title: `Po.${threadId}`,
+              });
+            },
+          },
+        ]);
       }
     }
   }, [clipboardText]);
