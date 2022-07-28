@@ -22,7 +22,7 @@ export default function renderFooter({
     if (!loading && typeof loadMore === "function") {
       loadMore();
     }
-  }, [loadMore]);
+  }, [loadMore, loading]);
   const LoadingText = useMemo(() => {
     if (loading) {
       return loadings[randomIndex];
@@ -30,10 +30,10 @@ export default function renderFooter({
       if (empty) return "暂无数据";
       return hasNoMore ? "已经没有更多了" : "下拉加载更多";
     }
-  }, [loading, hasNoMore, empty, randomIndex]);
+  }, [loading, loadings, randomIndex, empty, hasNoMore]);
   useEffect(() => {
     setRadomIndex((loadings.length * Math.random()) | 0);
-  }, []);
+  }, [loadings.length]);
   return (
     <TouchableOpacity onPress={onPress}>
       <View

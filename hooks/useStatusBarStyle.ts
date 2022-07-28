@@ -14,8 +14,8 @@ export const useStatusBarStyle = () => {
 
   useEffect(() => {
     const cardColor = colorScheme === "light" ? cardColorLight : cardColorDark;
-    const luminocity = Color(cardColor).luminosity();
-    setStatusBarStyle(luminocity > 0.5 ? "dark" : "light");
+    const luminosity = Color(cardColor).luminosity();
+    setStatusBarStyle(luminosity > 0.5 ? "dark" : "light");
   }, [colorScheme, cardColorLight, cardColorDark]);
 
   return statusBarStyle;

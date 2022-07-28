@@ -1,5 +1,6 @@
 import { useAtom } from "jotai";
-import { useState, useEffect, useCallback } from "react";
+import { useReducerAtom } from "jotai/utils";
+import { useState, useEffect, useCallback, useMemo, useReducer } from "react";
 import Toast from "react-native-toast-message";
 import { useIsMounted } from "usehooks-ts";
 
@@ -8,6 +9,7 @@ import usePostFiltered from "./usePostFiltered";
 import { Reply, getPostById, Post } from "@/api";
 import { historyAtom, orderAtom } from "@/atoms/index";
 import Errors from "@/constants/Errors";
+import Request from "@/constants/Request";
 import { UserHistory } from "@/screens/BrowseHistoryScreen";
 
 interface ReplyWithPage extends Reply {
@@ -21,23 +23,94 @@ interface PostCache {
   data: ReplyWithPage[];
 }
 
+interface Pagination {
+  firstPage: number;
+  lastPage: number;
+  hasNoMore: boolean;
+}
+
+type HistoryAction = {
+  type: "REFRESH" | "ADD";
+  payload: {
+    id: number;
+    data: UserHistory;
+  };
+};
+
+type PaginationAction = {
+  type: "PREV" | "NEXT" | "JUMP" | "SET" | "FINISH";
+  payload?: {
+    nextPage: number;
+    length?: number;
+  };
+};
+
+const historyReducer = (state: UserHistory[], action: HistoryAction) => {
+  switch (action.type) {
+    case "REFRESH":
+      return [
+        action.payload.data,
+        ...state.filter((record) => record.id && record.id !== action.payload.id),
+      ];
+    case "ADD":
+      return [action.payload.data, ...state];
+    default:
+      return state;
+  }
+};
+
+const paginationReducer = (state: Pagination, action: PaginationAction) => {
+  switch (action.type) {
+    case "PREV":
+      return {
+        ...state,
+        firstPage: action.payload?.nextPage!,
+      };
+    case "NEXT":
+      return {
+        ...state,
+        lastPage: action.payload?.nextPage!,
+        hasNoMore: Number(action.payload?.length) < Request.pageSize,
+      };
+    case "JUMP":
+      return {
+        ...state,
+        currentPage: action.payload?.nextPage!,
+        firstPage: action.payload?.nextPage!,
+        lastPage: action.payload?.nextPage!,
+      };
+    case "FINISH":
+      return {
+        ...state,
+        hasNoMore: true,
+      };
+    default:
+      return state;
+  }
+};
+
 export default function usePosts(id: number) {
   const [posts, setPosts] = useState<ReplyWithPage[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<ReplyWithPage[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [firstPage, setFirstPage] = useState(1);
-  const [lastPage, setLastPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [hasNoMore, setHasNoMore] = useState(false);
-  const [lastPageFinished, setLastPageFinished] = useState(false);
 
   const [mainPost, setMainPost] = useState<Post>({} as Post);
   const [lastPosition, setLastPosition] = useState(0);
-  const [currentHistory, setCurrentHistory] = useState({} as UserHistory);
 
-  const [history, setHistory] = useAtom<UserHistory[], UserHistory[], void>(historyAtom);
+  const [pagination, dispatchPagination] = useReducer(paginationReducer, {
+    firstPage: 1,
+    lastPage: 1,
+    hasNoMore: false,
+  });
+  const [history, dispatchHistory] = useReducerAtom<UserHistory[], HistoryAction>(
+    historyAtom,
+    historyReducer
+  );
   const [order] = useAtom(orderAtom);
+
+  const currentHistory = useMemo(() => history?.find((x) => x.id === id), [history, id]);
 
   const isMounted = useIsMounted();
   const { result: postFiltered, setCurrentId } = usePostFiltered(Number(id));
@@ -60,7 +133,7 @@ export default function usePosts(id: number) {
         }
 
         if (type === "error") {
-          setHasNoMore(true);
+          dispatchPagination({ type: "FINISH" });
           if (code !== 6202) {
             Toast.show({
               type: "error",
@@ -75,25 +148,37 @@ export default function usePosts(id: number) {
         let nextPosts = replyWithPage;
         if (!jump) {
           nextPosts = nextPosts.filter((post) => !posts.find((x) => x.id === post.id));
-        }
-
-        if (jump) {
-          setFirstPage(nextPage);
-          setLastPage(nextPage);
-          setCurrentPage(nextPage);
-          setHasNoMore(reply?.length !== 20);
-          setLastPageFinished(reply?.length === 20);
-          setPosts(nextPosts);
-        } else {
-          if (nextPage < firstPage || (nextPage === firstPage && order === 1)) {
-            setFirstPage(nextPage);
+          const isPrev =
+            nextPage < pagination.firstPage || (nextPage === pagination.firstPage && order === 1);
+          if (isPrev) {
+            dispatchPagination({
+              type: "PREV",
+              payload: {
+                nextPage,
+                length: reply.length,
+              },
+            });
             setPosts([...nextPosts, ...posts]);
           } else {
-            setLastPage(nextPage);
-            setHasNoMore(reply?.length !== 20);
-            setLastPageFinished(reply?.length === 20);
+            dispatchPagination({
+              type: "NEXT",
+              payload: {
+                nextPage,
+                length: reply.length,
+              },
+            });
             setPosts([...posts, ...nextPosts]);
           }
+        } else {
+          dispatchPagination({
+            type: "JUMP",
+            payload: {
+              nextPage,
+              length: reply.length,
+            },
+          });
+          setCurrentPage(nextPage);
+          setPosts(nextPosts);
         }
         if (updatePosition) {
           setLastPosition(nextPosts[0].id);
@@ -102,74 +187,78 @@ export default function usePosts(id: number) {
         setIsLoading(false);
       }
     },
-    [posts, order, id]
+    [id, order, pagination.firstPage, posts]
   );
-
-  const refreshPosts = useCallback(async () => {
-    if (firstPage === 1) {
-      setIsRefreshing(true);
-      await loadData(1);
-      setIsRefreshing(false);
-    } else {
-      await loadData(firstPage - 1);
-    }
-    addToHistory(true);
-  }, [firstPage, order, loadData]);
-
-  const loadMoreData = async (force = false) => {
-    if (isLoading || (hasNoMore && !force)) return;
-    if (hasNoMore && !lastPageFinished) {
-      await loadData(lastPage);
-    } else {
-      await loadData(lastPage + 1);
-    }
-    addToHistory(true);
-  };
 
   // 添加历史记录
   const addToHistory = (noPositionChange: boolean = false) => {
     if (!mainPost?.id) return;
-    let newHistory = history.filter((x) => x.id) || [];
-    const oldHistory = currentHistory;
-    if (oldHistory) {
-      newHistory = history.filter((record) => record.id && record.id !== id);
-    }
+    const actionType = currentHistory ? "REFRESH" : "ADD";
     if (noPositionChange) {
-      newHistory.unshift({
-        ...mainPost,
-        createTime: Date.now(),
-        currentPage: oldHistory?.currentPage || currentPage,
-        position: oldHistory?.position || lastPosition,
+      dispatchHistory({
+        type: actionType,
+        payload: {
+          id: mainPost.id,
+          data: {
+            ...mainPost,
+            createTime: Date.now(),
+            currentPage: currentHistory?.currentPage || currentPage,
+            position: currentHistory?.position || lastPosition,
+          },
+        },
       });
     } else {
-      newHistory.unshift({
-        ...mainPost,
-        createTime: Date.now(),
-        currentPage,
-        position: lastPosition,
+      dispatchHistory({
+        type: actionType,
+        payload: {
+          id: mainPost.id,
+          data: {
+            ...mainPost,
+            createTime: Date.now(),
+            currentPage,
+            position: lastPosition,
+          },
+        },
       });
     }
-    setHistory(newHistory);
+  };
+
+  const refreshPosts = useCallback(async () => {
+    if (pagination.firstPage === 1) {
+      setIsRefreshing(true);
+      await loadData(1);
+      setIsRefreshing(false);
+    } else {
+      await loadData(pagination.firstPage - 1);
+    }
+    addToHistory(true);
+  }, [pagination.firstPage, order, loadData]);
+
+  const loadMoreData = async (force = false) => {
+    if (isLoading || (pagination.hasNoMore && !force)) return;
+    if (pagination.hasNoMore) {
+      await loadData(pagination.lastPage);
+    } else {
+      await loadData(pagination.lastPage + 1);
+    }
+    addToHistory(true);
   };
 
   useEffect(() => {
-    if (history) {
-      const current = history?.find((x) => x.id === id);
-      if (current) {
-        setCurrentHistory(current);
-      }
-      setCurrentPage(current?.currentPage || 1);
-      if (posts.length === 0) {
-        // 初始化
-        loadData(current?.currentPage || 1, true);
-      }
+    if (!history) return;
+    if (currentPage === 0) {
+      setCurrentPage(currentHistory?.currentPage || 1);
+    }
+    if (posts.length === 0) {
+      // 初始化
+      loadData(currentHistory?.currentPage || 1, true);
     }
   }, [history]);
 
   // 更新历史记录
   useEffect(() => {
     const shouldUpdate =
-      currentHistory.currentPage !== currentPage || currentHistory.position !== lastPosition;
+      currentHistory?.currentPage !== currentPage || currentHistory?.position !== lastPosition;
     if (lastPosition && mainPost.id === id && shouldUpdate) {
       addToHistory();
     }
@@ -196,11 +285,11 @@ export default function usePosts(id: number) {
     filteredPosts,
     isLoading,
     isRefreshing,
-    hasNoMore,
-    firstPage,
-    lastPage,
-    lastPosition,
+    hasNoMore: pagination.hasNoMore,
+    firstPage: pagination.firstPage,
+    lastPage: pagination.lastPage,
     currentPage,
+    lastPosition,
     currentHistory,
     loadData,
     refreshPosts,
