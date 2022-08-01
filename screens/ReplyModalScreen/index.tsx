@@ -37,6 +37,7 @@ import Picker from "@/components/Picker";
 import ImageView from "@/components/Post/ImageView";
 import { Text, useThemeColor, View, TextInput } from "@/components/Themed";
 import Errors from "@/constants/Errors";
+import Layout from "@/constants/Layout";
 import useForums from "@/hooks/useForums";
 import { ReplyHistory } from "@/screens/ReplyHistoryScreen";
 import { RootStackScreenProps } from "@/types";
@@ -488,7 +489,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     overflow: "hidden",
-    padding: 10,
+    paddingHorizontal: Layout.replyEditorHorizontalPadding,
+    paddingVertical: Layout.replyEditorVerticalPadding,
   },
   title: {
     fontSize: 20,
@@ -540,8 +542,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   footerWrapper: {
-    marginLeft: -10,
-    marginRight: -10,
+    marginHorizontal: -Layout.replyEditorHorizontalPadding,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

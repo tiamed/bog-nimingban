@@ -11,6 +11,8 @@ export default {
   isSmallDevice: width < 375,
   postHorizontalPadding: 16,
   postHorizontalPaddingSecondary: 4,
+  replyEditorHorizontalPadding: 6,
+  replyEditorVerticalPadding: 10,
   settingItemPaddingRight: 16,
   toastMaxLine: 20,
   settingKeys: [

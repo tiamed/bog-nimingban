@@ -2,6 +2,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 
 import Icon from "@/components/Icon";
 import { useThemeColor, View } from "@/components/Themed";
+import Layout from "@/constants/Layout";
 
 interface FooterItem {
   icon: React.ComponentProps<typeof Icon>["name"];
@@ -17,6 +18,7 @@ export default function Footer(props: { items: FooterItem[] }) {
       <View
         style={{
           flex: 6 - props.items.length,
+          backgroundColor: tintColor,
         }}
       />
       {props.items?.map(({ icon, family, onPress, inverted }) => (
@@ -37,6 +39,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingVertical: 8,
-    marginHorizontal: 4,
+    marginHorizontal: Layout.replyEditorHorizontalPadding,
   },
 });
