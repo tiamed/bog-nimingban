@@ -11,9 +11,9 @@ import {
   textColorAlphaAtom,
   tintColorAtom,
 } from "@/atoms";
-import { getContrastColor, getFirstContrastColor } from "@/components/Themed";
 import Colors from "@/constants/Colors";
 import useColorScheme from "@/hooks/useColorScheme";
+import { getContrastColor, getFirstContrastColor } from "@/utils/color";
 
 export const ColorSchemeContext = createContext("light");
 export const ThemeContext = createContext({

@@ -5,10 +5,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDebouncedCallback } from "use-debounce";
 
 import { Octicon } from "./Icon";
-import { ScrollView, Text, getContrastColor, useThemeColor } from "./Themed";
+import { ScrollView, Text, useThemeColor } from "./Themed";
 
 import { threadAtom } from "@/atoms";
 import useForums from "@/hooks/useForums";
+import { getContrastColor } from "@/utils/color";
 
 export default function DrawerContent(props: any) {
   const forums = useForums();

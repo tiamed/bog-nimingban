@@ -4,14 +4,13 @@ import Color from "color";
 import { decode } from "html-entities";
 import { useAtom } from "jotai";
 import parse, { HTMLElement } from "node-html-parser";
-import React, { useContext, useEffect, useMemo, useState, Fragment } from "react";
+import React, { useContext, useEffect, useMemo, useState, Fragment, Suspense, lazy } from "react";
 import { Linking, Pressable, TextStyle, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import { useCollapsible, AnimatedSection } from "reanimated-collapsible-helpers";
 import { useIsMounted } from "usehooks-ts";
 
 import { BogIcon } from "../Icon";
-import ReplyPostWithoutData from "./ReplyPostWithoutData";
 
 import { SizeContext } from "@/Provider";
 import { ThreadPostConfigContext } from "@/Provider/Layout";
@@ -19,6 +18,8 @@ import { autoExpandAtom, lineHeightAtom, responsiveWidthAtom } from "@/atoms";
 import { Text, useThemeColor } from "@/components/Themed";
 import Layout from "@/constants/Layout";
 import Urls from "@/constants/Urls";
+
+const ReplyPostWithoutData = lazy(() => import("./ReplyPostWithoutData"));
 
 export default function HtmlView(props: { content: string; level?: number }) {
   const navigation = useNavigation<StackNavigationProp<any>>();
@@ -113,14 +114,14 @@ function Quote(props: { data: string; level: number }) {
         }
       }, 300);
     }
-  }, [state]);
+  }, [isMounted, state]);
 
   useEffect(() => {
     if (autoExpand && props.level < 2) {
       setLoadingText("加载中...");
       onPress();
     }
-  }, [autoExpand]);
+  }, [autoExpand, onPress, props.level]);
 
   return (
     <View
@@ -155,6 +156,8 @@ function Quote(props: { data: string; level: number }) {
           </Text>
         </QuoteReference>
         <Text
+          lightColor="#666666"
+          darkColor="#999999"
           style={{
             fontSize: BASE_SIZE * 0.8,
             lineHeight: LINE_HEIGHT - 4,
@@ -177,18 +180,20 @@ function Quote(props: { data: string; level: number }) {
             justifyContent: "center",
           }}>
           {(autoExpand || state === "expanded") && (
-            <ReplyPostWithoutData
-              id={quoteId}
-              width={replyWidth}
-              level={props.level + 1}
-              onLoaded={() => {
-                setTimeout(() => {
-                  if (isMounted()) {
-                    setLoadingText("");
-                  }
-                }, 200);
-              }}
-            />
+            <Suspense fallback={<></>}>
+              <ReplyPostWithoutData
+                id={quoteId}
+                width={replyWidth}
+                level={props.level + 1}
+                onLoaded={() => {
+                  setTimeout(() => {
+                    if (isMounted()) {
+                      setLoadingText("");
+                    }
+                  }, 200);
+                }}
+              />
+            </Suspense>
           )}
         </AnimatedSection>
       )}
@@ -207,7 +212,7 @@ function Quote(props: { data: string; level: number }) {
         }}
         onPress={() => {
           if (state === "collapsed") {
-            setLoadingText("加载中");
+            setLoadingText("加载中...");
           }
           onPress();
         }}>
