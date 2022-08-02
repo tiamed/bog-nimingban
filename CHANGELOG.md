@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.40](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.39...v1.0.0-alpha.40) (2022-08-02)
+
+
+### Features
+
+* upgrade expo sdk 46 ([61a5290](https://github.com/tiamed/bog-nimingban/commit/61a52903ddfdcb6fb20ae601b669140bc6c3ad43))
+
+
+### Bug Fixes
+
+* clipboard listener ([4d266db](https://github.com/tiamed/bog-nimingban/commit/4d266db6bac74d73256f67d4719fffcf58fe1f38))
+* **reply:** align buttons ([1c24d2d](https://github.com/tiamed/bog-nimingban/commit/1c24d2dc4b8222b46502c80623832168f2b403e8))
+
 ## [1.0.0-alpha.39](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.38...v1.0.0-alpha.39) (2022-07-24)
 
 
