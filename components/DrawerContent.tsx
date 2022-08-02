@@ -57,7 +57,7 @@ export default function DrawerContent(props: any) {
                 styles.item,
                 { backgroundColor: forum.id === thread ? tintBackgroundColor : "transparent" },
               ]}
-              onPress={onPress.bind(null, forum)}>
+              onPress={() => onPress(forum)}>
               <Text
                 style={[styles.itemLabel, { color: forum.id === thread ? tintColor : textColor }]}>
                 {forum.name}

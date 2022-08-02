@@ -27,15 +27,15 @@ export default function ReplyPost(props: {
   const setPreviewUrl = useSetAtom(previewUrlAtom);
   const navigation = useNavigation();
   const isPo = props.data.cookie === props.po;
-  const onImagePress = (image: Image) => {
-    setPreviewUrl(getImageUrl(image));
-    navigation.navigate("PreviewModal");
-  };
 
   const memoizedHtmlView = useMemo(() => {
     return <HtmlView content={props.data.content as string} level={props.level || 1} />;
   }, [props.data.content, props.level]);
   const memoizedImageView = useMemo(() => {
+    const onImagePress = (image: Image) => {
+      setPreviewUrl(getImageUrl(image));
+      navigation.navigate("PreviewModal");
+    };
     return (
       <View
         style={{
@@ -57,7 +57,7 @@ export default function ReplyPost(props: {
         )}
       </View>
     );
-  }, [props.data?.images]);
+  }, [navigation, props, setPreviewUrl]);
 
   return (
     <Pressable onPress={props.onPress} onLongPress={props.onLongPress}>

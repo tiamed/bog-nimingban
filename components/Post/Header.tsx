@@ -1,5 +1,3 @@
-import { formatRelative, formatDistance, format } from "date-fns";
-import { zhCN } from "date-fns/locale";
 import { useContext } from "react";
 import { View, StyleSheet } from "react-native";
 
@@ -9,7 +7,7 @@ import { LayoutConfigContext, SizeContext } from "@/Provider";
 import { Post } from "@/api";
 import { Text, useThemeColor } from "@/components/Themed";
 import { useForumsIdMap } from "@/hooks/useForums";
-import { normalizeHtml } from "@/utils/format";
+import { formatTime, normalizeHtml } from "@/utils/format";
 
 function getCookieText(
   post: Partial<Post>,
@@ -183,21 +181,8 @@ export function renderTime(
   time: number | undefined,
   accurate: boolean = false
 ) {
-  const now = Date.now();
-  const timestamp = Date.parse(`${root} GMT+0000`) || time || now;
-  const diff = now - timestamp;
-  if (accurate) {
-    return format(timestamp, "yyyy-MM-dd HH:mm:ss");
-  }
-  if (diff < 1000 * 60 * 60 * 24) {
-    return formatDistance(now, timestamp, {
-      locale: zhCN,
-      addSuffix: true,
-    });
-  }
-  return formatRelative(timestamp, now, {
-    locale: zhCN,
-  });
+  const timestamp = Date.parse(`${root} GMT+0000`) || time || Date.now();
+  return formatTime(timestamp, accurate);
 }
 
 export function renderReplyCount(count: number) {
