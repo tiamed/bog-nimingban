@@ -37,13 +37,13 @@ export default function ForumSettingsScreen({
         </TouchableOpacity>
       ),
     });
-  }, [order, visibility, setForums]);
+  }, [order, visibility, setForums, navigation, cardInactiveColor]);
 
   useEffect(() => {
-    if (!order.length && forums.length) {
+    if (order.length !== forums.length) {
       setOrder(forums.map((f) => f.id));
     }
-  }, [forums, order]);
+  }, [forums, order, setOrder]);
 
   return (
     <View style={styles.container}>
