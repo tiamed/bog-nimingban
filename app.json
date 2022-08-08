@@ -14,12 +14,19 @@
     },
     "updates": {
       "fallbackToCacheTimeout": 60000,
-      "checkAutomatically": "ON_ERROR_RECOVERY"
+      "checkAutomatically": "ON_ERROR_RECOVERY",
+      "url": "https://u.expo.dev/91336b92-4d9a-4bb2-a717-4e6ef77c7929"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "fun.tiamed"
+      "bundleIdentifier": "fun.tiamed",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos.",
+        "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -31,7 +38,10 @@
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
         "ACCESS_MEDIA_LOCATION",
-        "CAMERA"
+        "CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_MEDIA_LOCATION"
       ],
       "softwareKeyboardLayoutMode": "resize",
       "allowBackup": true
@@ -56,6 +66,9 @@
         }
       ]
     ],
-    "githubUrl": "https://github.com/tiamed/bog-nimingban"
+    "githubUrl": "https://github.com/tiamed/bog-nimingban",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    }
   }
 }

@@ -27,4 +27,4 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: 🚀 Publish app
-        run: expo publish --non-interactive
+        run: eas update --branch default
