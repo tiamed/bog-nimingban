@@ -1,13 +1,15 @@
 import Constants from "expo-constants";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Linking, StyleSheet, TouchableHighlight } from "react-native";
 
 import { SizeContext } from "@/Provider";
+import ChangelogModal from "@/components/ChangelogModal";
 import { View, Text, useThemeColor } from "@/components/Themed";
 import { manualUpdate } from "@/tasks/checkAppUpdate";
 import { RootStackScreenProps } from "@/types";
 
 export default function AboutScreen({ route, navigation }: RootStackScreenProps<"About">) {
+  const [changelogVisible, setChangelogVisible] = useState(false);
   return (
     <View style={styles.container}>
       <AboutItem
@@ -50,12 +52,19 @@ export default function AboutScreen({ route, navigation }: RootStackScreenProps<
         }}
       />
       <AboutItem
+        title="更新日志"
+        onPress={() => {
+          setChangelogVisible(true);
+        }}
+      />
+      <AboutItem
         title="检查更新"
         desc={`当前版本：${Constants.manifest?.version}`}
         onPress={() => {
           manualUpdate();
         }}
       />
+      <ChangelogModal visible={changelogVisible} onClose={() => setChangelogVisible(false)} />
     </View>
   );
 }
