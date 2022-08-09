@@ -1,3 +1,4 @@
+import { nativeApplicationVersion } from "expo-application";
 import Constants from "expo-constants";
 import { useContext, useState } from "react";
 import { Linking, StyleSheet, TouchableHighlight } from "react-native";
@@ -59,7 +60,7 @@ export default function AboutScreen({ route, navigation }: RootStackScreenProps<
       />
       <AboutItem
         title="检查更新"
-        desc={`当前版本：${Constants.manifest?.version}`}
+        desc={`当前版本：${Constants.manifest?.version ?? nativeApplicationVersion}`}
         onPress={() => {
           manualUpdate();
         }}
