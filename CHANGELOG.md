@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.41](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.40...v1.0.0-alpha.41) (2022-08-09)
+
+
+### Features
+
+* **about:** changelog ([46e12ce](https://github.com/tiamed/bog-nimingban/commit/46e12cee915b1226f559494f2b6b185d9d2591c9))
+
+
+### Bug Fixes
+
+* eas update channel ([9ac0b9a](https://github.com/tiamed/bog-nimingban/commit/9ac0b9ac46e891c9336bae2bc20f5c465b3a0d08))
+* forum setting unchanged after refresh ([e39f030](https://github.com/tiamed/bog-nimingban/commit/e39f0308d058ee316c66a68b8465739a7289e9f9))
+* **reply:** improve emoticon view performance ([d841afd](https://github.com/tiamed/bog-nimingban/commit/d841afd371a7bb670148068a74d2cc4caccaff5d))
+
 ## [1.0.0-alpha.40](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.39...v1.0.0-alpha.40) (2022-08-02)
 
 
