@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { useContext, useState } from "react";
+import { memo, useContext, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, FlatList, View } from "react-native";
 import { TabView, TabBar } from "react-native-tab-view";
 
@@ -16,10 +16,9 @@ const ROUTE_CONFIG = [
   { key: "extra", title: "特殊" },
 ];
 
-export default function EmoticonPicker(props: {
-  visible: boolean;
-  onInsert: (emoticon: string) => void;
-}) {
+const EmoticonViewMemoized = memo(EmoticonView);
+
+export default function EmoticonPicker(props: { onInsert: (emoticon: string) => void }) {
   const emoticons = useEmoticons();
   const backgroundColor = useThemeColor({}, "background");
   const tintColor = useThemeColor({}, "tint");
@@ -38,37 +37,61 @@ export default function EmoticonPicker(props: {
     />
   );
 
+  const renderScene = ({ route }: { route: any }) => {
+    switch (route.key) {
+      case "kaomoji":
+        return (
+          <EmoticonViewMemoized data={emoticons?.[0]?.value || []} onInsert={props.onInsert} />
+        );
+      case "bmoji":
+        return (
+          <EmoticonViewMemoized data={emoticons?.[1]?.value || []} onInsert={props.onInsert} />
+        );
+      case "emoji":
+        return (
+          <EmoticonViewMemoized data={emoticons?.[2]?.value || []} onInsert={props.onInsert} />
+        );
+      case "extra":
+        return <EmoticonViewMemoized data={EXTRA_SYMBOLS} onInsert={props.onInsert} />;
+      default:
+        return null;
+    }
+  };
+
+  useEffect(() => {
+    console.log("onInsert changed");
+  }, [props.onInsert]);
+
   return (
     <View
       style={{
         width: "100%",
-        height: props.visible ? emoticonPickerHeight : 0,
+        height: emoticonPickerHeight,
       }}>
       <TabView
         navigationState={{ index, routes }}
-        renderScene={({ route }) => {
-          switch (route.key) {
-            case "kaomoji":
-              return <EmoticonView data={emoticons?.[0]?.value || []} onInsert={props.onInsert} />;
-            case "bmoji":
-              return <EmoticonView data={emoticons?.[1]?.value || []} onInsert={props.onInsert} />;
-            case "emoji":
-              return <EmoticonView data={emoticons?.[2]?.value || []} onInsert={props.onInsert} />;
-            case "extra":
-              return <EmoticonView data={EXTRA_SYMBOLS} onInsert={props.onInsert} />;
-            default:
-              return null;
-          }
-        }}
+        renderScene={renderScene}
         onIndexChange={setIndex}
         keyboardDismissMode="none"
         renderTabBar={renderTabBar}
+        lazy
       />
     </View>
   );
 }
 
 function EmoticonView(props: { data: string[]; onInsert: (emoticon: string) => void }) {
+  const renderItem = ({ item }: { item: string }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          props.onInsert(item);
+        }}
+        style={styles.item}>
+        <Text>{item}</Text>
+      </TouchableOpacity>
+    );
+  };
   return (
     <FlatList
       style={{
@@ -80,18 +103,10 @@ function EmoticonView(props: { data: string[]; onInsert: (emoticon: string) => v
       numColumns={4}
       data={props.data}
       keyExtractor={(item) => item}
-      maxToRenderPerBatch={100}
+      maxToRenderPerBatch={1}
       keyboardDismissMode="none"
       keyboardShouldPersistTaps="always"
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          onPress={() => {
-            props.onInsert(item);
-          }}
-          style={styles.item}>
-          <Text>{item}</Text>
-        </TouchableOpacity>
-      )}
+      renderItem={renderItem}
     />
   );
 }

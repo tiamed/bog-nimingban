@@ -1,6 +1,6 @@
 import * as ImagePicker from "expo-image-picker";
-import { useAtom, useSetAtom } from "jotai";
-import { useContext, useEffect, useRef, useState } from "react";
+import { atom, useAtom, useSetAtom } from "jotai";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
   Platform,
   StyleSheet,
@@ -28,7 +28,6 @@ import {
   postIdRefreshingAtom,
   replyHistoryAtom,
   selectedCookieAtom,
-  selectionAtom,
   sketchUriAtom,
 } from "@/atoms";
 import Icon from "@/components/Icon";
@@ -41,6 +40,8 @@ import Layout from "@/constants/Layout";
 import useForums from "@/hooks/useForums";
 import { ReplyHistory } from "@/screens/ReplyHistoryScreen";
 import { RootStackScreenProps } from "@/types";
+
+const showPrefixInputAtom = atom(false);
 
 export default function ReplyModalScreen({
   route,
@@ -55,9 +56,8 @@ export default function ReplyModalScreen({
   const [title, setTitle] = useState("");
   const [showKeyboard, setShowKeyboard] = useState(true);
   const [showEmoticonPicker, setShowEmoticonPicker] = useState(false);
-  const [showPrefixInput, setShowPrefixInput] = useState(false);
 
-  const [selection, setSelection] = useAtom(selectionAtom);
+  const [showPrefixInput] = useAtom(showPrefixInputAtom);
   const [cookies] = useAtom(cookiesAtom);
   const [draft, setDraft] = useAtom(draftAtom);
   const [autoSavedDraft, setAutoSavedDraft] = useAtom(autoSavedDraftAtom);
@@ -66,16 +66,16 @@ export default function ReplyModalScreen({
   const [replyHistory, setReplyHistory] = useAtom<ReplyHistory[], ReplyHistory[], void>(
     replyHistoryAtom
   );
-  const [fullscreenInput, setFullscreenInput] = useAtom(fullscreenInputAtom);
+  const [fullscreenInput] = useAtom(fullscreenInputAtom);
   const [sketchUri, setSketchUri] = useAtom(sketchUriAtom);
   const setPostIdRefreshing = useSetAtom(postIdRefreshingAtom);
 
   const tintColor = useThemeColor({}, "tint");
-  const tintBackgroundColor = useThemeColor({}, "tintBackground");
   const backgroundColor = useThemeColor({}, "background");
   const forums = useForums();
   const BASE_SIZE = useContext(SizeContext);
   const inputRef = useRef<any>(null);
+  const selectionRef = useRef<{ start: number; end: number }>({ start: 0, end: 0 });
   const close = () => {
     navigation.goBack();
   };
@@ -91,26 +91,32 @@ export default function ReplyModalScreen({
     setShowEmoticonPicker(!showEmoticonPicker);
   };
 
-  const insertDraft = (str: string) => {
-    setDraft([draft.slice(0, selection.start), str, draft.slice(selection.end)].join(""));
-    if (Platform.OS === "android") {
-      const targetPosition = selection.start + str.length;
-      setSelection({
-        start: targetPosition,
-        end: targetPosition,
-      });
-      InteractionManager.runAfterInteractions(() => {
-        inputRef.current?.setNativeProps({
-          selection: { start: targetPosition, end: targetPosition },
+  const insertDraft = useCallback(
+    (str: string) => {
+      setDraft((draft) =>
+        [
+          draft.slice(0, selectionRef.current.start),
+          str,
+          draft.slice(selectionRef.current.end),
+        ].join("")
+      );
+      if (Platform.OS === "android") {
+        const targetPosition = selectionRef.current.start + str.length;
+        selectionRef.current = { start: targetPosition, end: targetPosition };
+        InteractionManager.runAfterInteractions(() => {
+          inputRef.current?.setNativeProps({
+            selection: { start: targetPosition, end: targetPosition },
+          });
+          global.requestAnimationFrame(() => inputRef.current?.setNativeProps({ selection: null }));
         });
-        global.requestAnimationFrame(() => inputRef.current?.setNativeProps({ selection: null }));
-      });
 
-      if (inputRef.current?.setSelectionRange) {
-        inputRef.current.setSelectionRange(targetPosition, targetPosition);
+        if (inputRef.current?.setSelectionRange) {
+          inputRef.current.setSelectionRange(targetPosition, targetPosition);
+        }
       }
-    }
-  };
+    },
+    [setDraft]
+  );
 
   const upload = async (uri: string) => {
     try {
@@ -199,7 +205,7 @@ export default function ReplyModalScreen({
         setPostIdRefreshing(replyId!);
       }
       setDraft("");
-      setSelection({ start: 0, end: 0 });
+      selectionRef.current = { start: 0, end: 0 };
       close();
     } else {
       Toast.show({
@@ -275,70 +281,20 @@ export default function ReplyModalScreen({
           marginTop: insets.top,
           flex: fullscreenInput ? 1 : undefined,
         }}>
-        <View style={styles.header}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}>
-            <TouchableOpacity
-              hitSlop={{ left: 5, right: 100, top: 5, bottom: 5 }}
-              onPress={() => setShowPrefixInput(!showPrefixInput)}
-              style={{
-                marginRight: BASE_SIZE * 0.2,
-                paddingHorizontal: BASE_SIZE * 0.8,
-                backgroundColor: tintBackgroundColor,
-                borderRadius: BASE_SIZE,
-              }}>
-              <Icon
-                family="Octicons"
-                name={showPrefixInput ? "triangle-down" : "triangle-up"}
-                color={tintColor}
-              />
-            </TouchableOpacity>
-            <Text style={{ fontWeight: "bold" }}>
-              {replyId ? `回复 Po.${replyId}` : "发布新串"}
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-              style={{ marginRight: 20 }}
-              hitSlop={{ left: 20, right: 20, top: 20, bottom: 20 }}
-              onPress={() => {
-                const current = forums.find((x) => x.id === forumId);
-                Toast.show({ type: "info", text1: current?.info });
-              }}>
-              <Icon name="question" family="Octicons" color={tintColor} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ marginRight: 20 }}
-              hitSlop={{ left: 20, right: 20, top: 20, bottom: 20 }}
-              onPress={() => {
-                setFullscreenInput(!fullscreenInput);
-              }}>
-              <Icon name="screen-full" family="Octicons" color={tintColor} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ marginRight: 10 }}
-              hitSlop={{ left: 20, right: 20, top: 20, bottom: 20 }}
-              onPress={close}>
-              <Icon name="x" family="Octicons" color={tintColor} />
-            </TouchableOpacity>
-          </View>
-        </View>
+        <Header replyId={replyId} forumId={forumId} onClose={close} />
         {showPrefixInput && (
           <>
             <TextInput
               value={name}
               selectionColor={tintColor}
-              onChangeText={(val) => setName(val)}
+              onChangeText={setName}
               placeholder="昵称"
               style={[styles.inputPrefix, { height: BASE_SIZE * 1.8 }]}
             />
             <TextInput
               value={title}
               selectionColor={tintColor}
-              onChangeText={(val) => setTitle(val)}
+              onChangeText={setTitle}
               placeholder="标题"
               style={[styles.inputPrefix, { height: BASE_SIZE * 1.8 }]}
             />
@@ -360,10 +316,10 @@ export default function ReplyModalScreen({
           ]}
           value={draft}
           onSelectionChange={(event) => {
-            setSelection(event.nativeEvent.selection);
+            selectionRef.current = event.nativeEvent.selection;
           }}
           showSoftInputOnFocus={showKeyboard}
-          onChangeText={(val) => setDraft(val)}
+          onChangeText={setDraft}
           autoCorrect={false}
         />
         <View style={styles.pickerWrapper}>
@@ -459,14 +415,76 @@ export default function ReplyModalScreen({
               ]}
             />
           </View>
-          <EmoticonPicker
-            visible={showEmoticonPicker}
-            onInsert={(emoji) => {
-              insertDraft(emoji);
-            }}
-          />
+          {showEmoticonPicker && <EmoticonPicker onInsert={insertDraft} />}
         </View>
       </KeyboardAvoidingView>
+    </View>
+  );
+}
+
+function Header(props: {
+  replyId: number | null | undefined;
+  forumId: number | null | undefined;
+  onClose: () => void;
+}) {
+  const [fullscreenInput, setFullscreenInput] = useAtom(fullscreenInputAtom);
+  const [showPrefixInput, setShowPrefixInput] = useAtom(showPrefixInputAtom);
+  const BASE_SIZE = useContext(SizeContext);
+  const tintBackgroundColor = useThemeColor({}, "tintBackground");
+  const tintColor = useThemeColor({}, "tint");
+  const forums = useForums();
+
+  return (
+    <View style={styles.header}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+        }}>
+        <TouchableOpacity
+          hitSlop={{ left: 5, right: 100, top: 5, bottom: 5 }}
+          onPress={() => setShowPrefixInput(!showPrefixInput)}
+          style={{
+            marginRight: BASE_SIZE * 0.2,
+            paddingHorizontal: BASE_SIZE * 0.8,
+            backgroundColor: tintBackgroundColor,
+            borderRadius: BASE_SIZE,
+          }}>
+          <Icon
+            family="Octicons"
+            name={showPrefixInput ? "triangle-down" : "triangle-up"}
+            color={tintColor}
+          />
+        </TouchableOpacity>
+        <Text style={{ fontWeight: "bold" }}>
+          {props.replyId ? `回复 Po.${props.replyId}` : "发布新串"}
+        </Text>
+      </View>
+      <View style={{ flexDirection: "row" }}>
+        <TouchableOpacity
+          style={{ marginRight: 20 }}
+          hitSlop={{ left: 20, right: 20, top: 20, bottom: 20 }}
+          onPress={() => {
+            const current = forums.find((x) => x.id === props.forumId);
+            Toast.show({ type: "info", text1: current?.info });
+          }}>
+          <Icon name="question" family="Octicons" color={tintColor} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ marginRight: 20 }}
+          hitSlop={{ left: 20, right: 20, top: 20, bottom: 20 }}
+          onPress={() => {
+            setFullscreenInput(!fullscreenInput);
+          }}>
+          <Icon name="screen-full" family="Octicons" color={tintColor} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ marginRight: 10 }}
+          hitSlop={{ left: 20, right: 20, top: 20, bottom: 20 }}
+          onPress={props.onClose}>
+          <Icon name="x" family="Octicons" color={tintColor} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

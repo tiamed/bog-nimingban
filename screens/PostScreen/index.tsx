@@ -11,13 +11,7 @@ import Footer from "./Footer";
 import PageModal from "./PageModal";
 
 import { Reply, Post } from "@/api";
-import {
-  previewsAtom,
-  draftAtom,
-  postIdRefreshingAtom,
-  orderAtom,
-  selectionAtom,
-} from "@/atoms/index";
+import { previewsAtom, draftAtom, postIdRefreshingAtom, orderAtom } from "@/atoms/index";
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
 import { View } from "@/components/Themed";
@@ -104,7 +98,6 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   const [order] = useAtom(orderAtom);
 
   const setDraft = useSetAtom(draftAtom);
-  const setSelection = useSetAtom(selectionAtom);
   const forumsIdMap = useForumsIdMap();
 
   const listRef = useRef<FlatList>(null);
@@ -231,7 +224,6 @@ export default function PostScreen({ route, navigation }: RootStackScreenProps<"
   useEffect(() => {
     setCurrentId(route.params.id);
     setDraft("");
-    setSelection({ start: 0, end: 0 });
     return () => {
       setMainPost({} as Post);
     };
