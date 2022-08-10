@@ -1,5 +1,3 @@
-import { nativeApplicationVersion } from "expo-application";
-import Constants from "expo-constants";
 import { useContext, useState } from "react";
 import { Linking, StyleSheet, TouchableHighlight } from "react-native";
 
@@ -8,6 +6,7 @@ import ChangelogModal from "@/components/ChangelogModal";
 import { View, Text, useThemeColor } from "@/components/Themed";
 import { manualUpdate } from "@/tasks/checkAppUpdate";
 import { RootStackScreenProps } from "@/types";
+import { getVersion } from "@/utils/update";
 
 export default function AboutScreen({ route, navigation }: RootStackScreenProps<"About">) {
   const [changelogVisible, setChangelogVisible] = useState(false);
@@ -60,7 +59,7 @@ export default function AboutScreen({ route, navigation }: RootStackScreenProps<
       />
       <AboutItem
         title="检查更新"
-        desc={`当前版本：${Constants.manifest?.version ?? nativeApplicationVersion}`}
+        desc={`当前版本：${getVersion()}`}
         onPress={() => {
           manualUpdate();
         }}
