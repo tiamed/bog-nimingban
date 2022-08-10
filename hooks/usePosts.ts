@@ -11,6 +11,7 @@ import { historyAtom, orderAtom } from "@/atoms/index";
 import Errors from "@/constants/Errors";
 import Request from "@/constants/Request";
 import { UserHistory } from "@/screens/BrowseHistoryScreen";
+import { excludeSameId } from "@/utils/helper";
 
 interface ReplyWithPage extends Reply {
   currentPage?: number;
@@ -143,11 +144,9 @@ export default function usePosts(id: number) {
           return;
         }
 
-        const replyWithPage: ReplyWithPage[] = reply.map((x) => ({ ...x, currentPage: nextPage }));
+        const nextPosts: ReplyWithPage[] = reply.map((x) => ({ ...x, currentPage: nextPage }));
 
-        let nextPosts = replyWithPage;
         if (!jump) {
-          nextPosts = nextPosts.filter((post) => !posts.find((x) => x.id === post.id));
           const isPrev =
             nextPage < pagination.firstPage || (nextPage === pagination.firstPage && order === 1);
           if (isPrev) {
@@ -158,7 +157,7 @@ export default function usePosts(id: number) {
                 length: reply.length,
               },
             });
-            setPosts([...nextPosts, ...posts]);
+            setPosts((posts) => [...excludeSameId(nextPosts, posts), ...posts]);
           } else {
             dispatchPagination({
               type: "NEXT",
@@ -167,7 +166,7 @@ export default function usePosts(id: number) {
                 length: reply.length,
               },
             });
-            setPosts([...posts, ...nextPosts]);
+            setPosts((posts) => [...posts, ...excludeSameId(nextPosts, posts)]);
           }
         } else {
           dispatchPagination({
@@ -187,7 +186,7 @@ export default function usePosts(id: number) {
         setIsLoading(false);
       }
     },
-    [id, order, pagination.firstPage, posts]
+    [id, isMounted, order, pagination.firstPage]
   );
 
   // 添加历史记录
