@@ -2,6 +2,7 @@ import Slider from "@react-native-community/slider";
 import { useAtom } from "jotai";
 import { useContext } from "react";
 import { StyleSheet, View } from "react-native";
+import { useDebouncedCallback } from "use-debounce/lib";
 
 import { Text, useThemeColor } from "./Themed";
 
@@ -19,12 +20,16 @@ export default function SettingSlider(props: {
   const tintColor = useThemeColor({}, "tint");
   const inactiveColor = useThemeColor({}, "inactive");
 
+  const debouncedSetValue = useDebouncedCallback(setValue, 200, {
+    trailing: true,
+  });
+
   return (
     <View style={[styles.item, { minHeight: BASE_SIZE * 4 }]}>
       <Text style={styles.itemLabel}>{props.title}</Text>
       <Slider
         value={value as number | undefined}
-        onValueChange={(val: number) => setValue(val)}
+        onValueChange={debouncedSetValue}
         minimumValue={props.min}
         maximumValue={props.max}
         step={props.step}
