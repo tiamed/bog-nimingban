@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.42](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.41...v1.0.0-alpha.42) (2022-08-12)
+
+
+### Bug Fixes
+
+* **slider:** andriod slider jumps when sliding ([f2736b5](https://github.com/tiamed/bog-nimingban/commit/f2736b50a7551c4fddf75af172f42eabd1282a35))
+
 ## [1.0.0-alpha.41](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.40...v1.0.0-alpha.41) (2022-08-09)
 
 

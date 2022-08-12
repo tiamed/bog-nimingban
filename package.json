@@ -1,6 +1,6 @@
 {
   "name": "bog-nimingban",
-  "version": "1.0.0-alpha.41",
+  "version": "1.0.0-alpha.42",
   "scripts": {
     "start": "npx expo start",
     "android": "npx expo start --android",
