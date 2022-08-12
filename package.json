@@ -9,6 +9,7 @@
     "eject": "npx expo eject",
     "test": "jest --watchAll",
     "prerelease": "standard-version commitizen --prerelease",
+    "release": "standard-version commitizen --patch",
     "postinstall": "patch-package"
   },
   "jest": {

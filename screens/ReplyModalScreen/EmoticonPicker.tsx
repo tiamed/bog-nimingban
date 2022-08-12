@@ -58,10 +58,6 @@ export default function EmoticonPicker(props: { onInsert: (emoticon: string) => 
     }
   };
 
-  useEffect(() => {
-    console.log("onInsert changed");
-  }, [props.onInsert]);
-
   return (
     <View
       style={{
