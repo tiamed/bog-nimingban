@@ -1,8 +1,8 @@
 import { parseISO } from "date-fns";
 import * as Clipboard from "expo-clipboard";
 import { useAtom, useSetAtom } from "jotai";
-import { useContext, useEffect, useState } from "react";
-import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { Alert, AppState, StyleSheet, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import AddCookieModal from "./AddCookieModal";
@@ -11,10 +11,11 @@ import { Cookie, showAddModalAtom, showCreateModalAtom } from "./common";
 
 import { SizeContext } from "@/Provider";
 import { SignInfo, signIn, deleteSlaveCookie } from "@/api";
-import { cookiesAtom, selectedCookieAtom, signDictAtom } from "@/atoms/index";
+import { cookiesAtom, lastSignedTimeAtom, selectedCookieAtom, signDictAtom } from "@/atoms/index";
 import Icon from "@/components/Icon";
 import { Button, Text, useThemeColor } from "@/components/Themed";
 import Errors from "@/constants/Errors";
+import { useSignAll } from "@/hooks/useSign";
 
 interface SignDict {
   [key: string]: SignInfo;
@@ -32,6 +33,7 @@ export default function Cookies() {
   const setShowCreateModal = useSetAtom(showCreateModalAtom);
   const iconColor = useThemeColor({}, "tint");
   const BASE_SIZE = useContext(SizeContext);
+  const handleSignAll = useSignAll();
 
   const getCanSign = (utcTimeString: string) => {
     const signTime = parseISO(utcTimeString);
@@ -40,6 +42,14 @@ export default function Cookies() {
       return true;
     }
     return Date.now() > timestamp;
+  };
+
+  const getIsSigned = (cookie: Cookie) => {
+    const signTime = signDict?.[cookie.hash]?.signtime;
+    if (signTime) {
+      return !getCanSign(signTime);
+    }
+    return false;
   };
 
   const handleSign = async (cookie: Cookie) => {
@@ -169,6 +179,7 @@ export default function Cookies() {
             setShowAddModal(true);
           }}
         />
+        <Button title="一键签到" style={{ marginLeft: 10 }} onPress={handleSignAll} />
       </View>
       <AddCookieModal cookie={current} />
       <CreateCookieModal />
@@ -186,7 +197,7 @@ export default function Cookies() {
             setCurrent(cookie);
             setShowAddModal(true);
           }}>
-          <Icon name="edit" color={iconColor} />
+          <Icon family="Octicons" name="pencil" color={iconColor} />
         </TouchableOpacity>
         {isSlave ? (
           <TouchableOpacity
@@ -198,14 +209,14 @@ export default function Cookies() {
                 text1: "影武者无法导出",
               });
             }}>
-            <Icon name="user-secret" color={iconColor} />
+            <Icon family="Octicons" name="hubot" color={iconColor} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
             style={styles.edit}
             disabled={!cookie.id}
             onPress={() => handleCopy(cookie)}>
-            <Icon name="download" color={iconColor} />
+            <Icon family="Octicons" name="copy" color={iconColor} />
           </TouchableOpacity>
         )}
 
@@ -213,7 +224,13 @@ export default function Cookies() {
         {!isSlave && (
           <>
             <Text style={styles.cookieSigned}>已签到{signDict?.[cookie.hash]?.sign || 0}天</Text>
-            <Button title="签到" disabled={!cookie.id} onPress={() => handleSign(cookie)} />
+            <TouchableOpacity disabled={!cookie.id} onPress={() => handleSign(cookie)}>
+              {getIsSigned(cookie) ? (
+                <Icon family="Octicons" name="check-circle-fill" color={iconColor} />
+              ) : (
+                <Icon family="Octicons" name="check-circle" color={iconColor} />
+              )}
+            </TouchableOpacity>
           </>
         )}
         {isSlave && <Text style={styles.cookieSlaveLabel}>影武者</Text>}
@@ -221,7 +238,7 @@ export default function Cookies() {
           style={styles.delete}
           disabled={!cookie.id}
           onPress={() => confirmDelete(cookie)}>
-          <Icon name="minus-circle" color={iconColor} />
+          <Icon family="Octicons" name="no-entry" color={iconColor} />
         </TouchableOpacity>
       </View>
     );
@@ -259,7 +276,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   cookieSlave: {
-    paddingLeft: 32,
+    paddingLeft: 27,
   },
   cookieSlaveLabel: {
     fontSize: 10,

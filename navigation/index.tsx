@@ -27,6 +27,7 @@ import LinkingConfiguration from "./LinkingConfiguration";
 
 import {
   historyTabAtom,
+  lastSignedTimeAtom,
   responsiveWidthAtom,
   showTabBarLabelAtom,
   sizeAtom,
@@ -35,6 +36,7 @@ import {
 import DrawerContent from "@/components/DrawerContent";
 import { TabBarIcon } from "@/components/Icon";
 import { useThemeColor } from "@/components/Themed";
+import { useSignAll } from "@/hooks/useSign";
 import AboutScreen from "@/screens/AboutScreen";
 import BlackListScreen from "@/screens/BlackListScreen";
 import BlackListUserScreen from "@/screens/BlackListUserScreen";
@@ -106,7 +108,9 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   const navigation = useNavigation<StackNavigationProp<any>>();
   const [clipboardText, setClipboardText] = useState("");
+  const [lastSignedTime, setLastSignedTime] = useAtom(lastSignedTimeAtom);
   const cardTextColor = useThemeColor({}, "cardText");
+  const handleSignAll = useSignAll();
 
   useEffect(() => {
     const listener = AppState.addEventListener("change", (nextAppState) => {
@@ -122,6 +126,21 @@ function RootNavigator() {
       listener.remove();
     };
   }, [clipboardText]);
+
+  useEffect(() => {
+    const listener = AppState.addEventListener("change", (nextAppState) => {
+      const now = Date.now();
+      const canSignAll = now > lastSignedTime + 1000 * 60 * 60 * 24;
+      if (nextAppState === "active" && canSignAll) {
+        handleSignAll().then(() => {
+          setLastSignedTime(now);
+        });
+      }
+    });
+    return () => {
+      listener.remove();
+    };
+  }, [handleSignAll, lastSignedTime, setLastSignedTime]);
 
   useEffect(() => {
     if (clipboardText) {
