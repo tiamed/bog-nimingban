@@ -24,6 +24,10 @@
     "production": {}
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "language": "zh-Hans"
+      }
+    }
   }
 }
