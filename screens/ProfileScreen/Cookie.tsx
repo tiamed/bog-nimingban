@@ -1,8 +1,8 @@
 import { parseISO } from "date-fns";
 import * as Clipboard from "expo-clipboard";
 import { useAtom, useSetAtom } from "jotai";
-import { useCallback, useContext, useEffect, useState } from "react";
-import { Alert, AppState, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import AddCookieModal from "./AddCookieModal";
@@ -11,7 +11,7 @@ import { Cookie, showAddModalAtom, showCreateModalAtom } from "./common";
 
 import { SizeContext } from "@/Provider";
 import { SignInfo, signIn, deleteSlaveCookie } from "@/api";
-import { cookiesAtom, lastSignedTimeAtom, selectedCookieAtom, signDictAtom } from "@/atoms/index";
+import { cookiesAtom, selectedCookieAtom, signDictAtom } from "@/atoms/index";
 import Icon from "@/components/Icon";
 import { Button, Text, useThemeColor } from "@/components/Themed";
 import Errors from "@/constants/Errors";

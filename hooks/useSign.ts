@@ -13,17 +13,19 @@ export const useSignAll = () => {
   const handleSignAll = useCallback(async () => {
     Toast.show({ type: "info", text1: "正在签到..." });
     const masterCookies = cookies.filter((cookie) => !cookie.master && cookie.id);
+    let newSignDict = {};
     const results = await Promise.all(
       masterCookies.map(async ({ hash, code }) => {
         const {
           data: { info, code: resultCode },
         } = await signIn(code.split("#")[0], hash);
         if (info && info.exp) {
-          setSignDict({ ...signDict, [hash]: info });
+          newSignDict = { ...newSignDict, [hash]: info };
         }
         return resultCode;
       })
     );
+    setSignDict(newSignDict);
     const successCount = results.filter((code) => code === 7010).length;
     const completedCount = results.filter((code) => code === 7006).length;
     const errorCount = results.filter((code) => code !== 7010 && code !== 7006).length;

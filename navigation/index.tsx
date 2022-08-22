@@ -130,7 +130,7 @@ function RootNavigator() {
   useEffect(() => {
     const listener = AppState.addEventListener("change", (nextAppState) => {
       const now = Date.now();
-      const canSignAll = now > lastSignedTime + 1000 * 60 * 60 * 24;
+      const canSignAll = lastSignedTime !== null && now > lastSignedTime + 1000 * 60 * 60 * 24;
       if (nextAppState === "active" && canSignAll) {
         handleSignAll().then(() => {
           setLastSignedTime(now);
