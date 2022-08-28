@@ -18,6 +18,7 @@ import { ColorSchemeContext, LayoutConfigContext, SizeContext } from "@/Provider
 import Colors from "@/constants/Colors";
 import Layout from "@/constants/Layout";
 import useColor from "@/hooks/useColor";
+import useColorScheme from "@/hooks/useColorScheme";
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -98,6 +99,7 @@ export const TextInput = forwardRef(function (props: TextInputProps, ref) {
   const textColor = useThemeColor({}, "text");
   const tintColor = useThemeColor({}, "tint");
   const placeholderTextColor = useThemeColor({}, "inactive");
+  const colorScheme = useColorScheme();
 
   return (
     <DefaultTextInput
@@ -105,6 +107,7 @@ export const TextInput = forwardRef(function (props: TextInputProps, ref) {
       style={[{ backgroundColor, color: textColor }, style]}
       selectionColor={tintColor}
       placeholderTextColor={placeholderTextColor}
+      keyboardAppearance={colorScheme}
       {...otherProps}
     />
   );
