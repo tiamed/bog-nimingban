@@ -39,7 +39,7 @@ export default function DrawerContent(props: any) {
   return (
     <View style={{ marginTop: insets.top, flex: 1 }}>
       <View style={styles.header}>
-        <Text style={[styles.headerLabel, { color: headerTextColor }]}>所有板块</Text>
+        <Text style={[styles.headerLabel, { color: headerTextColor }]}>所有版块</Text>
         <TouchableOpacity
           style={styles.headerIcon}
           onPress={() => {
