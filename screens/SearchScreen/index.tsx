@@ -1,7 +1,12 @@
 import { useReducerAtom } from "jotai/utils";
 import { useEffect, useRef, useState } from "react";
-import { Platform, KeyboardAvoidingView, StyleSheet, InteractionManager } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  Platform,
+  KeyboardAvoidingView,
+  StyleSheet,
+  InteractionManager,
+  TouchableOpacity,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import SearchHistory, { searchHistoryReducer } from "./SearchHistory";

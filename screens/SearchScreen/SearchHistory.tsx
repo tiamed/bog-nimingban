@@ -1,8 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { atom, useAtom } from "jotai";
 import { useReducerAtom } from "jotai/utils";
-import { StyleSheet, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 
 import { useThemeColor } from "../../components/Themed";
 
