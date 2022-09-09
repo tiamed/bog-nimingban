@@ -59,6 +59,7 @@ import RecommendScreen from "@/screens/RecommendScreen";
 import ReplyHistoryScreen from "@/screens/ReplyHistoryScreen";
 import ReplyModalScreen from "@/screens/ReplyModalScreen";
 import SearchModalScreen from "@/screens/SearchModalScreen";
+import SearchResultScreen from "@/screens/SearchResultScreen";
 import SearchScreen from "@/screens/SearchScreen";
 import SketchScreen from "@/screens/SketchScreen";
 import CheckFavoriteUpdate from "@/tasks/CheckFavoriteUpdate";
@@ -184,10 +185,17 @@ function RootNavigator() {
         })}
       />
       <Stack.Screen
+        name="SearchResult"
+        component={SearchResultScreen}
+        options={{
+          title: "搜索结果：",
+        }}
+      />
+      <Stack.Screen
         name="Search"
         component={SearchScreen}
         options={{
-          title: "搜索结果：",
+          headerShown: false,
         }}
       />
       <Stack.Screen

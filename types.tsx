@@ -37,7 +37,8 @@ export type RootStackParamList = {
   ForumSettings: undefined;
   About: undefined;
   FooterLayout: undefined;
-  Search: {
+  Search: undefined;
+  SearchResult: {
     query: string;
   };
   Sketch: undefined;

@@ -9,6 +9,7 @@ export default {
     height,
   },
   isSmallDevice: width < 375,
+  padding: 16,
   postHorizontalPadding: 16,
   postHorizontalPaddingSecondary: 4,
   replyEditorHorizontalPadding: 6,

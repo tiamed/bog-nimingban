@@ -1,10 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
 
-export default function Overlay(props: { style?: Partial<ViewStyle> }) {
+export default function Overlay(props: { style?: Partial<ViewStyle>; onPress?: () => void }) {
   const navigation = useNavigation();
   return (
-    <TouchableWithoutFeedback onPress={navigation.goBack}>
+    <TouchableWithoutFeedback onPress={props.onPress || navigation.goBack}>
       <View style={[styles.overlay, props.style]} />
     </TouchableWithoutFeedback>
   );

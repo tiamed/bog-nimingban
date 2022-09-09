@@ -42,6 +42,7 @@ const linking: LinkingOptions<RootStackParamList> = {
       BlackList: "blacklist",
       LayoutSettings: "layoutSettings",
       FooterLayout: "footerLayout",
+      SearchResult: "SearchResult",
       Search: "search",
       Sketch: "sketch",
       NotFound: "*",

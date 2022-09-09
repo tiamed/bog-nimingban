@@ -21,7 +21,7 @@ export default function HomeFloatingAction() {
         });
         break;
       case "search":
-        navigation.navigate("SearchModal");
+        navigation.navigate("Search");
         break;
       case "recommend":
         navigation.navigate("Recommend");
