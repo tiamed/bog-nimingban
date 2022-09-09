@@ -48,10 +48,7 @@ export const searchHistoryReducer = (
 function HistoryItem(props: { item: SearchHistoryItem }) {
   const textColor = useThemeColor({}, "text");
   const backgroundColor = useThemeColor({}, "background");
-  const [searchHistory, dispatchSearchHistory] = useReducerAtom(
-    searchHistoryAtom,
-    searchHistoryReducer
-  );
+  const [, dispatchSearchHistory] = useReducerAtom(searchHistoryAtom, searchHistoryReducer);
   const navigation = useNavigation();
 
   const [canDelete, setCanDelete] = useAtom(canDeleteAtom);
@@ -59,7 +56,6 @@ function HistoryItem(props: { item: SearchHistoryItem }) {
   return (
     <>
       <TouchableOpacity
-        key={`${props.item.query}-${props.item.isJump}`}
         style={[styles.item, { backgroundColor }]}
         onLongPress={() => {
           setCanDelete(!canDelete);
@@ -119,11 +115,13 @@ export default function SearchHistory() {
           <Icon family="Octicons" name="trash" color={inactiveColor} />
         </TouchableOpacity>
       </View>
-      <View style={styles.items}>
-        {searchHistory.map((item: SearchHistoryItem) => (
-          <HistoryItem item={item} />
-        ))}
-      </View>
+      {!!searchHistory.length && (
+        <View style={styles.items}>
+          {searchHistory.map((item: SearchHistoryItem) => (
+            <HistoryItem key={`${item.query}-${item.isJump}`} item={item} />
+          ))}
+        </View>
+      )}
     </View>
   );
 }
@@ -134,11 +132,11 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   header: {
-    marginBottom: 16,
     flexDirection: "row",
     justifyContent: "space-between",
   },
   items: {
+    marginTop: 4,
     flexDirection: "row",
     flexWrap: "wrap-reverse",
   },
@@ -147,10 +145,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 32,
     marginRight: 8,
+    marginBottom: 12,
     flexDirection: "row",
-  },
-  popover: {
-    padding: 12,
-    borderRadius: 6,
   },
 });
