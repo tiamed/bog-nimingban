@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0-0](https://github.com/tiamed/bog-nimingban/compare/v1.0.0...v1.1.0-0) (2023-01-03)
+
+
+### Features
+
+* ios keyboard scheme support ([41fa8e1](https://github.com/tiamed/bog-nimingban/commit/41fa8e1e6709de308053a565da3de3c88faf7911))
+* search history ([b19eabe](https://github.com/tiamed/bog-nimingban/commit/b19eabeda5a22f276e70aad137177bc97ba549f1))
+* sign all, auto sign, change cookie icons ([66a99ee](https://github.com/tiamed/bog-nimingban/commit/66a99ee3a1a1275626c8fcff57546dadedf52bb1))
+
+
+### Bug Fixes
+
+* auto sign timing and result ([da7b695](https://github.com/tiamed/bog-nimingban/commit/da7b6958bf52da6b4e275aa939e6a462812de61e))
+* **image:** replace thumbnail extension ([24503d8](https://github.com/tiamed/bog-nimingban/commit/24503d82233a6c17268eae0bd9fc5b42401b2b02))
+* search screen buttons ([6abc283](https://github.com/tiamed/bog-nimingban/commit/6abc2837e3ac6537d8f035a5b63ebb9d4353e944))
+
 ## [1.0.0](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.42...v1.0.0) (2022-08-12)
 
 ## [1.0.0-alpha.42](https://github.com/tiamed/bog-nimingban/compare/v1.0.0-alpha.41...v1.0.0-alpha.42) (2022-08-12)
