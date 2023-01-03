@@ -2,7 +2,7 @@
   "expo": {
     "name": "粉岛",
     "slug": "bog-nimingban",
-    "version": "1.1.0-0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "bog",
@@ -69,6 +69,11 @@
     "githubUrl": "https://github.com/tiamed/bog-nimingban",
     "runtimeVersion": {
       "policy": "sdkVersion"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "91336b92-4d9a-4bb2-a717-4e6ef77c7929"
+      }
     }
   }
 }
