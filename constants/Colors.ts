@@ -4,6 +4,7 @@ const tintColorDark = "#ff4c6d";
 export default {
   light: {
     text: "#000",
+    textHidden: "#000",
     background: "#fff",
     quoteBackground: "#f7f7f7",
     replyBackground: "#fafafa",
@@ -27,6 +28,7 @@ export default {
   },
   dark: {
     text: "#fff",
+    textHidden: "#fff",
     background: "#000",
     quoteBackground: "#202124",
     replyBackground: "#1c1c1c",

@@ -250,13 +250,14 @@ function Link(props: { href: string; text?: string; onPress?: () => void }) {
 
 function HiddenText(props: { children: any }) {
   const [isHidden, setIsHidden] = useState(true);
+  const textHiddenColor = useThemeColor({}, "textHidden");
   const textColor = useThemeColor({}, "text");
   return (
     <Text
       onPress={() => setIsHidden(!isHidden)}
       style={{
-        opacity: isHidden ? 0 : 1,
-        backgroundColor: isHidden ? textColor : undefined,
+        color: isHidden ? textHiddenColor : textColor,
+        backgroundColor: isHidden ? textHiddenColor : undefined,
       }}>
       {props.children}
     </Text>
