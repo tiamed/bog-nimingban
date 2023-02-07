@@ -31,7 +31,7 @@ export default function BlackListWordScreen({
         </TouchableOpacity>
       ),
     });
-  }, []);
+  }, [cardInactiveColor, navigation]);
 
   return (
     <View style={styles.container}>
