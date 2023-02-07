@@ -92,14 +92,18 @@ export default function ReplyModalScreen({
   };
 
   const insertDraft = useCallback(
-    (str: string) => {
-      setDraft((draft) =>
-        [
-          draft.slice(0, selectionRef.current.start),
-          str,
-          draft.slice(selectionRef.current.end),
-        ].join("")
-      );
+    (str: string, isAppend: boolean = false) => {
+      if (isAppend) {
+        setDraft((draft) => [draft, str].join(""));
+      } else {
+        setDraft((draft) =>
+          [
+            draft.slice(0, selectionRef.current.start),
+            str,
+            draft.slice(selectionRef.current.end),
+          ].join("")
+        );
+      }
       if (Platform.OS === "android") {
         const targetPosition = selectionRef.current.start + str.length;
         selectionRef.current = { start: targetPosition, end: targetPosition };
@@ -157,7 +161,7 @@ export default function ReplyModalScreen({
       quality: 1,
     });
 
-    if (!result.cancelled) {
+    if (!result.cancelled && result.uri) {
       await upload(result.uri);
     }
   };
@@ -218,9 +222,9 @@ export default function ReplyModalScreen({
   useEffect(() => {
     if (route.params.content) {
       if (draft.endsWith("\n") || draft.length === 0) {
-        insertDraft(route.params.content);
+        insertDraft(route.params.content, true);
       } else {
-        insertDraft("\n" + route.params.content);
+        insertDraft("\n" + route.params.content, true);
       }
     }
     setForumId(route.params.forumId);
