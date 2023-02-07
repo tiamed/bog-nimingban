@@ -95,11 +95,11 @@ export default function AddCookieModal(props: { cookie?: Cookie }) {
   };
 
   useEffect(() => {
-    if (props.cookie) {
+    if (props.cookie && visible) {
       setName(props.cookie.name);
       setMaster(props.cookie.master);
     }
-  }, [props.cookie]);
+  }, [props.cookie, visible]);
 
   return (
     <Modal isVisible={visible} onBackdropPress={close} avoidKeyboard>
