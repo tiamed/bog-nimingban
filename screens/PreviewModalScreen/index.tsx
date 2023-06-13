@@ -59,7 +59,12 @@ export default function PreviewModalScreen() {
   const saveImage = () => {
     getImage(async (uri) => {
       const asset = await MediaLibrary.createAssetAsync(uri);
-      await MediaLibrary.createAlbumAsync("bog-nimingban", asset, false);
+      const album = await MediaLibrary.getAlbumAsync("bog-nimingban");
+      if (album) {
+        await MediaLibrary.addAssetsToAlbumAsync([asset], album);
+      } else {
+        await MediaLibrary.createAlbumAsync("bog-nimingban", asset, false);
+      }
       Toast.show({ type: "success", text1: "已保存图片" });
     });
   };
