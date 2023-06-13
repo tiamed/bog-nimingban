@@ -66,3 +66,6 @@ bog 岛第三方客户端
 
 - [海岛](https://github.com/toddtail/bogisland)
 - [B岛](https://gitee.com/simsim95/bog)
+
+## 致谢
+- 设计@ミツキ
