@@ -32,6 +32,7 @@ import {
   showTabBarLabelAtom,
   sizeAtom,
   tabRefreshingAtom,
+  shouldListenClipboardAtom,
 } from "@/atoms";
 import DrawerContent from "@/components/DrawerContent";
 import { TabBarIcon } from "@/components/Icon";
@@ -110,12 +111,13 @@ function RootNavigator() {
   const navigation = useNavigation<StackNavigationProp<any>>();
   const [clipboardText, setClipboardText] = useState("");
   const [lastSignedTime, setLastSignedTime] = useAtom(lastSignedTimeAtom);
+  const [shouldListenClipboard] = useAtom(shouldListenClipboardAtom);
   const cardTextColor = useThemeColor({}, "cardText");
   const handleSignAll = useSignAll();
 
   useEffect(() => {
     const listener = AppState.addEventListener("change", (nextAppState) => {
-      if (nextAppState === "active") {
+      if (nextAppState === "active" && shouldListenClipboard) {
         Clipboard.getStringAsync().then(async (text) => {
           if (text && text !== clipboardText) {
             setClipboardText(text);
@@ -126,7 +128,7 @@ function RootNavigator() {
     return () => {
       listener.remove();
     };
-  }, [clipboardText]);
+  }, [clipboardText, shouldListenClipboard]);
 
   useEffect(() => {
     const listener = AppState.addEventListener("change", (nextAppState) => {

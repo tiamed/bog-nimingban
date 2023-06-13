@@ -15,6 +15,7 @@ import {
   anonCookieModeAtom,
   emojiCookieModeAtom,
   nativeImageRendererAtom,
+  shouldListenClipboardAtom,
 } from "@/atoms";
 import JumpToSettings from "@/components/JumpToSettings";
 import SettingPicker from "@/components/SettingPicker";
@@ -27,6 +28,7 @@ export default function GeneralSettingsScreen() {
       <View style={styles.container}>
         <SettingSwitch title="振动反馈" atom={vibrateAtom} />
         <SettingSwitch title="记住只看po" atom={shouldMemorizePostFilteredAtom} />
+        <SettingSwitch title="监听剪贴板跳转串" atom={shouldListenClipboardAtom} />
         <SettingSwitch title="串外链接启用点击" atom={clickableAtom} />
         <SettingSwitch title="切换预览图渲染模式" atom={nativeImageRendererAtom} />
         <SettingSwitch title="串引用自动展开" atom={autoExpandAtom} />
