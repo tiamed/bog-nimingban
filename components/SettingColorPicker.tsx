@@ -75,12 +75,10 @@ function ColorPickerModal(props: {
   };
   useEffect(() => {
     setSelectedColor(color);
-  }, [color]);
+  }, [color, props.visible]);
   useEffect(() => {
-    if (selectedColor !== hex) {
-      setHex(selectedColor);
-    }
-  }, [hex, selectedColor]);
+    setHex(selectedColor);
+  }, [selectedColor]);
   return (
     <Modal isVisible={props.visible} onBackdropPress={close} avoidKeyboard>
       <View style={styles.modal}>
