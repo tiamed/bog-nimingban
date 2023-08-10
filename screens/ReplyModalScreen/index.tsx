@@ -1,3 +1,4 @@
+import { manipulateAsync } from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
 import { atom, useAtom, useSetAtom } from "jotai";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
@@ -37,6 +38,7 @@ import ImageView from "@/components/Post/ImageView";
 import { Text, useThemeColor, View, TextInput } from "@/components/Themed";
 import Errors from "@/constants/Errors";
 import Layout from "@/constants/Layout";
+import Media from "@/constants/Media";
 import useForums from "@/hooks/useForums";
 import { ReplyHistory } from "@/screens/ReplyHistoryScreen";
 import { RootStackScreenProps } from "@/types";
@@ -139,19 +141,18 @@ export default function ReplyModalScreen({
         type: `image/${ext}`,
       } as any);
       const { code, pic, msg } = await uploadImage(formData);
+      Toast.hide();
       if (code === 200) {
         if (images.find((image) => image.url === pic)) {
-          Toast.show({ type: "success", text1: "请勿上传重复图片", position: "top" });
+          Toast.show({ type: "error", text1: "请勿上传重复图片", position: "top" });
         } else {
           setImages([...images, { url: pic, ext: `.${ext}` }]);
         }
       } else {
-        Toast.show({ type: "error", text1: msg, position: "top" });
+        Toast.show({ type: "error", text1: Errors[code] || msg, position: "top" });
       }
     } catch (error) {
       Toast.show({ type: "error", text1: (error as Error).message, position: "top" });
-    } finally {
-      Toast.hide();
     }
   };
 
@@ -161,8 +162,28 @@ export default function ReplyModalScreen({
       quality: 1,
     });
 
-    if (!result.cancelled && result.uri) {
-      await upload(result.uri);
+    if (result.canceled) return;
+
+    const file = result.assets?.[0];
+
+    if (file?.uri) {
+      const ext = file.uri.substr(file.uri.lastIndexOf(".")).toLowerCase();
+      const canCompress = !(ext === ".gif" && Platform.OS === "android");
+      const needCompress = !file.fileSize || file.fileSize > Media.MaxImageSize;
+
+      if (canCompress && needCompress) {
+        try {
+          const manipulateResult = await manipulateAsync(file.uri, [], {
+            compress: 0.5,
+          });
+          await upload(manipulateResult.uri);
+        } catch (error) {
+          console.error(error);
+          await upload(file.uri);
+        }
+      } else {
+        await upload(file.uri);
+      }
     }
   };
 
@@ -255,6 +276,7 @@ export default function ReplyModalScreen({
   useEffect(() => {
     if (draft) {
       setAutoSavedDraft(draft);
+      setCanRecoverDraft(false);
     }
   }, [draft]);
 
