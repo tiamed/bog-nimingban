@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0-1](https://github.com/tiamed/bog-nimingban/compare/v1.1.0-0...v1.2.0-1) (2023-08-10)
+
+
+### Features
+
+* listen clipboard switch ([fa3e03f](https://github.com/tiamed/bog-nimingban/commit/fa3e03fe716672d30679a8af1a11bda641dd3c80))
+
+
+### Bug Fixes
+
+* compress image when out of size ([8ca683d](https://github.com/tiamed/bog-nimingban/commit/8ca683d0e62ccedaaad3c3d780c641ee0a7fe765))
+* creating albums when saving pictures ([0bc5ff2](https://github.com/tiamed/bog-nimingban/commit/0bc5ff2fe9de1ade9f0b0875856b60cced0b4192))
+* edit cookie name ([5f49dd3](https://github.com/tiamed/bog-nimingban/commit/5f49dd32f2f1058de6517d964a9bb8a8c1d66eff))
+* hidden text opacity ([2e771d2](https://github.com/tiamed/bog-nimingban/commit/2e771d22961606f51309947179f9f758b9b3dfac))
+* **reply:** append reply number ([ecccb27](https://github.com/tiamed/bog-nimingban/commit/ecccb27d7d5bf4d0ccf56cab247890608cbebf8f))
+* **settings:** color picker value resets on input ([af62454](https://github.com/tiamed/bog-nimingban/commit/af624548a49be7e299e0affa5a18977610802c36))
+
 ## [1.2.0-0](https://github.com/tiamed/bog-nimingban/compare/v1.1.0-0...v1.2.0-0) (2023-08-10)
 
 

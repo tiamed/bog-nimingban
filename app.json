@@ -2,7 +2,7 @@
   "expo": {
     "name": "粉岛",
     "slug": "bog-nimingban",
-    "version": "1.2.0-0",
+    "version": "1.2.0-1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "bog",
