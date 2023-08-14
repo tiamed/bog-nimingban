@@ -4,8 +4,8 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "r
 import { FlatList, InteractionManager, StyleSheet, TouchableOpacity } from "react-native";
 import Toast from "react-native-toast-message";
 
-import { UserFavorite } from "../screens/FavoriteScreen/index";
 import Icon from "./Icon";
+import { UserFavorite } from "../screens/FavoriteScreen/index";
 
 import { SizeContext } from "@/Provider";
 import { accurateTimeFormatAtom, favoriteAtom, favoriteTagsAtom } from "@/atoms";
@@ -281,7 +281,7 @@ function TagItem(props: {
       {props.time && (
         <View style={styles.itemActionWrapper}>
           <TouchableOpacity style={styles.itemAction} onPress={props.onEdit}>
-            <Icon name="edit" color={tintColor} size={BASE_SIZE * 1.4} />
+            <Icon family="Octicons" name="pencil" color={tintColor} size={BASE_SIZE * 1.4} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.itemAction} onPress={props.onDelete}>
             <Icon name="minus-circle" color={tintColor} size={BASE_SIZE * 1.4} />

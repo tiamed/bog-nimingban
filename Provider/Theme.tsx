@@ -65,7 +65,9 @@ export default function ThemeProvider(props: any) {
       card: cardColorLight,
       cardText: getContrastColor(["#e5e5e7", "#1c1c1e"], cardColorLight),
       cardActive: getFirstContrastColor([tint, "#fff", "#000"], cardColorLight),
-      cardInactive: getContrastColor([Colors.light.inactive, Colors.dark.inactive], cardColorLight),
+      cardInactive: Color(getFirstContrastColor([tint, "#fff", "#000"], cardColorLight))
+        .alpha(0.3)
+        .string(),
     },
     dark: {
       highlightBackground: Color(highlight).alpha(0.1).string(),
@@ -77,7 +79,9 @@ export default function ThemeProvider(props: any) {
       card: cardColorDark,
       cardText: getContrastColor(["#e5e5e7", "#1c1c1e"], cardColorDark),
       cardActive: getFirstContrastColor([tint, "#fff", "#000"], cardColorDark),
-      cardInactive: getContrastColor([Colors.light.inactive, Colors.dark.inactive], cardColorDark),
+      cardInactive: Color(getFirstContrastColor([tint, "#fff", "#000"], cardColorDark))
+        .alpha(0.3)
+        .string(),
     },
   };
 

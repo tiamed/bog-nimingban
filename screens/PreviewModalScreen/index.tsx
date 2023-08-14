@@ -1,4 +1,3 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import CachedImage from "expo-cached-image";
 import * as FileSystem from "expo-file-system";
@@ -15,6 +14,7 @@ import Toast from "react-native-toast-message";
 import LongImageModal from "./LongImageModal";
 
 import { previewIndexAtom, previewsAtom, nativeImageRendererAtom } from "@/atoms";
+import Icon from "@/components/Icon";
 import { parseImageUrl } from "@/components/Post/ImageView";
 import { useThemeColor } from "@/components/Themed";
 import Urls from "@/constants/Urls";
@@ -126,7 +126,7 @@ export default function PreviewModalScreen() {
         distanceToEdge={{ horizontal: 190, vertical: 30 }}
         actions={[
           {
-            icon: <MaterialCommunityIcons name="magnify-plus" color="white" size={20} />,
+            icon: <Icon family="Ionicons" name="scan" color="white" size={20} />,
             name: "magnify",
           },
         ]}
@@ -140,7 +140,7 @@ export default function PreviewModalScreen() {
         distanceToEdge={{ horizontal: 110, vertical: 30 }}
         actions={[
           {
-            icon: <MaterialCommunityIcons name="share-variant" color="white" size={20} />,
+            icon: <Icon family="Ionicons" name="share-social" color="white" size={20} />,
             name: "share",
           },
         ]}
@@ -152,7 +152,7 @@ export default function PreviewModalScreen() {
         distanceToEdge={{ horizontal: 30, vertical: 30 }}
         actions={[
           {
-            icon: <MaterialCommunityIcons name="content-save" color="white" size={20} />,
+            icon: <Icon family="Ionicons" name="save-sharp" color="white" size={20} />,
             name: "save",
           },
         ]}
