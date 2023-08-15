@@ -7,9 +7,9 @@ import parse, { HTMLElement } from "node-html-parser";
 import React, { useContext, useEffect, useMemo, useState, Fragment, Suspense, lazy } from "react";
 import { Linking, Pressable, TextStyle, View } from "react-native";
 import HTMLView from "react-native-htmlview";
-import { useCollapsible, AnimatedSection } from "reanimated-collapsible-helpers";
 import { useIsMounted } from "usehooks-ts";
 
+import ReplyPostWithoutData from "./ReplyPostWithoutData";
 import { BogIcon } from "../Icon";
 
 import { SizeContext } from "@/Provider";
@@ -18,8 +18,8 @@ import { autoExpandAtom, lineHeightAtom, responsiveWidthAtom } from "@/atoms";
 import { Text, useThemeColor } from "@/components/Themed";
 import Layout from "@/constants/Layout";
 import Urls from "@/constants/Urls";
-
-const ReplyPostWithoutData = lazy(() => import("./ReplyPostWithoutData"));
+import { useCollapsible, AnimatedSection } from "@/utils/collapsible-helpers";
+// const ReplyPostWithoutData = lazy(() => import("./ReplyPostWithoutData"));
 
 export default function HtmlView(props: { content: string; level?: number }) {
   const navigation = useNavigation<StackNavigationProp<any>>();
@@ -99,7 +99,7 @@ function Quote(props: { data: string; level: number }) {
     Layout.postHorizontalPadding * 2 -
     (props.level - 1) * (Layout.postHorizontalPaddingSecondary * 2 + 2);
 
-  const { animatedHeight, onPress, onLayout, state } = useCollapsible({ duration: 200 });
+  const { animatedStyle, onPress, onLayout, state } = useCollapsible({ duration: 200 });
   const isMounted = useIsMounted();
 
   const borderBottomRadius = useMemo(() => {
@@ -169,7 +169,7 @@ function Quote(props: { data: string; level: number }) {
       {expandable && (
         <AnimatedSection
           key={quoteId}
-          animatedHeight={animatedHeight}
+          animatedStyle={animatedStyle}
           onLayout={onLayout}
           state={state}
           style={{
