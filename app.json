@@ -17,9 +17,7 @@
       "checkAutomatically": "ON_ERROR_RECOVERY",
       "url": "https://u.expo.dev/91336b92-4d9a-4bb2-a717-4e6ef77c7929"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "fun.tiamed",
@@ -64,6 +62,14 @@
         {
           "AsyncStorage_db_size_in_MB": "500"
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
       ]
     ],
     "githubUrl": "https://github.com/tiamed/bog-nimingban",
@@ -74,6 +80,7 @@
       "eas": {
         "projectId": "91336b92-4d9a-4bb2-a717-4e6ef77c7929"
       }
-    }
+    },
+    "jsEngine": "hermes"
   }
 }

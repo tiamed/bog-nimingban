@@ -82,7 +82,8 @@
     "react-native-wheel-color-picker": "^1.2.0",
     "reanimated-collapsible-helpers": "^1.0.0",
     "use-debounce": "^7.0.1",
-    "usehooks-ts": "^2.4.2"
+    "usehooks-ts": "^2.4.2",
+    "expo-build-properties": "~0.8.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
