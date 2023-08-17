@@ -83,11 +83,10 @@ export default function BackupModal(props: { cookie?: Cookie }) {
   const handleFileImport = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({ type: "application/json" });
-      if (result.type === "cancel") {
+      if (result.canceled) {
         Toast.show({ type: "error", text1: "导入取消" });
       } else {
-        const { uri } = result;
-        confirmImport(() => handleImport(uri));
+        confirmImport(() => handleImport(result.assets[0].uri));
       }
     } catch (error) {
       Toast.show({ type: "error", text1: (error as Error).message });
@@ -96,7 +95,12 @@ export default function BackupModal(props: { cookie?: Cookie }) {
 
   const handleImport = async (uri: string) => {
     try {
-      const backup = JSON.parse(await FileSystem.readAsStringAsync(uri));
+      const config = await FileSystem.readAsStringAsync(uri);
+      if (!config) {
+        Toast.show({ type: "error", text1: "导入失败", text2: "无法读取文件" });
+        return;
+      }
+      const backup = JSON.parse(config);
       const promises = backup.map(async ([key, value]: [key: string, value: any]) => {
         if (BACKUP_KEYS.includes(key)) {
           await AsyncStorage.setItem(key, JSON.stringify(value));
