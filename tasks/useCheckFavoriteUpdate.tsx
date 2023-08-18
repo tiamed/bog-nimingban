@@ -6,7 +6,7 @@ import { getPostById } from "@/api";
 import { favoriteAtom } from "@/atoms";
 import { UserFavorite } from "@/screens/FavoriteScreen";
 
-export default function CheckFavoriteUpdate() {
+export default function useCheckFavoriteUpdate() {
   const [favorite, setFavorite] = useAtom<UserFavorite[], UserFavorite[], void>(favoriteAtom);
   const { value, setTrue, setFalse } = useBoolean();
 
@@ -48,5 +48,4 @@ export default function CheckFavoriteUpdate() {
     },
     value ? 2 * 60 * 1000 : null
   );
-  return null;
 }

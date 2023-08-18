@@ -4,6 +4,7 @@ import { Linking, StyleSheet, TouchableHighlight } from "react-native";
 import { SizeContext } from "@/Provider";
 import ChangelogModal from "@/components/ChangelogModal";
 import { View, Text, useThemeColor } from "@/components/Themed";
+import Urls from "@/constants/Urls";
 import { manualUpdate } from "@/tasks/checkAppUpdate";
 import { RootStackScreenProps } from "@/types";
 import { getVersion } from "@/utils/update";
@@ -24,31 +25,31 @@ export default function AboutScreen({ route, navigation }: RootStackScreenProps<
       <AboutItem
         title="Github"
         onPress={() => {
-          Linking.openURL("https://github.com/tiamed/bog-nimingban");
+          Linking.openURL(Urls.github.bog);
         }}
       />
       <AboutItem
         title="加载语录"
         onPress={() => {
-          Linking.openURL("https://github.com/tiamed/bog-slang");
+          Linking.openURL(Urls.github.slang);
         }}
       />
       <AboutItem
         title="安卓安装包 (br65)"
         onPress={() => {
-          Linking.openURL("https://wwz.lanzouf.com/b01v7e4ng");
+          Linking.openURL(Urls.lanzou);
         }}
       />
       <AboutItem
         title="支持BTM"
         onPress={() => {
-          Linking.openURL("https://afdian.net/@kaiki");
+          Linking.openURL(Urls.afdian.btm);
         }}
       />
       <AboutItem
         title="支持粉岛"
         onPress={() => {
-          Linking.openURL("https://afdian.net/@tiamed");
+          Linking.openURL(Urls.afdian.bog);
         }}
       />
       <AboutItem

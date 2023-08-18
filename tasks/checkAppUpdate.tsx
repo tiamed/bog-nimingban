@@ -2,6 +2,8 @@ import * as Updates from "expo-updates";
 import { Alert } from "react-native";
 import Toast from "react-native-toast-message";
 
+import { checkRelease } from "./checkRelease";
+
 export async function checkUpdate() {
   const isAvailable = await checkUpdateAvailability();
   if (isAvailable) {
@@ -42,6 +44,8 @@ function confirmUpdateAsync(): Promise<boolean> {
 }
 
 export async function manualUpdate(needConfirm?: boolean) {
+  const hasNewRelease = await checkRelease();
+  if (hasNewRelease) return;
   const isAvailable = await checkUpdateAvailability();
   if (!isAvailable) {
     if (!needConfirm) {

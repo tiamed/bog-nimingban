@@ -63,8 +63,8 @@ import SearchModalScreen from "@/screens/SearchModalScreen";
 import SearchResultScreen from "@/screens/SearchResultScreen";
 import SearchScreen from "@/screens/SearchScreen";
 import SketchScreen from "@/screens/SketchScreen";
-import CheckFavoriteUpdate from "@/tasks/CheckFavoriteUpdate";
-import CheckVersionUpdate from "@/tasks/CheckVersionUpdate";
+import useCheckFavoriteUpdate from "@/tasks/useCheckFavoriteUpdate";
+import useCheckVersionUpdate from "@/tasks/useCheckVersionUpdate";
 import {
   HistoryTabParamList,
   RootStackParamList,
@@ -82,6 +82,8 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
   const cardColor = useThemeColor({}, "card");
   const cardTextColor = useThemeColor({}, "cardText");
   const theme = colorScheme === "dark" ? DarkTheme : DefaultTheme;
+  useCheckVersionUpdate();
+  useCheckFavoriteUpdate();
 
   return (
     <NavigationContainer
@@ -95,8 +97,6 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
         },
       }}>
       <RootNavigator />
-      <CheckFavoriteUpdate />
-      <CheckVersionUpdate />
     </NavigationContainer>
   );
 }

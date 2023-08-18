@@ -6,7 +6,7 @@ import { manualUpdate } from "./checkAppUpdate";
 
 import { lastCheckUpdateAtom, checkUpdateIntervalAtom } from "@/atoms";
 
-export default function CheckVersionUpdate() {
+export default function useCheckVersionUpdate() {
   const [lastCheckUpdate, setLastCheckUpdate] = useAtom(lastCheckUpdateAtom);
   const [checkUpdateInterval] = useAtom(checkUpdateIntervalAtom);
   const currentAppState = useAppState();
@@ -18,5 +18,4 @@ export default function CheckVersionUpdate() {
       }
     }
   }, [currentAppState]);
-  return null;
 }
