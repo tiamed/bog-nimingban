@@ -5,7 +5,7 @@ import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
 import { useAtom } from "jotai";
 import React, { useState } from "react";
-import { StyleSheet, Image, ActivityIndicator, View } from "react-native";
+import { StyleSheet, Image, ActivityIndicator, View, Platform } from "react-native";
 import { FloatingAction } from "react-native-floating-action";
 import ImageViewer from "react-native-image-zoom-viewer";
 import { IImageInfo } from "react-native-image-zoom-viewer/built/image-viewer.type";
@@ -60,10 +60,13 @@ export default function PreviewModalScreen() {
     getImage(async (uri) => {
       const asset = await MediaLibrary.createAssetAsync(uri);
       const album = await MediaLibrary.getAlbumAsync("bog-nimingban");
-      if (album) {
-        await MediaLibrary.addAssetsToAlbumAsync([asset], album);
-      } else {
-        await MediaLibrary.createAlbumAsync("bog-nimingban", asset, false);
+      // android 11 and above requires confirmation to move files(see https://source.android.com/docs/core/storage/scoped)
+      if (Platform.OS === "ios" || (Platform.OS === "android" && Platform.Version < 30)) {
+        if (album) {
+          await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+        } else {
+          await MediaLibrary.createAlbumAsync("bog-nimingban", asset, false);
+        }
       }
       Toast.show({ type: "success", text1: "已保存图片" });
     });
