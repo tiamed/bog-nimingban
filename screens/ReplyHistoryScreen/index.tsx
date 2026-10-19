@@ -1,7 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
-import { endOfDay, startOfDay, sub, add } from "date-fns";
 import { atom, useAtom, useSetAtom } from "jotai";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { StyleSheet, FlatList, FlatListProps } from "react-native";
 
 import ActionModal from "./ActionModal";
@@ -13,17 +12,16 @@ import {
   replyHistoryAtom,
   showReplyHistoryActionModalAtom,
 } from "@/atoms";
+import HistoryFilterBar from "@/components/HistoryFilterBar";
 import HistoryFloatingAction from "@/components/HistoryFloatingAction";
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
 import { View } from "@/components/Themed";
 import useHaptics from "@/hooks/useHaptics";
 import renderFooter from "@/screens/HomeScreen/renderFooter";
+import { defaultHistoryRange, filterHistoryByRange, HistoryRange } from "@/utils/historyRange";
 
-const rangeAtom = atom({
-  start: startOfDay(sub(new Date(), { days: 7 })).getTime(),
-  end: endOfDay(add(new Date(), { days: 7 })).getTime(),
-});
+const rangeAtom = atom<HistoryRange>(defaultHistoryRange);
 
 export interface ReplyHistory extends Reply {
   createTime: number;
@@ -31,7 +29,6 @@ export interface ReplyHistory extends Reply {
 
 export default function ReplyHistoryScreen() {
   const [history] = useAtom<ReplyHistory[]>(replyHistoryAtom);
-  const [filteredHistory, setFilteredHistory] = useState<ReplyHistory[]>([]);
   const [focusItem, setFocusItem] = useState<ReplyHistory>({} as ReplyHistory);
   const [range, setRange] = useAtom(rangeAtom);
   const setPreviews = useSetAtom(previewsAtom);
@@ -40,13 +37,7 @@ export default function ReplyHistoryScreen() {
   const navigation = useNavigation();
   const haptics = useHaptics();
 
-  const updateHistory = () => {
-    setFilteredHistory(
-      history?.filter(({ createTime }) => {
-        return createTime >= range.start && createTime < range.end;
-      }) ?? []
-    );
-  };
+  const filteredHistory = useMemo(() => filterHistoryByRange(history, range), [history, range]);
 
   const renderItem: FlatListProps<ReplyHistory>["renderItem"] = ({ item }) =>
     item && (
@@ -82,13 +73,16 @@ export default function ReplyHistoryScreen() {
 
   const keyExtractor = (item: ReplyHistory) => item.id.toString();
 
-  useEffect(() => {
-    updateHistory();
-  }, [range, history]);
-
   return (
     <View style={styles.container}>
+      <HistoryFilterBar
+        range={range}
+        count={filteredHistory.length}
+        total={history?.length ?? 0}
+        onClear={setRange}
+      />
       <FlatList
+        style={styles.list}
         data={filteredHistory}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
@@ -97,16 +91,11 @@ export default function ReplyHistoryScreen() {
           renderFooter({
             loading: false,
             hasNoMore: true,
+            empty: filteredHistory.length === 0,
           })
         }
       />
-      <HistoryFloatingAction
-        start={range.start}
-        end={range.end}
-        onChange={(start, end) => {
-          setRange({ start, end });
-        }}
-      />
+      <HistoryFloatingAction range={range} onChange={setRange} />
       <ActionModal item={focusItem} />
     </View>
   );
@@ -117,6 +106,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    width: "100%",
+  },
+  list: {
     width: "100%",
   },
 });

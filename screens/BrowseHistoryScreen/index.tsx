@@ -1,6 +1,5 @@
-import { endOfDay, startOfDay, sub, add } from "date-fns";
 import { atom, useAtom, useSetAtom } from "jotai";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { StyleSheet, FlatList, FlatListProps } from "react-native";
 
 import renderFooter from "../HomeScreen/renderFooter";
@@ -15,14 +14,13 @@ import {
   maxLineAtom,
   showBrowseHistoryActionModalAtom,
 } from "@/atoms";
+import HistoryFilterBar from "@/components/HistoryFilterBar";
 import HistoryFloatingAction from "@/components/HistoryFloatingAction";
 import ThreadPost from "@/components/Post/ThreadPost";
 import { View } from "@/components/Themed";
+import { defaultHistoryRange, filterHistoryByRange, HistoryRange } from "@/utils/historyRange";
 
-const rangeAtom = atom({
-  start: startOfDay(sub(new Date(), { days: 7 })).getTime(),
-  end: endOfDay(add(new Date(), { days: 7 })).getTime(),
-});
+const rangeAtom = atom<HistoryRange>(defaultHistoryRange);
 export interface UserHistory extends Post {
   createTime: number;
   currentPage: number;
@@ -30,7 +28,6 @@ export interface UserHistory extends Post {
 }
 
 export default function BrowseHistoryScreen() {
-  const [filteredHistory, setFilteredHistory] = useState<UserHistory[]>([]);
   const [focusItem, setFocusItem] = useState<UserHistory>({} as UserHistory);
   const [history] = useAtom<UserHistory[]>(historyAtom);
   const [maxLine] = useAtom(maxLineAtom);
@@ -39,13 +36,7 @@ export default function BrowseHistoryScreen() {
   const [clickable] = useAtom(clickableAtom);
   const setShowBrowseHistoryActionModal = useSetAtom(showBrowseHistoryActionModalAtom);
 
-  const updateHistory = () => {
-    setFilteredHistory(
-      history?.filter(({ createTime, id }) => {
-        return createTime >= range.start && createTime < range.end;
-      })
-    );
-  };
+  const filteredHistory = useMemo(() => filterHistoryByRange(history, range), [history, range]);
 
   const renderItem: FlatListProps<UserHistory>["renderItem"] = ({ item }) =>
     item && (
@@ -62,14 +53,17 @@ export default function BrowseHistoryScreen() {
 
   const keyExtractor = (item: UserHistory) => item?.id.toString();
 
-  useEffect(() => {
-    updateHistory();
-  }, [range, history]);
-
   return (
     <ThreadPostConfigContext.Provider value={{ expandable, clickable }}>
       <View style={styles.container}>
+        <HistoryFilterBar
+          range={range}
+          count={filteredHistory.length}
+          total={history?.length ?? 0}
+          onClear={setRange}
+        />
         <FlatList
+          style={styles.list}
           data={filteredHistory}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
@@ -78,16 +72,11 @@ export default function BrowseHistoryScreen() {
             renderFooter({
               loading: false,
               hasNoMore: true,
+              empty: filteredHistory.length === 0,
             })
           }
         />
-        <HistoryFloatingAction
-          start={range.start}
-          end={range.end}
-          onChange={(start, end) => {
-            setRange({ start, end });
-          }}
-        />
+        <HistoryFloatingAction range={range} onChange={setRange} />
         <ActionModal item={focusItem} />
       </View>
     </ThreadPostConfigContext.Provider>
@@ -99,6 +88,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    width: "100%",
+  },
+  list: {
     width: "100%",
   },
 });
