@@ -3,29 +3,28 @@ on:
     branches:
       - master
       - 'releases/**'
+  workflow_dispatch:
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: 🏗 Setup repo
-        uses: actions/checkout@v2
+      - name: Setup repo
+        uses: actions/checkout@v4
 
-      - name: 🏗 Setup Node
-        uses: actions/setup-node@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
-          cache: npm
+          node-version: 20
 
-      - name: 🏗 Setup Expo
-        uses: expo/expo-github-action@v7
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
         with:
-          expo-version: latest
-          eas-version: latest
+          eas-version: 3.18.0
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: 🚀 Publish app
-        run: eas update --auto --branch default
+      - name: Publish app
+        run: npx eas-cli@3.18.0 update --auto --branch default --non-interactive
