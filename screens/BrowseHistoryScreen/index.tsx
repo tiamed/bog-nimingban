@@ -16,8 +16,10 @@ import {
 } from "@/atoms";
 import HistoryFilterBar from "@/components/HistoryFilterBar";
 import HistoryFloatingAction from "@/components/HistoryFloatingAction";
+import ListSearchBar from "@/components/ListSearchBar";
 import ThreadPost from "@/components/Post/ThreadPost";
 import { View } from "@/components/Themed";
+import useListSearch from "@/hooks/useListSearch";
 import { defaultHistoryRange, filterHistoryByRange, HistoryRange } from "@/utils/historyRange";
 
 const rangeAtom = atom<HistoryRange>(defaultHistoryRange);
@@ -36,7 +38,8 @@ export default function BrowseHistoryScreen() {
   const [clickable] = useAtom(clickableAtom);
   const setShowBrowseHistoryActionModal = useSetAtom(showBrowseHistoryActionModalAtom);
 
-  const filteredHistory = useMemo(() => filterHistoryByRange(history, range), [history, range]);
+  const rangedHistory = useMemo(() => filterHistoryByRange(history, range), [history, range]);
+  const { query, setQuery, results: filteredHistory, searching } = useListSearch(rangedHistory);
 
   const renderItem: FlatListProps<UserHistory>["renderItem"] = ({ item }) =>
     item && (
@@ -56,6 +59,7 @@ export default function BrowseHistoryScreen() {
   return (
     <ThreadPostConfigContext.Provider value={{ expandable, clickable }}>
       <View style={styles.container}>
+        <ListSearchBar value={query} onChangeText={setQuery} />
         <HistoryFilterBar
           range={range}
           count={filteredHistory.length}
@@ -68,11 +72,14 @@ export default function BrowseHistoryScreen() {
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           onEndReachedThreshold={0.5}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
           ListFooterComponent={() =>
             renderFooter({
               loading: false,
               hasNoMore: true,
               empty: filteredHistory.length === 0,
+              emptyText: searching ? "没有匹配的记录" : undefined,
             })
           }
         />
