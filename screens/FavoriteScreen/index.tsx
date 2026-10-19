@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StyleSheet, FlatList, FlatListProps } from "react-native";
 
 import renderFooter from "../HomeScreen/renderFooter";
@@ -15,9 +15,11 @@ import {
   favoriteTagsAtom,
   maxLineAtom,
 } from "@/atoms";
+import ListSearchBar from "@/components/ListSearchBar";
 import ThreadPost from "@/components/Post/ThreadPost";
 import TagModal, { Tag } from "@/components/TagModal";
 import { View } from "@/components/Themed";
+import useListSearch from "@/hooks/useListSearch";
 import { RootTabScreenProps } from "@/types";
 export interface UserFavorite extends Post {
   createTime: number;
@@ -31,11 +33,22 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
   const [currentFavorite, setCurrentFavorite] = useState<UserFavorite>();
   const [favorite, setFavorite] = useAtom<UserFavorite[], UserFavorite[], void>(favoriteAtom);
   const [favoriteTags] = useAtom(favoriteTagsAtom);
-  const [filteredFavorite, setFilteredFavorite] = useState<UserFavorite[]>([]);
   const [maxLine] = useAtom(maxLineAtom);
   const [expandable] = useAtom(expandableAtom);
   const [clickable] = useAtom(clickableAtom);
   const [favoriteFilter] = useAtom(favoriteFilterAtom);
+  const taggedFavorite = useMemo(() => {
+    const list = favorite ?? [];
+    switch (favoriteFilter) {
+      case "empty":
+        return list.filter((item) => !item?.tags?.length);
+      case "":
+        return list;
+      default:
+        return list.filter((item) => item?.tags?.includes(favoriteFilter));
+    }
+  }, [favorite, favoriteFilter]);
+  const { query, setQuery, results: filteredFavorite, searching } = useListSearch(taggedFavorite);
   const renderItem: FlatListProps<UserFavorite>["renderItem"] = ({ item }) =>
     item && (
       <ThreadPost
@@ -75,22 +88,6 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
   };
 
   useEffect(() => {
-    if (favorite?.length) {
-      switch (favoriteFilter) {
-        case "empty":
-          setFilteredFavorite(favorite.filter((item) => !item?.tags?.length));
-          break;
-        case "":
-          setFilteredFavorite(favorite);
-          break;
-        default:
-          setFilteredFavorite(favorite?.filter((item) => item?.tags?.includes(favoriteFilter)));
-          break;
-      }
-    }
-  }, [favorite, favoriteFilter]);
-
-  useEffect(() => {
     const favoriteName = getFavoriteName(favoriteFilter);
     navigation.setOptions({
       title: `收藏·${favoriteName || "全部"} (${filteredFavorite.length})`,
@@ -100,15 +97,21 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
   return (
     <ThreadPostConfigContext.Provider value={{ expandable, clickable }}>
       <View style={styles.container}>
+        <ListSearchBar value={query} onChangeText={setQuery} />
         <FlatList
+          style={styles.list}
           data={filteredFavorite}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           onEndReachedThreshold={0.5}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
           ListFooterComponent={() =>
             renderFooter({
               loading: false,
               hasNoMore: true,
+              empty: searching && filteredFavorite.length === 0,
+              emptyText: "没有匹配的收藏",
             })
           }
         />
@@ -132,6 +135,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    width: "100%",
+  },
+  list: {
     width: "100%",
   },
 });

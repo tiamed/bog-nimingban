@@ -9,11 +9,13 @@ export default function renderFooter({
   loading = false,
   hasNoMore = false,
   empty = false,
+  emptyText = "暂无数据",
   loadMore = () => {},
 }: {
   loading: boolean;
   hasNoMore: boolean;
   empty?: boolean;
+  emptyText?: string;
   loadMore?: () => void;
 }) {
   const [randomIndex, setRadomIndex] = useState(0);
@@ -27,10 +29,10 @@ export default function renderFooter({
     if (loading) {
       return loadings[randomIndex];
     } else {
-      if (empty) return "暂无数据";
+      if (empty) return emptyText;
       return hasNoMore ? "已经没有更多了" : "下拉加载更多";
     }
-  }, [loading, loadings, randomIndex, empty, hasNoMore]);
+  }, [loading, loadings, randomIndex, empty, emptyText, hasNoMore]);
   useEffect(() => {
     setRadomIndex((loadings.length * Math.random()) | 0);
   }, [loadings.length]);

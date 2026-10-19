@@ -14,10 +14,12 @@ import {
 } from "@/atoms";
 import HistoryFilterBar from "@/components/HistoryFilterBar";
 import HistoryFloatingAction from "@/components/HistoryFloatingAction";
+import ListSearchBar from "@/components/ListSearchBar";
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
 import { View } from "@/components/Themed";
 import useHaptics from "@/hooks/useHaptics";
+import useListSearch from "@/hooks/useListSearch";
 import renderFooter from "@/screens/HomeScreen/renderFooter";
 import { defaultHistoryRange, filterHistoryByRange, HistoryRange } from "@/utils/historyRange";
 
@@ -37,7 +39,8 @@ export default function ReplyHistoryScreen() {
   const navigation = useNavigation();
   const haptics = useHaptics();
 
-  const filteredHistory = useMemo(() => filterHistoryByRange(history, range), [history, range]);
+  const rangedHistory = useMemo(() => filterHistoryByRange(history, range), [history, range]);
+  const { query, setQuery, results: filteredHistory, searching } = useListSearch(rangedHistory);
 
   const renderItem: FlatListProps<ReplyHistory>["renderItem"] = ({ item }) =>
     item && (
@@ -75,6 +78,7 @@ export default function ReplyHistoryScreen() {
 
   return (
     <View style={styles.container}>
+      <ListSearchBar value={query} onChangeText={setQuery} placeholder="搜索内容、串号或饼干" />
       <HistoryFilterBar
         range={range}
         count={filteredHistory.length}
@@ -87,11 +91,14 @@ export default function ReplyHistoryScreen() {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         onEndReachedThreshold={0.5}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
         ListFooterComponent={() =>
           renderFooter({
             loading: false,
             hasNoMore: true,
             empty: filteredHistory.length === 0,
+            emptyText: searching ? "没有匹配的记录" : undefined,
           })
         }
       />
