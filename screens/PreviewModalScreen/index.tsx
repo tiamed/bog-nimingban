@@ -4,7 +4,7 @@ import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
 import { useAtom } from "jotai";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { StyleSheet, Image, ActivityIndicator, View, Platform } from "react-native";
 import { FloatingAction } from "react-native-floating-action";
 import ImageViewer from "react-native-image-zoom-viewer";
@@ -18,6 +18,7 @@ import Icon from "@/components/Icon";
 import { parseImageUrl } from "@/components/Post/ImageView";
 import { useThemeColor } from "@/components/Themed";
 import Urls from "@/constants/Urls";
+import { getImageHeaders, getImageSource } from "@/utils/image";
 
 const brokenImageUri = Image.resolveAssetSource(require("@/assets/images/image-broken-2x.png")).uri;
 
@@ -32,6 +33,14 @@ export default function PreviewModalScreen() {
   const [isLongImage, setIsLongImage] = useState(false);
   const activeColor = useThemeColor({}, "active");
   const inactiveColor = useThemeColor({}, "inactive");
+  const imageUrls = useMemo<IImageInfo[]>(
+    () =>
+      previews.map((preview) => ({
+        ...preview,
+        props: { ...preview.props, source: getImageSource(preview.url) },
+      })),
+    [previews]
+  );
 
   const getImage = async (callback: (uri: string) => any) => {
     if (isLoading) {
@@ -44,7 +53,9 @@ export default function PreviewModalScreen() {
         setIsLoading(true);
         const { uri } = await FileSystem.downloadAsync(
           previews[index].url,
-          FileSystem.cacheDirectory + previews[index].url.replace(`${Urls.baseURL}image/large/`, "")
+          FileSystem.cacheDirectory +
+            previews[index].url.replace(`${Urls.baseURL}image/large/`, ""),
+          { headers: getImageHeaders(previews[index].url) }
         );
 
         await callback(uri);
@@ -82,7 +93,7 @@ export default function PreviewModalScreen() {
     <>
       <ImageViewer
         index={previewIndex}
-        imageUrls={previews as IImageInfo[]}
+        imageUrls={imageUrls}
         enableSwipeDown
         onSwipeDown={() => navigation.goBack()}
         onClick={() => navigation.goBack()}
@@ -93,7 +104,7 @@ export default function PreviewModalScreen() {
             <>
               {nativeImageRenderer ? (
                 <CachedImage
-                  source={{ uri: previews[index].url?.replace("large", "thumb") }}
+                  source={getImageSource(previews[index].url?.replace("large", "thumb"))}
                   cacheKey={`${parseImageUrl(previews[index].url)?.url}-thumb-`}
                   resizeMode="contain"
                   style={{
@@ -103,7 +114,7 @@ export default function PreviewModalScreen() {
                 />
               ) : (
                 <Image
-                  source={{ uri: previews[index].url?.replace("large", "thumb") }}
+                  source={getImageSource(previews[index].url?.replace("large", "thumb"))}
                   style={{
                     width: "100%",
                     height: "100%",
