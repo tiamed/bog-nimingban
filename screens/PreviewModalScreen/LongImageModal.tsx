@@ -6,6 +6,7 @@ import WebView from "react-native-webview";
 
 import Modal from "@/components/Modal";
 import { useThemeColor } from "@/components/Themed";
+import { FORUM_IMAGE_USER_AGENT, getImageSource, isForumImageUrl } from "@/utils/image";
 
 export default function LongImageModal(props: {
   visible: boolean;
@@ -33,7 +34,8 @@ export default function LongImageModal(props: {
   return (
     <Modal isVisible={props.visible} onBackdropPress={props.onDismiss} style={styles.modal}>
       <WebView
-        source={{ uri: props.uri }}
+        source={getImageSource(props.uri)}
+        userAgent={isForumImageUrl(props.uri) ? FORUM_IMAGE_USER_AGENT : undefined}
         containerStyle={styles.container}
         style={{ display: show ? "flex" : "none", backgroundColor: "transparent" }}
         injectedJavaScriptBeforeContentLoaded={INJECTED_JAVASCRIPT}

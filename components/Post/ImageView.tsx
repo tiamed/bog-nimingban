@@ -9,6 +9,7 @@ import { Image } from "@/api";
 import { nativeImageRendererAtom, thumbnailResizeAtom } from "@/atoms";
 import Urls from "@/constants/Urls";
 import useShowImage from "@/hooks/useShowImage";
+import { getImageSource } from "@/utils/image";
 
 export default function ImageView(props: {
   onPress: () => void;
@@ -26,13 +27,13 @@ export default function ImageView(props: {
     <TouchableOpacity onPress={props.onPress} style={props.style}>
       {nativeImageRenderer ? (
         <RNImage
-          source={{ uri: getThumbnailUrl(props.data, props.path) }}
+          source={getImageSource(getThumbnailUrl(props.data, props.path))}
           style={props.imageStyle}
           resizeMode={thumbnailResize}
         />
       ) : (
         <CachedImage
-          source={{ uri: getThumbnailUrl(props.data, props.path) }}
+          source={getImageSource(getThumbnailUrl(props.data, props.path))}
           cacheKey={`${props.data.url}-thumb-${props.path || ""}`}
           resizeMode={thumbnailResize}
           style={props.imageStyle}

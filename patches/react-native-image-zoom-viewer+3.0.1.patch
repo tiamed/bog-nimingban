@@ -1,0 +1,54 @@
+diff --git a/node_modules/react-native-image-zoom-viewer/built/image-viewer.component.js b/node_modules/react-native-image-zoom-viewer/built/image-viewer.component.js
+index 3ca5e2b..00c9e24 100644
+--- a/node_modules/react-native-image-zoom-viewer/built/image-viewer.component.js
++++ b/node_modules/react-native-image-zoom-viewer/built/image-viewer.component.js
+@@ -367,10 +367,17 @@ var ImageViewer = /** @class */ (function (_super) {
+         if (!image.url || image.url.startsWith("file:")) {
+             imageLoaded = true;
+         }
++        var headers = image.props && image.props.source && image.props.source.headers;
+         // 如果已知源图片宽高，直接设置为 success
+         if (image.width && image.height) {
+             if (this.props.enablePreload && imageLoaded === false) {
+-                react_native_1.Image.prefetch(image.url);
++                if (headers) {
++                    // Image.prefetch cannot send headers; getSizeWithHeaders also warms the image cache
++                    react_native_1.Image.getSizeWithHeaders(image.url, headers, function () { }, function () { });
++                }
++                else {
++                    react_native_1.Image.prefetch(image.url);
++                }
+             }
+             imageStatus.width = image.width;
+             imageStatus.height = image.height;
+@@ -378,12 +385,13 @@ var ImageViewer = /** @class */ (function (_super) {
+             saveImageSize();
+             return;
+         }
+-        react_native_1.Image.getSize(image.url, function (width, height) {
++        var onSizeSuccess = function (width, height) {
+             imageStatus.width = width;
+             imageStatus.height = height;
+             imageStatus.status = 'success';
+             saveImageSize();
+-        }, function () {
++        };
++        var onSizeFailure = function () {
+             try {
+                 var data = react_native_1.Image.resolveAssetSource(image.props.source);
+                 imageStatus.width = data.width;
+@@ -396,7 +404,13 @@ var ImageViewer = /** @class */ (function (_super) {
+                 imageStatus.status = 'fail';
+                 saveImageSize();
+             }
+-        });
++        };
++        if (headers) {
++            react_native_1.Image.getSizeWithHeaders(image.url, headers, onSizeSuccess, onSizeFailure);
++        }
++        else {
++            react_native_1.Image.getSize(image.url, onSizeSuccess, onSizeFailure);
++        }
+     };
+     /**
+      * 回到原位
