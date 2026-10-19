@@ -16,6 +16,7 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StackNavigationProp } from "@react-navigation/stack";
+import Color from "color";
 import * as Clipboard from "expo-clipboard";
 import { useAtom, useSetAtom } from "jotai";
 import * as React from "react";
@@ -288,6 +289,13 @@ function HistoryTabNavigator() {
   const cardColor = useThemeColor({}, "card");
   const cardActiveColor = useThemeColor({}, "cardActive");
   const cardInactiveColor = useThemeColor({}, "cardInactive");
+  const tabPressColor = React.useMemo(() => {
+    try {
+      return Color(cardActiveColor).alpha(0.12).string();
+    } catch {
+      return "rgba(128, 128, 128, 0.12)";
+    }
+  }, [cardActiveColor]);
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const index = useNavigationState(
@@ -338,7 +346,8 @@ function HistoryTabNavigator() {
           shadowColor: "transparent",
           marginBottom: 3,
         },
-        tabBarPressColor: cardActiveColor,
+        tabBarPressColor: tabPressColor,
+        tabBarPressOpacity: 0.6,
         tabBarActiveTintColor: cardActiveColor,
         tabBarInactiveTintColor: cardInactiveColor,
         swipeEnabled: true,
