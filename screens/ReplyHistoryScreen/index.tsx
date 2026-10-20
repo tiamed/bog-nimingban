@@ -14,7 +14,6 @@ import {
 } from "@/atoms";
 import HistoryFilterBar from "@/components/HistoryFilterBar";
 import HistoryFloatingAction from "@/components/HistoryFloatingAction";
-import ListSearchBar from "@/components/ListSearchBar";
 import { getImageUrl, getThumbnailUrl } from "@/components/Post/ImageView";
 import ReplyPost from "@/components/Post/ReplyPost";
 import { View } from "@/components/Themed";
@@ -24,6 +23,7 @@ import renderFooter from "@/screens/HomeScreen/renderFooter";
 import { defaultHistoryRange, filterHistoryByRange, HistoryRange } from "@/utils/historyRange";
 
 const rangeAtom = atom<HistoryRange>(defaultHistoryRange);
+const queryAtom = atom("");
 
 export interface ReplyHistory extends Reply {
   createTime: number;
@@ -33,6 +33,7 @@ export default function ReplyHistoryScreen() {
   const [history] = useAtom<ReplyHistory[]>(replyHistoryAtom);
   const [focusItem, setFocusItem] = useState<ReplyHistory>({} as ReplyHistory);
   const [range, setRange] = useAtom(rangeAtom);
+  const [query, setQuery] = useAtom(queryAtom);
   const setPreviews = useSetAtom(previewsAtom);
   const setPreviewUrl = useSetAtom(previewUrlAtom);
   const setShowReplyHistoryActionModalAtom = useSetAtom(showReplyHistoryActionModalAtom);
@@ -40,7 +41,7 @@ export default function ReplyHistoryScreen() {
   const haptics = useHaptics();
 
   const rangedHistory = useMemo(() => filterHistoryByRange(history, range), [history, range]);
-  const { query, setQuery, results: filteredHistory, searching } = useListSearch(rangedHistory);
+  const { results: filteredHistory, searching } = useListSearch(rangedHistory, query);
 
   const renderItem: FlatListProps<ReplyHistory>["renderItem"] = ({ item }) =>
     item && (
@@ -78,12 +79,15 @@ export default function ReplyHistoryScreen() {
 
   return (
     <View style={styles.container}>
-      <ListSearchBar value={query} onChangeText={setQuery} placeholder="搜索内容、串号或饼干" />
       <HistoryFilterBar
         range={range}
+        query={query}
         count={filteredHistory.length}
         total={history?.length ?? 0}
-        onClear={setRange}
+        onClear={() => {
+          setRange(defaultHistoryRange);
+          setQuery("");
+        }}
       />
       <FlatList
         style={styles.list}
@@ -91,8 +95,6 @@ export default function ReplyHistoryScreen() {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         onEndReachedThreshold={0.5}
-        keyboardDismissMode="on-drag"
-        keyboardShouldPersistTaps="handled"
         ListFooterComponent={() =>
           renderFooter({
             loading: false,
@@ -102,7 +104,15 @@ export default function ReplyHistoryScreen() {
           })
         }
       />
-      <HistoryFloatingAction range={range} onChange={setRange} />
+      <HistoryFloatingAction
+        range={range}
+        query={query}
+        searchPlaceholder="搜索内容、串号或饼干"
+        onChange={(nextRange, nextQuery) => {
+          setRange(nextRange);
+          setQuery(nextQuery);
+        }}
+      />
       <ActionModal item={focusItem} />
     </View>
   );

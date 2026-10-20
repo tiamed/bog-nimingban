@@ -6,6 +6,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Icon from "@/components/Icon";
+import ListSearchBar from "@/components/ListSearchBar";
 import Modal from "@/components/Modal";
 import { Button, Text, useThemeColor, View } from "@/components/Themed";
 import useHaptics from "@/hooks/useHaptics";
@@ -18,9 +19,11 @@ import {
 
 export default function HistoryFloatingAction(props: {
   range: HistoryRange;
-  onChange: (range: HistoryRange) => void;
+  query: string;
+  searchPlaceholder?: string;
+  onChange: (range: HistoryRange, query: string) => void;
 }) {
-  const { range, onChange } = props;
+  const { range, query, searchPlaceholder, onChange } = props;
   const [visible, setVisible] = useState(false);
   const tintColor = useThemeColor({}, "tint");
 
@@ -40,10 +43,12 @@ export default function HistoryFloatingAction(props: {
       <HistoryRangeModal
         visible={visible}
         range={range}
+        query={query}
+        searchPlaceholder={searchPlaceholder}
         onDismiss={() => setVisible(false)}
-        onChange={(value) => {
+        onChange={(value, nextQuery) => {
           setVisible(false);
-          onChange(value);
+          onChange(value, nextQuery);
         }}
       />
     </>
@@ -53,10 +58,13 @@ export default function HistoryFloatingAction(props: {
 function HistoryRangeModal(props: {
   visible: boolean;
   range: HistoryRange;
-  onChange: (range: HistoryRange) => void;
+  query: string;
+  searchPlaceholder?: string;
+  onChange: (range: HistoryRange, query: string) => void;
   onDismiss: () => void;
 }) {
-  const { visible, range, onChange, onDismiss } = props;
+  const { visible, range, query, searchPlaceholder, onChange, onDismiss } = props;
+  const [draftQuery, setDraftQuery] = useState("");
   const [customStart, setCustomStart] = useState(0);
   const [customEnd, setCustomEnd] = useState(0);
   const [pickerTarget, setPickerTarget] = useState<"start" | "end" | null>(null);
@@ -72,30 +80,51 @@ function HistoryRangeModal(props: {
         range.preset === "custom" && range.start ? range.start : subDays(now, 6).getTime()
       );
       setCustomEnd(range.preset === "custom" && range.end ? range.end : now);
+      setDraftQuery(query);
     }
-  }, [visible, range]);
+  }, [visible, range, query]);
 
   const selectPreset = (preset: Exclude<HistoryRangePreset, "custom">) => {
     haptics.light();
-    onChange({ preset });
+    onChange({ preset }, draftQuery);
   };
 
   const applyCustom = () => {
     haptics.light();
-    onChange({
-      preset: "custom",
-      start: startOfDay(customStart).getTime(),
-      end: endOfDay(customEnd).getTime(),
-    });
+    onChange(
+      {
+        preset: "custom",
+        start: startOfDay(customStart).getTime(),
+        end: endOfDay(customEnd).getTime(),
+      },
+      draftQuery
+    );
   };
 
+  const confirm = () => onChange(range, draftQuery);
+
   return (
-    <Modal isVisible={visible} onBackdropPress={onDismiss} style={styles.modalWrapper}>
+    <Modal
+      isVisible={visible}
+      onBackdropPress={onDismiss}
+      style={styles.modalWrapper}
+      avoidKeyboard>
       <View style={[styles.modal, { paddingBottom: 20 + insets.bottom }]}>
         <View style={styles.header}>
-          <Text style={styles.title}>按日期筛选</Text>
           <Button title="取消" onPress={onDismiss} />
+          <Text style={styles.title}>筛选</Text>
+          <Button title="确认" onPress={confirm} />
         </View>
+        <ListSearchBar
+          style={styles.search}
+          value={draftQuery}
+          onChangeText={setDraftQuery}
+          onSubmitEditing={confirm}
+          placeholder={searchPlaceholder}
+        />
+        <Text style={styles.sectionTitle} lightColor="#666666" darkColor="#999999">
+          日期范围
+        </Text>
         <View style={styles.presets}>
           {historyRangePresets.map(({ preset, label }) => {
             const active = range.preset === preset;
@@ -195,6 +224,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
+  },
+  search: {
+    marginBottom: 16,
   },
   presets: {
     flexDirection: "row",

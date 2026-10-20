@@ -1,16 +1,13 @@
-import { useMemo, useState } from "react";
-import { useDebounce } from "use-debounce";
+import { useMemo } from "react";
 
 import { useForumsIdMap } from "@/hooks/useForums";
-import { filterBySearch, SearchableItem } from "@/utils/listSearch";
+import { filterBySearch, getSearchTerms, SearchableItem } from "@/utils/listSearch";
 
-export default function useListSearch<T extends SearchableItem>(items: T[]) {
-  const [query, setQuery] = useState("");
-  const [debouncedQuery] = useDebounce(query, 200);
+export default function useListSearch<T extends SearchableItem>(items: T[], query: string) {
   const forumNames = useForumsIdMap();
   const results = useMemo(
-    () => filterBySearch(items, debouncedQuery, forumNames),
-    [items, debouncedQuery, forumNames]
+    () => filterBySearch(items, query, forumNames),
+    [items, query, forumNames]
   );
-  return { query, setQuery, results, searching: debouncedQuery.trim().length > 0 };
+  return { results, searching: getSearchTerms(query).length > 0 };
 }
