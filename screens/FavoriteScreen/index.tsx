@@ -15,9 +15,10 @@ import {
   favoriteTagsAtom,
   maxLineAtom,
 } from "@/atoms";
+import FilterBar from "@/components/FilterBar";
 import ThreadPost from "@/components/Post/ThreadPost";
 import TagModal, { Tag } from "@/components/TagModal";
-import { Button, View } from "@/components/Themed";
+import { View } from "@/components/Themed";
 import useListSearch from "@/hooks/useListSearch";
 import { RootTabScreenProps } from "@/types";
 import { formatSearchLabel } from "@/utils/listSearch";
@@ -90,18 +91,22 @@ export default function FavoriteScreen({ route, navigation }: RootTabScreenProps
 
   useEffect(() => {
     const favoriteName = getFavoriteName(favoriteFilter);
-    const searchLabel = searching ? `·${formatSearchLabel(query, 6)}` : "";
     navigation.setOptions({
-      title: `收藏·${favoriteName || "全部"}${searchLabel} (${filteredFavorite.length})`,
-      headerRight: searching
-        ? () => <Button title="清除搜索" style={styles.headerButton} onPress={() => setQuery("")} />
-        : undefined,
+      title: `收藏·${favoriteName || "全部"} (${taggedFavorite.length})`,
     });
-  }, [filteredFavorite, searching, query]);
+  }, [taggedFavorite]);
 
   return (
     <ThreadPostConfigContext.Provider value={{ expandable, clickable }}>
       <View style={styles.container}>
+        {searching && (
+          <FilterBar
+            label={`${formatSearchLabel(query)} · ${filteredFavorite.length}/${
+              taggedFavorite.length
+            } 条`}
+            onClear={() => setQuery("")}
+          />
+        )}
         <FlatList
           style={styles.list}
           data={filteredFavorite}
@@ -141,8 +146,5 @@ const styles = StyleSheet.create({
   },
   list: {
     width: "100%",
-  },
-  headerButton: {
-    marginRight: 16,
   },
 });

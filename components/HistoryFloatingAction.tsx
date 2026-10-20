@@ -8,7 +8,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Icon from "@/components/Icon";
 import ListSearchBar from "@/components/ListSearchBar";
 import Modal from "@/components/Modal";
-import { Button, Text, useThemeColor, View } from "@/components/Themed";
+import {
+  Button,
+  Text,
+  useSecondaryTextColor,
+  useThemeColor,
+  useTintContrastColor,
+  View,
+} from "@/components/Themed";
 import useHaptics from "@/hooks/useHaptics";
 import {
   formatHistoryDate,
@@ -70,6 +77,8 @@ function HistoryRangeModal(props: {
   const [pickerTarget, setPickerTarget] = useState<"start" | "end" | null>(null);
   const borderColor = useThemeColor({}, "border");
   const tintColor = useThemeColor({}, "tint");
+  const secondaryColor = useSecondaryTextColor();
+  const tintContrastColor = useTintContrastColor();
   const insets = useSafeAreaInsets();
   const haptics = useHaptics();
 
@@ -122,9 +131,7 @@ function HistoryRangeModal(props: {
           onSubmitEditing={confirm}
           placeholder={searchPlaceholder}
         />
-        <Text style={styles.sectionTitle} lightColor="#666666" darkColor="#999999">
-          日期范围
-        </Text>
+        <Text style={[styles.sectionTitle, { color: secondaryColor }]}>日期范围</Text>
         <View style={styles.presets}>
           {historyRangePresets.map(({ preset, label }) => {
             const active = range.preset === preset;
@@ -137,14 +144,12 @@ function HistoryRangeModal(props: {
                   active && { backgroundColor: tintColor },
                 ]}
                 onPress={() => selectPreset(preset)}>
-                <Text style={active ? styles.activeText : undefined}>{label}</Text>
+                <Text style={active ? { color: tintContrastColor } : undefined}>{label}</Text>
               </TouchableOpacity>
             );
           })}
         </View>
-        <Text style={styles.sectionTitle} lightColor="#666666" darkColor="#999999">
-          自定义范围
-        </Text>
+        <Text style={[styles.sectionTitle, { color: secondaryColor }]}>自定义范围</Text>
         <View style={styles.customRow}>
           <DateField
             label="开始"
@@ -163,7 +168,7 @@ function HistoryRangeModal(props: {
         <TouchableOpacity
           style={[styles.applyButton, { backgroundColor: tintColor }]}
           onPress={applyCustom}>
-          <Text style={styles.activeText}>应用自定义范围</Text>
+          <Text style={{ color: tintContrastColor }}>应用自定义范围</Text>
         </TouchableOpacity>
         <DateTimePickerModal
           isVisible={pickerTarget !== null}
@@ -192,13 +197,12 @@ function HistoryRangeModal(props: {
 function DateField(props: { label: string; value: number; active: boolean; onPress: () => void }) {
   const borderColor = useThemeColor({}, "border");
   const tintColor = useThemeColor({}, "tint");
+  const secondaryColor = useSecondaryTextColor();
   return (
     <TouchableOpacity
       style={[styles.dateField, { borderColor: props.active ? tintColor : borderColor }]}
       onPress={props.onPress}>
-      <Text style={styles.dateLabel} lightColor="#666666" darkColor="#999999">
-        {props.label}
-      </Text>
+      <Text style={[styles.dateLabel, { color: secondaryColor }]}>{props.label}</Text>
       <Text>{props.value ? formatHistoryDate(props.value) : "-"}</Text>
     </TouchableOpacity>
   );
@@ -242,9 +246,6 @@ const styles = StyleSheet.create({
     margin: 5,
     borderWidth: 1,
     borderRadius: 10,
-  },
-  activeText: {
-    color: "white",
   },
   sectionTitle: {
     marginBottom: 8,
