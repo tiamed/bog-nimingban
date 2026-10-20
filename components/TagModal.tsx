@@ -4,8 +4,9 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "r
 import { FlatList, InteractionManager, StyleSheet, TouchableOpacity } from "react-native";
 import Toast from "react-native-toast-message";
 
-import Icon from "./Icon";
 import { UserFavorite } from "../screens/FavoriteScreen/index";
+import Icon from "./Icon";
+import ListSearchBar from "./ListSearchBar";
 
 import { SizeContext } from "@/Provider";
 import { accurateTimeFormatAtom, favoriteAtom, favoriteTagsAtom } from "@/atoms";
@@ -27,12 +28,16 @@ export default function TagModal(props: {
   maxLimit?: number;
   visible: boolean;
   showDefault?: boolean;
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
   onValueChange: (value: string[]) => void;
   onDismiss: () => void;
   onOpen: () => void;
 }) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedValue, setSelectedValue] = useState<string[]>([]);
+  const [searchDraft, setSearchDraft] = useState("");
+  const searchable = !!props.onSearchChange;
   const [tags, setTags] = useAtom<Tag[], Tag[], void>(favoriteTagsAtom);
   const [favorite] = useAtom<UserFavorite[]>(favoriteAtom);
   const setEditingTag = useSetAtom(editingTagAtom);
@@ -44,6 +49,7 @@ export default function TagModal(props: {
   const confirm = () => {
     close();
     props.onValueChange(selectedValue);
+    props.onSearchChange?.(searchDraft);
   };
 
   const closeAddModal = () => {
@@ -111,14 +117,32 @@ export default function TagModal(props: {
     setSelectedValue(props.initialValue);
   }, [props.initialValue]);
 
+  useEffect(() => {
+    if (props.visible) {
+      setSearchDraft(props.searchQuery ?? "");
+    }
+  }, [props.visible, props.searchQuery]);
+
   return (
     <>
-      <Modal isVisible={props.visible} onBackdropPress={close} style={styles.modalWrapper}>
+      <Modal
+        isVisible={props.visible}
+        onBackdropPress={close}
+        style={styles.modalWrapper}
+        avoidKeyboard={searchable}>
         <View style={styles.modal}>
           <View style={styles.header}>
             <Button title="取消" onPress={close} />
             <Button title="确认" onPress={confirm} />
           </View>
+          {searchable && (
+            <ListSearchBar
+              style={styles.search}
+              value={searchDraft}
+              onChangeText={setSearchDraft}
+              onSubmitEditing={confirm}
+            />
+          )}
           <FlatList
             style={styles.list}
             contentContainerStyle={styles.contentContainer}
@@ -313,6 +337,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
     marginBottom: 10,
+  },
+  search: {
+    marginHorizontal: 10,
+    marginBottom: 5,
   },
   list: {
     overflow: "scroll",

@@ -1,27 +1,35 @@
 import { StyleSheet } from "react-native";
 
 import { Button, Text, useThemeColor, View } from "@/components/Themed";
-import { defaultHistoryRange, getHistoryRangeLabel, HistoryRange } from "@/utils/historyRange";
+import { getHistoryRangeLabel, HistoryRange } from "@/utils/historyRange";
+import { formatSearchLabel, getSearchTerms } from "@/utils/listSearch";
 
 export default function HistoryFilterBar(props: {
   range: HistoryRange;
+  query: string;
   count: number;
   total: number;
-  onClear: (range: HistoryRange) => void;
+  onClear: () => void;
 }) {
-  const { range, count, total, onClear } = props;
+  const { range, query, count, total, onClear } = props;
   const borderColor = useThemeColor({}, "border");
+  const searching = getSearchTerms(query).length > 0;
 
-  if (range.preset === "all") {
+  if (range.preset === "all" && !searching) {
     return null;
   }
+
+  const labels = [
+    range.preset !== "all" ? getHistoryRangeLabel(range) : "",
+    searching ? formatSearchLabel(query) : "",
+  ].filter(Boolean);
 
   return (
     <View style={[styles.bar, { borderBottomColor: borderColor }]}>
       <Text numberOfLines={1} style={styles.label} lightColor="#666666" darkColor="#999999">
-        {getHistoryRangeLabel(range)} · {count}/{total} 条
+        {labels.join(" · ")} · {count}/{total} 条
       </Text>
-      <Button title="显示全部" onPress={() => onClear(defaultHistoryRange)} />
+      <Button title="清除筛选" onPress={onClear} />
     </View>
   );
 }

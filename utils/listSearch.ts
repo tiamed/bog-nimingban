@@ -43,6 +43,11 @@ export function getSearchTerms(query: string) {
   return query.trim().toLowerCase().split(/\s+/).filter(Boolean);
 }
 
+export function formatSearchLabel(query: string, maxLength: number = 10) {
+  const text = query.trim();
+  return `“${text.length > maxLength ? `${text.slice(0, maxLength)}…` : text}”`;
+}
+
 export function filterBySearch<T extends SearchableItem>(
   items: T[] | undefined,
   query: string,

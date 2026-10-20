@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
 
-import { filterBySearch, getSearchTerms } from "../listSearch";
+import { filterBySearch, formatSearchLabel, getSearchTerms } from "../listSearch";
 
 const items = [
   {
@@ -44,6 +44,13 @@ describe("filterBySearch", () => {
   it("requires every term to match", () => {
     expect(ids(filterBySearch(items, "收到 xyz"))).toEqual([50999999]);
     expect(ids(filterBySearch(items, "收到 qwe"))).toEqual([]);
+  });
+});
+
+describe("formatSearchLabel", () => {
+  it("quotes and truncates the query", () => {
+    expect(formatSearchLabel("  摸鱼 ")).toBe("“摸鱼”");
+    expect(formatSearchLabel("abcdefghijk", 4)).toBe("“abcd…”");
   });
 });
 

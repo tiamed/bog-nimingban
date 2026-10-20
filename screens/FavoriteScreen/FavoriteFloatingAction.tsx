@@ -8,7 +8,10 @@ import TagModal from "../../components/TagModal";
 import { favoriteFilterAtom } from "@/atoms";
 import { useThemeColor } from "@/components/Themed";
 
-export default function FavoriteFloatingAction() {
+export default function FavoriteFloatingAction(props: {
+  query: string;
+  onQueryChange: (query: string) => void;
+}) {
   const tintColor = useThemeColor({}, "tint");
   const [favoriteFilter, setFavoriteFilter] = useAtom(favoriteFilterAtom);
   const [visible, setVisible] = useState(false);
@@ -39,6 +42,8 @@ export default function FavoriteFloatingAction() {
         onValueChange={([id]) => {
           setFavoriteFilter(id || "");
         }}
+        searchQuery={props.query}
+        onSearchChange={props.onQueryChange}
         showDefault
       />
     </>
